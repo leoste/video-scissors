@@ -39,11 +39,11 @@ namespace Scissors.UserControls
 
         internal void CreateSlice(int id)
         {
-            for (int i = SliceCount - 1; i >= id; i -= 1)
-            {
-                slices[i].SetId(i + 1);                
-            }
             slices.Insert(id, new SliceController(this, id));
+            for (int i = SliceCount - 1; i > id; i -= 1)
+            {
+                slices[i].SetId(i);
+            }
         }
 
         /*public void CreateSlice(Slice bottomSlice)
