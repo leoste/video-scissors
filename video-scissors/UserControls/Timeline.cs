@@ -13,20 +13,44 @@ namespace Scissors.UserControls
 {
     public partial class Timeline : UserControl
     {
+        private List<SliceController> slices;
+
+        internal FlowLayoutPanel ControlsPanel { get { return optionScroll; } }
+        internal FlowLayoutPanel ContentsPanel { get { return sliceScroll; } }
+        internal int SliceCount { get { return slices.Count; } }
+
         public Timeline()
         {
             InitializeComponent();
+            slices = new List<SliceController>();
+            slices.Add(new SliceController(this));
+            slices.Add(new SliceController(this));
         }
 
-        public void CreateSlice(Slice bottomSlice)
+        internal int GetSliceId(SliceController slice)
+        {
+            return slices.IndexOf(slice);
+        }
+
+        internal void CreateSlice()
+        {
+            CreateSlice(SliceCount);
+        }
+
+        internal void CreateSlice(int id)
+        {
+            for (int i = SliceCount - 1; i >= id; i -= 1)
+            {
+                slices[i].SetId(i + 1);                
+            }
+            slices.Insert(id, new SliceController(this, id));
+        }
+
+        /*public void CreateSlice(Slice bottomSlice)
         {
             int index = flowLayoutPanel1.Controls.GetChildIndex(bottomSlice) + 1;
 
-            Slice slice = new Slice();
-            slice.Width = flowLayoutPanel1.Width;
-            Random rnd = new Random();
-            slice.BackColor = Color.FromArgb(rnd.Next(32, 72), rnd.Next(32, 72), rnd.Next(32, 72));                
-            flowLayoutPanel1.Controls.Add(slice);
+            Slice slice = CreateSlice();
 
             int c = flowLayoutPanel1.Controls.Count - 1;
 
@@ -37,6 +61,16 @@ namespace Scissors.UserControls
             }
 
             flowLayoutPanel1.Controls.SetChildIndex(slice, index);
+        }
+
+        private Slice CreateSlice()
+        {
+            Slice slice = new Slice();
+            slice.Width = flowLayoutPanel1.Width;
+            Random rnd = new Random();
+            slice.BackColor = Color.FromArgb(rnd.Next(32, 72), rnd.Next(32, 72), rnd.Next(32, 72));
+            flowLayoutPanel1.Controls.Add(slice);
+            return slice;
         }
         
         public void RemoveSlice(Slice slice)
@@ -63,6 +97,6 @@ namespace Scissors.UserControls
                     flowLayoutPanel1.Controls[i].Width = flowLayoutPanel1.Width;
                 }
             }
-        }
+        }*/
     }
 }

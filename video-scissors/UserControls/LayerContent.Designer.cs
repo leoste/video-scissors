@@ -1,6 +1,6 @@
 ﻿namespace Scissors.UserControls
 {
-    partial class LayerObject
+    partial class LayerContent
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,18 +28,34 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.SuspendLayout();
             // 
-            // TimelineObject
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 3);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(150, 40);
+            this.flowLayoutPanel1.TabIndex = 8;
+            this.flowLayoutPanel1.WrapContents = false;
+            // 
+            // LayerTray
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Name = "TimelineObject";
-            this.Size = new System.Drawing.Size(150, 40);
+            this.Controls.Add(this.flowLayoutPanel1);
+            this.Name = "LayerTray";
+            this.Size = new System.Drawing.Size(150, 46);
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }
