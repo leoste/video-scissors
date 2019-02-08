@@ -20,6 +20,9 @@ namespace Scissors.Timeline
 
         private List<ItemController> items;
         
+        private int oldLength;
+        private float oldZoom;
+
         internal Panel ItemContentsPanel { get { return content.Panel; } }
 
         internal int Length { get { return slice.Length; } }
@@ -28,6 +31,9 @@ namespace Scissors.Timeline
 
         private void Initialize(SliceController slice)
         {
+            oldLength = -1;
+            oldZoom = -1;
+
             this.slice = slice;
             controlsPanel = slice.LayerControlsPanel;
             contentsPanel = slice.LayerContentsPanel;
@@ -102,10 +108,18 @@ namespace Scissors.Timeline
 
         internal void UpdateUI()
         {
-            foreach (ItemController item in items)
+            if (Length != oldLength || Zoom != oldZoom)
             {
-                item.UpdateUI();
-            }
+                oldLength = Length;
+                oldZoom = Zoom;
+
+                content.Width = (int)(Length * Zoom);
+
+                foreach (ItemController item in items)
+                {
+                    item.UpdateUI();
+                }
+            }            
         }
 
         public void Dispose()

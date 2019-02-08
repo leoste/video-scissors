@@ -18,10 +18,14 @@ namespace Scissors.Timeline
         private Panel contentsPanel;
 
         private ItemContent content;
+        
+        private int oldItemLength;
+        private int oldStartPosition;
+        private float oldZoom;        
 
         private int startPosition;
         private int endPosition;
-        private int length;
+        private int itemLength;
         
         internal int StartPosition
         {
@@ -30,10 +34,10 @@ namespace Scissors.Timeline
             {
                 if (value >= 0)
                 {
-                    if (value + length < layer.Length)
+                    if (value + itemLength < layer.Length)
                     {
                         startPosition = value;
-                        endPosition = startPosition + length;
+                        endPosition = startPosition + itemLength;
                         UpdateUI();
                     }
                     else throw EndTooBigException;
@@ -52,7 +56,7 @@ namespace Scissors.Timeline
                     if (value > startPosition)
                     {
                         endPosition = value;
-                        length = endPosition - startPosition;
+                        itemLength = endPosition - startPosition;
                         UpdateUI();
                     }
                     else throw EndTooSmallException;
@@ -61,7 +65,7 @@ namespace Scissors.Timeline
             }
         }
 
-        internal int Length
+        internal int ItemLength
         {
             get { return endPosition - startPosition; }
             set
@@ -70,7 +74,7 @@ namespace Scissors.Timeline
                 {
                     if (startPosition + value < layer.Length)
                     {
-                        length = value;
+                        itemLength = value;
                         endPosition = startPosition + value;
                         UpdateUI();
                     }
@@ -80,8 +84,16 @@ namespace Scissors.Timeline
             }
         }
 
+        internal int Length { get { return layer.Length; } }
+        internal int Framerate { get { return layer.Framerate; } }
+        internal float Zoom { get { return layer.Zoom; } }
+
         internal ItemController(LayerController layer)
         {
+            oldZoom = -1;
+            oldItemLength = -1;
+            oldStartPosition = -1;
+
             this.layer = layer;
             contentsPanel = layer.ItemContentsPanel;
             content = new ItemContent();
@@ -89,7 +101,35 @@ namespace Scissors.Timeline
 
         internal void UpdateUI()
         {
+            bool updatePos = false;
+            bool updateWidth = false;
 
+            if (startPosition != oldStartPosition)
+            {
+                oldStartPosition = startPosition;
+                updatePos = true;
+            }
+            if (itemLength != oldItemLength)
+            {
+                oldItemLength = ItemLength;
+                updateWidth = true;
+            }
+            if (Zoom != oldZoom)
+            {
+                oldZoom = Zoom;
+                updatePos = true;
+                updateWidth = true;
+            }
+
+            if (updatePos)
+            {
+                content.Left = (int)(startPosition * Zoom);
+            }
+
+            if (updateWidth)
+            {
+                content.Width = (int)(itemLength * Zoom);
+            }
         }
 
         public void Dispose()

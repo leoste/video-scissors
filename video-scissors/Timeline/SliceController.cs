@@ -19,6 +19,10 @@ namespace Scissors.Timeline
         private SliceContent content;
                 
         private List<LayerController> layers;
+
+        private int oldLayerCount;
+        private int oldLength;
+        private float oldZoom;
         
         internal int LayerCount { get { return layers.Count; } }
         internal FlowLayoutPanel LayerControlsPanel { get { return control.Panel; } }
@@ -30,6 +34,10 @@ namespace Scissors.Timeline
 
         private void Initialize(TimelineController timeline)
         {
+            oldLayerCount = -1;
+            oldLength = -1;
+            oldZoom = -1;
+
             this.timeline = timeline;
             controlsPanel = timeline.ControlsPanel;
             contentsPanel = timeline.ContentsPanel;
@@ -92,13 +100,6 @@ namespace Scissors.Timeline
             contentsPanel.Controls.SetChildIndex(content, id);
         }
 
-        private void UpdateHeight()
-        {
-            int height = 46 * LayerCount + (LayerCount - 1) * 3 + 6;
-            control.Height = height;
-            content.Height = height;
-        }
-
         internal int GetId()
         {
             return id;
@@ -128,7 +129,7 @@ namespace Scissors.Timeline
                 layers[i].SetId(i);
             }
 
-            UpdateHeight();
+            UpdateUI();
         }
 
         internal void RemoveLayer(int id)
@@ -146,7 +147,7 @@ namespace Scissors.Timeline
                 layers.Add(new LayerController(this));
             }
 
-            UpdateHeight();
+            UpdateUI();
         }
 
         internal void SwapLayers(int id1, int id2)
@@ -158,12 +159,29 @@ namespace Scissors.Timeline
             layers[id1] = layers[id2];
             layers[id2] = layer1;
         }
-
+        
         internal void UpdateUI()
         {
-            foreach (LayerController layer in layers)
+            if (LayerCount != oldLayerCount)
             {
-                layer.UpdateUI();
+                oldLayerCount = LayerCount;
+
+                int height = 46 * LayerCount + (LayerCount - 1) * 3 + 6;
+                control.Height = height;
+                content.Height = height;
+            }            
+
+            if (Length != oldLength || Zoom != oldZoom)
+            {
+                oldLength = Length;
+                oldZoom = Zoom;
+
+                content.Width = (int)(Length * Zoom);
+
+                foreach (LayerController layer in layers)
+                {
+                    layer.UpdateUI();
+                }
             }
         }
 
