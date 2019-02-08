@@ -11,7 +11,7 @@ namespace Scissors.Timeline
     class SliceController: IDisposable
     {
         private int id;
-        private Timeline timeline;
+        private TimelineController timeline;
         private FlowLayoutPanel controlsPanel;
         private FlowLayoutPanel contentsPanel;
 
@@ -28,7 +28,7 @@ namespace Scissors.Timeline
         internal int Framerate { get { return timeline.Framerate; } }
         internal float Zoom { get { return timeline.Zoom; } }
 
-        private void Initialize(Timeline timeline)
+        private void Initialize(TimelineController timeline)
         {
             this.timeline = timeline;
             controlsPanel = timeline.ControlsPanel;
@@ -74,13 +74,13 @@ namespace Scissors.Timeline
             if (id < timeline.SliceCount - 1) timeline.SwapSlices(id, id + 1);
         }
         
-        internal SliceController(Timeline timeline)
+        internal SliceController(TimelineController timeline)
         {
             id = timeline.SliceCount;
             Initialize(timeline);
         }
 
-        internal SliceController(Timeline timeline, int id)
+        internal SliceController(TimelineController timeline, int id)
         {
             this.id = id;
             Initialize(timeline);
