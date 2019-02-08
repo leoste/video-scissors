@@ -23,8 +23,8 @@ namespace Scissors.UserControls
         {
             InitializeComponent();
             slices = new List<SliceController>();
-            slices.Add(new SliceController(this));
-            slices.Add(new SliceController(this));
+            CreateSlice();
+            CreateSlice();
         }
 
         internal int GetSliceId(SliceController slice)
@@ -46,57 +46,25 @@ namespace Scissors.UserControls
             }
         }
 
-        /*public void CreateSlice(Slice bottomSlice)
+        internal void RemoveSlice(int id)
         {
-            int index = flowLayoutPanel1.Controls.GetChildIndex(bottomSlice) + 1;
-
-            Slice slice = CreateSlice();
-
-            int c = flowLayoutPanel1.Controls.Count - 1;
-
-            for (int i = c - 1; i >= index; i -= 1)
-            {
-                Control control = flowLayoutPanel1.Controls[i];
-                flowLayoutPanel1.Controls.SetChildIndex(control, i + 1);
-            }
-
-            flowLayoutPanel1.Controls.SetChildIndex(slice, index);
-        }
-
-        private Slice CreateSlice()
-        {
-            Slice slice = new Slice();
-            slice.Width = flowLayoutPanel1.Width;
-            Random rnd = new Random();
-            slice.BackColor = Color.FromArgb(rnd.Next(32, 72), rnd.Next(32, 72), rnd.Next(32, 72));
-            flowLayoutPanel1.Controls.Add(slice);
-            return slice;
-        }
-        
-        public void RemoveSlice(Slice slice)
-        {
-            if (flowLayoutPanel1.Controls.Count == 1)
-            {
-                CreateSlice(slice);
-            }
+            SliceController slice = slices[id];
+            slices.Remove(slice);
             slice.Dispose();
+            for (int i = id; i < SliceCount; i += 1)
+            {
+                slices[i].SetId(i);
+            }
         }
 
-        int oldwidth = 0;
-
-        private void flowLayoutPanel1_SizeChanged(object sender, EventArgs e)
+        internal void SwapSlices(int id1, int id2)
         {
-            if (flowLayoutPanel1.Width != oldwidth)
-            {
-                oldwidth = flowLayoutPanel1.Width;
+            slices[id1].SetId(id2);
+            slices[id2].SetId(id1);
 
-                int c = flowLayoutPanel1.Controls.Count;
-
-                for (int i = 0; i < c; i += 1)
-                {
-                    flowLayoutPanel1.Controls[i].Width = flowLayoutPanel1.Width;
-                }
-            }
-        }*/
+            SliceController slice1 = slices[id1];            
+            slices[id1] = slices[id2];
+            slices[id2] = slice1;
+        }
     }
 }

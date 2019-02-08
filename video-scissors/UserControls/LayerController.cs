@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace Scissors.UserControls
 {
-    class LayerController
+    class LayerController : IDisposable
     {
+        public void Dispose()
+        {
+            
+        }
     }
 }

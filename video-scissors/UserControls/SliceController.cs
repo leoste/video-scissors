@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Scissors.UserControls
 {
-    class SliceController
+    class SliceController: IDisposable
     {
         private int id;
         private Timeline timeline;
@@ -22,6 +22,8 @@ namespace Scissors.UserControls
 
         private void Initialize(Timeline timeline)
         {
+            layers = new List<LayerController>();
+
             this.timeline = timeline;
             controlsPanel = timeline.ControlsPanel;
             contentsPanel = timeline.ContentsPanel;
@@ -32,17 +34,48 @@ namespace Scissors.UserControls
             control.BackColor = color;
             controlsPanel.Controls.Add(control);
             control.AddClicked += Control_AddClicked;
+            control.RemoveClicked += Control_RemoveClicked;
+            control.MoveUpClicked += Control_MoveUpClicked;
+            control.MoveDownClicked += Control_MoveDownClicked;
 
             content = new SliceContent();
             control.BackColor = color;
             contentsPanel.Controls.Add(content);
 
             SetId();
-        }
+        } 
 
         private void Control_AddClicked(object sender, EventArgs e)
         {
             timeline.CreateSlice(id + 1);
+        }
+
+        private void Control_RemoveClicked(object sender, EventArgs e)
+        {
+            timeline.RemoveSlice(id);
+        }
+
+        private void Control_MoveUpClicked(object sender, EventArgs e)
+        {
+            if (id > 0) timeline.SwapSlices(id, id - 1);
+        }
+
+        private void Control_MoveDownClicked(object sender, EventArgs e)
+        {
+            if (id < timeline.SliceCount - 1) timeline.SwapSlices(id, id + 1);
+        }
+
+        public void Dispose()
+        {
+            foreach (LayerController layer in layers)
+            {
+                layer.Dispose();
+            }
+
+            controlsPanel.Controls.Remove(control);
+            contentsPanel.Controls.Remove(content);
+            control.Dispose();
+            content.Dispose();
         }
 
         internal SliceController(Timeline timeline)
