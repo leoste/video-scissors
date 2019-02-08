@@ -18,6 +18,14 @@ namespace Scissors.Timeline
         private LayerControl control;
         private LayerContent content;
 
+        private List<ItemController> items;
+        
+        internal Panel ItemContentsPanel { get { return content.Panel; } }
+
+        internal int Length { get { return slice.Length; } }
+        internal int Framerate { get { return slice.Framerate; } }
+        internal float Zoom { get { return slice.Zoom; } }
+
         private void Initialize(SliceController slice)
         {
             this.slice = slice;
@@ -39,6 +47,8 @@ namespace Scissors.Timeline
             contentsPanel.Controls.Add(content);
 
             SetId();
+
+            items = new List<ItemController>();
         }
 
         private void Control_AddClicked(object sender, EventArgs e)
@@ -90,8 +100,21 @@ namespace Scissors.Timeline
             SetId();
         }
 
+        internal void UpdateUI()
+        {
+            foreach (ItemController item in items)
+            {
+                item.UpdateUI();
+            }
+        }
+
         public void Dispose()
         {
+            foreach (ItemController item in items)
+            {
+                item.Dispose();
+            }
+
             controlsPanel.Controls.Remove(control);
             contentsPanel.Controls.Remove(content);
             control.Dispose();

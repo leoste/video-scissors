@@ -24,6 +24,10 @@ namespace Scissors.Timeline
         internal FlowLayoutPanel LayerControlsPanel { get { return control.Panel; } }
         internal FlowLayoutPanel LayerContentsPanel { get { return content.Panel; } }
 
+        internal int Length { get { return timeline.Length; } }
+        internal int Framerate { get { return timeline.Framerate; } }
+        internal float Zoom { get { return timeline.Zoom; } }
+
         private void Initialize(Timeline timeline)
         {
             this.timeline = timeline;
@@ -153,6 +157,14 @@ namespace Scissors.Timeline
             LayerController layer1 = layers[id1];
             layers[id1] = layers[id2];
             layers[id2] = layer1;
+        }
+
+        internal void UpdateUI()
+        {
+            foreach (LayerController layer in layers)
+            {
+                layer.UpdateUI();
+            }
         }
 
         public void Dispose()

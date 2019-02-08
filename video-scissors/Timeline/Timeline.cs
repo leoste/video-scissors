@@ -14,16 +14,65 @@ namespace Scissors.Timeline
     public partial class Timeline : UserControl
     {
         private List<SliceController> slices;
+        private int length = 1800;
+        private int framerate = 30;
+        private float zoom = 10;
 
         internal int SliceCount { get { return slices.Count; } }
         internal FlowLayoutPanel ControlsPanel { get { return optionScroll; } }
         internal FlowLayoutPanel ContentsPanel { get { return sliceScroll; } }
+        
+        /// <summary>
+        /// Timeline length in frames.
+        /// </summary>
+        public int Length {
+            get { return length; }
+            set { SetLength(value); }
+        }
+        
+        /// <summary>
+        /// Timeline framerate. Changing this with an existing project will screw up its speed.
+        /// </summary>
+        public int Framerate {
+            get { return framerate; }
+            set { SetFramerate(value); }
+        }
+        
+        /// <summary>
+        /// Timeline horizontal zoom.
+        /// </summary>
+        public float Zoom {
+            get { return zoom; }
+            set { SetZoom(value); }
+        }
 
         public Timeline()
         {
             InitializeComponent();
             slices = new List<SliceController>();
             CreateSlice();
+        }
+
+        private void SetLength(int length)
+        {
+            //check if length can be changed or not
+
+            this.length = length;
+        }
+
+        private void SetFramerate(int framerate)
+        {
+            this.framerate = framerate;
+
+            // update ruler
+        }
+
+        private void SetZoom(float zoom)
+        {
+            this.zoom = zoom;
+
+            // resize slices, layers
+            // resize and reposition items
         }
 
         internal int GetSliceId(SliceController slice)

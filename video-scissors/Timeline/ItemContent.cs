@@ -10,11 +10,9 @@ using System.Windows.Forms;
 
 namespace Scissors.Timeline
 {
-    public partial class LayerContent : UserControl
+    public partial class ItemContent : UserControl
     {
-        internal Panel Panel { get { return panel1; } }
-
-        public LayerContent()
+        public ItemContent()
         {
             InitializeComponent();
         }
