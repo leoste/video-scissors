@@ -55,6 +55,8 @@ namespace Scissors.Timeline
             SetId();
 
             items = new List<ItemController>();
+
+            UpdateUI();
         }
 
         private void Control_AddClicked(object sender, EventArgs e)

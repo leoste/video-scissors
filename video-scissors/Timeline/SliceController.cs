@@ -60,6 +60,8 @@ namespace Scissors.Timeline
 
             layers = new List<LayerController>();
             CreateLayer();
+
+            UpdateUI();
         } 
 
         private void Control_AddClicked(object sender, EventArgs e)
