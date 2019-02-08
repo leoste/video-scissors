@@ -48,6 +48,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColorProvider.cs" />
+    <Compile Include="EffectAPI\EffectLoader.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EffectAPI\EffectLoader.Designer.cs">
+      <DependentUpon>EffectLoader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EffectAPI\EffectManager.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,6 +95,9 @@
     <Compile Include="UserControls\Timeline.Designer.cs">
       <DependentUpon>Timeline.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="EffectAPI\EffectLoader.resx">
+      <DependentUpon>EffectLoader.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -132,5 +142,6 @@
   <ItemGroup>
     <None Include="Resources\image.jpg" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

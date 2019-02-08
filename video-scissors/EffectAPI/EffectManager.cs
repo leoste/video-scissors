@@ -9,9 +9,10 @@ using System.Threading.Tasks;
 
 namespace Scissors.EffectAPI
 {
-    class EffectManager
+    internal class EffectManager
     {
         public static List<Assembly> effects = new List<Assembly>();
+
         static void LoadEffect(string path)
         {
             try
