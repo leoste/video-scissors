@@ -95,6 +95,7 @@ namespace Scissors.UserControls
             controlsPanel.Controls.SetChildIndex(control, id);
             contentsPanel.Controls.SetChildIndex(content, id);
             control.Label.Text = id.ToString();
+            content.Label.Text = id.ToString();
         }        
 
         internal int GetId()

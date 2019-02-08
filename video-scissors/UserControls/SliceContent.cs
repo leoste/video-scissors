@@ -12,6 +12,8 @@ namespace Scissors.UserControls
 {
     public partial class SliceContent : UserControl
     {
+        internal Label Label { get { return label1; } }
+
         public SliceContent()
         {
             InitializeComponent();
