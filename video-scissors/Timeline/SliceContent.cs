@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Scissors.UserControls
+namespace Scissors.Timeline
 {
     public partial class SliceContent : UserControl
     {

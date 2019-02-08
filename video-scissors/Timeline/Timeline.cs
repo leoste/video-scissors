@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.ComponentModel.Design;
 
-namespace Scissors.UserControls
+namespace Scissors.Timeline
 {
     public partial class Timeline : UserControl
     {

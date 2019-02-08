@@ -1,4 +1,4 @@
-﻿namespace Scissors.UserControls
+﻿namespace Scissors.Timeline
 {
     partial class SliceControl
     {

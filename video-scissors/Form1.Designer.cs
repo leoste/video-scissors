@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.timeline1 = new Scissors.UserControls.Timeline();
+            this.timeline1 = new Scissors.Timeline.Timeline();
             this.SuspendLayout();
             // 
             // timeline1
@@ -56,7 +56,7 @@
 
         #endregion
 
-        private UserControls.Timeline timeline1;
+        private Timeline.Timeline timeline1;
     }
 }
 
