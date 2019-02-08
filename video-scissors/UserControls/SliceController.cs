@@ -21,8 +21,8 @@ namespace Scissors.UserControls
         private List<LayerController> layers;
         
         internal int LayerCount { get { return layers.Count; } }
-        internal FlowLayoutPanel ControlsPanel { get { return control.Panel; } }
-        internal FlowLayoutPanel ContentsPanel { get { return content.Panel; } }
+        internal FlowLayoutPanel LayerControlsPanel { get { return control.Panel; } }
+        internal FlowLayoutPanel LayerContentsPanel { get { return content.Panel; } }
 
         private void Initialize(Timeline timeline)
         {

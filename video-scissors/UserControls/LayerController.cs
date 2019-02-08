@@ -21,8 +21,8 @@ namespace Scissors.UserControls
         private void Initialize(SliceController slice)
         {
             this.slice = slice;
-            controlsPanel = slice.ControlsPanel;
-            contentsPanel = slice.ContentsPanel;
+            controlsPanel = slice.LayerControlsPanel;
+            contentsPanel = slice.LayerContentsPanel;
 
             Color color = ColorProvider.GetRandomLayerColor();
 
