@@ -17,13 +17,15 @@ namespace Scissors.UserControls
 
         private SliceControl control;
         private SliceContent content;
-
+                
         private List<LayerController> layers;
+        
+        internal int LayerCount { get { return layers.Count; } }
+        internal FlowLayoutPanel ControlsPanel { get { return control.Panel; } }
+        internal FlowLayoutPanel ContentsPanel { get { return content.Panel; } }
 
         private void Initialize(Timeline timeline)
         {
-            layers = new List<LayerController>();
-
             this.timeline = timeline;
             controlsPanel = timeline.ControlsPanel;
             contentsPanel = timeline.ContentsPanel;
@@ -43,6 +45,9 @@ namespace Scissors.UserControls
             contentsPanel.Controls.Add(content);
 
             SetId();
+
+            layers = new List<LayerController>();
+            CreateLayer();
         } 
 
         private void Control_AddClicked(object sender, EventArgs e)
@@ -64,20 +69,7 @@ namespace Scissors.UserControls
         {
             if (id < timeline.SliceCount - 1) timeline.SwapSlices(id, id + 1);
         }
-
-        public void Dispose()
-        {
-            foreach (LayerController layer in layers)
-            {
-                layer.Dispose();
-            }
-
-            controlsPanel.Controls.Remove(control);
-            contentsPanel.Controls.Remove(content);
-            control.Dispose();
-            content.Dispose();
-        }
-
+        
         internal SliceController(Timeline timeline)
         {
             id = timeline.SliceCount;
@@ -94,9 +86,14 @@ namespace Scissors.UserControls
         {
             controlsPanel.Controls.SetChildIndex(control, id);
             contentsPanel.Controls.SetChildIndex(content, id);
-            control.Label.Text = id.ToString();
-            content.Label.Text = id.ToString();
-        }        
+        }
+
+        private void UpdateHeight()
+        {
+            int height = 46 * LayerCount + (LayerCount - 1) * 3 + 6;
+            control.Height = height;
+            content.Height = height;
+        }
 
         internal int GetId()
         {
@@ -107,6 +104,68 @@ namespace Scissors.UserControls
         {
             this.id = id;
             SetId();
+        }
+
+        internal int GetLayerId(LayerController layer)
+        {
+            return layers.IndexOf(layer);
+        }
+
+        internal void CreateLayer()
+        {
+            CreateLayer(LayerCount);
+        }
+
+        internal void CreateLayer(int id)
+        {
+            layers.Insert(id, new LayerController(this, id));
+            for (int i = LayerCount - 1; i > id; i -= 1)
+            {
+                layers[i].SetId(i);
+            }
+
+            UpdateHeight();
+        }
+
+        internal void RemoveLayer(int id)
+        {
+            LayerController layer = layers[id];
+            layers.Remove(layer);
+            layer.Dispose();
+            for (int i = id; i < LayerCount; i += 1)
+            {
+                layers[i].SetId(i);
+            }
+
+            if (LayerCount == 0)
+            {
+                layers.Add(new LayerController(this));
+            }
+
+            UpdateHeight();
+        }
+
+        internal void SwapLayers(int id1, int id2)
+        {
+            layers[id1].SetId(id2);
+            layers[id2].SetId(id1);
+
+            LayerController layer1 = layers[id1];
+            layers[id1] = layers[id2];
+            layers[id2] = layer1;
+        }
+
+        public void Dispose()
+        {
+            foreach (LayerController layer in layers)
+            {
+                layer.Dispose();
+            }
+
+            controlsPanel.Controls.Remove(control);
+            contentsPanel.Controls.Remove(content);
+            control.Dispose();
+            content.Dispose();
         }
     }
 }

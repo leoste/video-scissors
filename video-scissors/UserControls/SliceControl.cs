@@ -12,8 +12,6 @@ namespace Scissors.UserControls
 {
     public partial class SliceControl : UserControl
     {
-        internal Label Label { get { return label1; } }
-
         public SliceControl()
         {
             InitializeComponent();
@@ -25,6 +23,8 @@ namespace Scissors.UserControls
         public event EventHandler MoveDownClicked;
         public event EventHandler ToggleLockClicked;
         public event EventHandler ToggleVisibilityClicked;
+
+        internal FlowLayoutPanel Panel { get { return flowLayoutPanel1; } }
 
         private void removeSlice_Click(object sender, EventArgs e)
         {

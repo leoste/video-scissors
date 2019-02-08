@@ -15,15 +15,14 @@ namespace Scissors.UserControls
     {
         private List<SliceController> slices;
 
+        internal int SliceCount { get { return slices.Count; } }
         internal FlowLayoutPanel ControlsPanel { get { return optionScroll; } }
         internal FlowLayoutPanel ContentsPanel { get { return sliceScroll; } }
-        internal int SliceCount { get { return slices.Count; } }
 
         public Timeline()
         {
             InitializeComponent();
             slices = new List<SliceController>();
-            CreateSlice();
             CreateSlice();
         }
 
@@ -47,13 +46,18 @@ namespace Scissors.UserControls
         }
 
         internal void RemoveSlice(int id)
-        {
+        {            
             SliceController slice = slices[id];
             slices.Remove(slice);
             slice.Dispose();
             for (int i = id; i < SliceCount; i += 1)
             {
                 slices[i].SetId(i);
+            }
+
+            if (SliceCount == 0)
+            {
+                slices.Add(new SliceController(this));
             }
         }
 

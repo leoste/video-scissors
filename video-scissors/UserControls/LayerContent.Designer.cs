@@ -43,12 +43,13 @@
             this.flowLayoutPanel1.TabIndex = 8;
             this.flowLayoutPanel1.WrapContents = false;
             // 
-            // LayerTray
+            // LayerContent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.flowLayoutPanel1);
-            this.Name = "LayerTray";
+            this.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
+            this.Name = "LayerContent";
             this.Size = new System.Drawing.Size(150, 46);
             this.ResumeLayout(false);
 

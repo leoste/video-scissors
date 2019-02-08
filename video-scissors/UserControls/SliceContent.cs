@@ -12,7 +12,7 @@ namespace Scissors.UserControls
 {
     public partial class SliceContent : UserControl
     {
-        internal Label Label { get { return label1; } }
+        internal FlowLayoutPanel Panel { get { return flowLayoutPanel1; } }
 
         public SliceContent()
         {
