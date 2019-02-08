@@ -39,7 +39,7 @@ namespace Scissors.UserControls
             control.MoveDownClicked += Control_MoveDownClicked;
 
             content = new SliceContent();
-            control.BackColor = color;
+            content.BackColor = color;
             contentsPanel.Controls.Add(content);
 
             SetId();
