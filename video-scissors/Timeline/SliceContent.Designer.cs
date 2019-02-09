@@ -1,6 +1,6 @@
-﻿namespace Scissors.UserControls
+﻿namespace Scissors.Timeline
 {
-    partial class LayerContent
+    partial class SliceContent
     {
         /// <summary> 
         /// Required designer variable.
@@ -36,21 +36,22 @@
             this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 3);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(150, 40);
-            this.flowLayoutPanel1.TabIndex = 8;
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(150, 46);
+            this.flowLayoutPanel1.TabIndex = 7;
             this.flowLayoutPanel1.WrapContents = false;
             // 
-            // LayerContent
+            // SliceContent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.flowLayoutPanel1);
-            this.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
-            this.Name = "LayerContent";
-            this.Size = new System.Drawing.Size(150, 46);
+            this.Margin = new System.Windows.Forms.Padding(0);
+            this.Name = "SliceContent";
+            this.Size = new System.Drawing.Size(150, 52);
             this.ResumeLayout(false);
 
         }
