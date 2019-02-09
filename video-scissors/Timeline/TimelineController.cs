@@ -36,7 +36,7 @@ namespace Scissors.Timeline
         public float Zoom
         {
             get { return zoom; }
-            set { SetZoom(value); }
+            set { if (value > 0) SetZoom(value); }
         }
 
         public int Framerate { get { return framerate; } }
@@ -45,7 +45,8 @@ namespace Scissors.Timeline
 
         internal TimelineController(Timeline timeline)
         {
-            length = 1800;
+            //length = 1800;
+            length = 60;
             zoom = 10;
             framerate = 30;
 
@@ -59,14 +60,13 @@ namespace Scissors.Timeline
             //check if length can be changed or not
 
             this.length = length;
+            UpdateUI();
         }
         
         private void SetZoom(float zoom)
         {
             this.zoom = zoom;
-
-            // resize slices, layers
-            // resize and reposition items
+            UpdateUI();
         }
 
         internal int GetSliceId(SliceController slice)
@@ -126,6 +126,14 @@ namespace Scissors.Timeline
             }
 
             return processed;
+        }
+
+        internal void UpdateUI()
+        {
+            foreach (SliceController slice in slices)
+            {
+                slice.UpdateUI();
+            }
         }
     }
 }
