@@ -29,8 +29,10 @@ namespace Scissors.Timeline
         internal FlowLayoutPanel LayerContentsPanel { get { return content.Panel; } }
 
         internal int Length { get { return timeline.Length; } }
-        internal int Framerate { get { return timeline.Framerate; } }
         internal float Zoom { get { return timeline.Zoom; } }
+        internal int Framerate { get { return timeline.Framerate; } }
+        internal int FrameWidth { get { return timeline.FrameWidth; } }
+        internal int FrameHeight { get { return timeline.FrameHeight; } }
 
         private void Initialize(TimelineController timeline)
         {
@@ -185,6 +187,20 @@ namespace Scissors.Timeline
                     layer.UpdateUI();
                 }
             }
+        }
+
+        internal Frame ProcessFrame(Frame frame, int position)
+        {
+            Frame processed = new Frame(frame);
+
+            foreach (LayerController layer in layers)
+            {
+                Frame temp = layer.ProcessFrame(processed, position);
+                processed.Dispose();
+                processed = temp;
+            }            
+
+            return processed;
         }
 
         public void Dispose()

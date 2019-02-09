@@ -11,9 +11,11 @@ namespace Scissors.Timeline
     {
         private Timeline timeline;
         private List<SliceController> slices;
-        private int length = 1800;
-        private int framerate = 30;
-        private float zoom = 10;
+        private int length;
+        private float zoom;
+        private int framerate;
+        private int frameWidth;
+        private int frameHeight;
 
         internal int SliceCount { get { return slices.Count; } }
         internal FlowLayoutPanel ControlsPanel { get { return timeline.ControlsPanel; } }
@@ -27,16 +29,7 @@ namespace Scissors.Timeline
             get { return length; }
             set { SetLength(value); }
         }
-
-        /// <summary>
-        /// Timeline framerate. Changing this with an existing project will screw up its speed.
-        /// </summary>
-        public int Framerate
-        {
-            get { return framerate; }
-            set { SetFramerate(value); }
-        }
-
+                
         /// <summary>
         /// Timeline horizontal zoom.
         /// </summary>
@@ -46,8 +39,16 @@ namespace Scissors.Timeline
             set { SetZoom(value); }
         }
 
+        public int Framerate { get { return framerate; } }
+        public int FrameWidth { get { return frameWidth; } }
+        public int FrameHeight { get { return frameHeight; } }
+
         internal TimelineController(Timeline timeline)
         {
+            length = 1800;
+            zoom = 10;
+            framerate = 30;
+
             this.timeline = timeline;
             slices = new List<SliceController>();
             CreateSlice();
@@ -59,14 +60,7 @@ namespace Scissors.Timeline
 
             this.length = length;
         }
-
-        private void SetFramerate(int framerate)
-        {
-            this.framerate = framerate;
-
-            // update ruler
-        }
-
+        
         private void SetZoom(float zoom)
         {
             this.zoom = zoom;
@@ -118,6 +112,20 @@ namespace Scissors.Timeline
             SliceController slice1 = slices[id1];
             slices[id1] = slices[id2];
             slices[id2] = slice1;
+        }
+
+        internal Frame GetFrame(int position)
+        {
+            Frame processed = new Frame();
+
+            foreach (SliceController slice in slices)
+            {
+                Frame temp = slice.ProcessFrame(processed, position);
+                processed.Dispose();
+                processed = temp;
+            }
+
+            return processed;
         }
     }
 }

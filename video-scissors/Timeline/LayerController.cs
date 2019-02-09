@@ -26,8 +26,10 @@ namespace Scissors.Timeline
         internal Panel ItemContentsPanel { get { return content.Panel; } }
 
         internal int Length { get { return slice.Length; } }
-        internal int Framerate { get { return slice.Framerate; } }
         internal float Zoom { get { return slice.Zoom; } }
+        internal int Framerate { get { return slice.Framerate; } }
+        internal int FrameWidth { get { return slice.FrameWidth; } }
+        internal int FrameHeight { get { return slice.FrameHeight; } }
 
         private void Initialize(SliceController slice)
         {
@@ -55,6 +57,10 @@ namespace Scissors.Timeline
             SetId();
 
             items = new List<ItemController>();
+
+            items.Add(new ItemController(this, 2, 10));
+            items.Add(new ItemController(this, 15, 10));
+            items.Add(new ItemController(this, 40, 5));
 
             UpdateUI();
         }
@@ -122,6 +128,24 @@ namespace Scissors.Timeline
                     item.UpdateUI();
                 }
             }            
+        }
+
+        internal Frame ProcessFrame(Frame frame, int position)
+        {
+            Frame processed;
+
+            if (frame == null)
+            {
+                processed = new Frame(new Bitmap(FrameWidth, FrameHeight), false);
+            }
+            else
+            {
+                processed = new Frame(frame);
+            }
+
+            //find current Item and send Frame through it get something processed and return it
+
+            return processed;
         }
 
         public void Dispose()

@@ -88,7 +88,7 @@ namespace Scissors.Timeline
         internal int Framerate { get { return layer.Framerate; } }
         internal float Zoom { get { return layer.Zoom; } }
 
-        internal ItemController(LayerController layer)
+        internal ItemController(LayerController layer, int startPosition, int length)
         {
             oldZoom = -1;
             oldItemLength = -1;
@@ -97,6 +97,12 @@ namespace Scissors.Timeline
             this.layer = layer;
             contentsPanel = layer.ItemContentsPanel;
             content = new ItemContent();
+            contentsPanel.Controls.Add(content);
+
+            this.startPosition = startPosition;
+            ItemLength = length;
+
+            UpdateUI();
         }
 
         internal void UpdateUI()
