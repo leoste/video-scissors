@@ -7,10 +7,17 @@ using System.Windows.Forms;
 
 namespace Scissors.Timeline
 {
-    class TimelineController
+    class TimelineController : IController
     {
+        private static int defaultLength = 1800;
+        private static int defaultZoom = 10;
+        private static int defaultFramerate = 30;
+        private static int defaultFrameWidth = 1920;
+        private static int defaultFrameHeight = 1080;
+
         private Timeline timeline;
         private List<SliceController> slices;
+        private RulerController ruler;
         private int length;
         private float zoom;
         private int framerate;
@@ -20,38 +27,59 @@ namespace Scissors.Timeline
         internal int SliceCount { get { return slices.Count; } }
         internal FlowLayoutPanel ControlsPanel { get { return timeline.ControlsPanel; } }
         internal FlowLayoutPanel ContentsPanel { get { return timeline.ContentsPanel; } }
-
-        /// <summary>
-        /// Timeline length in frames.
-        /// </summary>
-        public int Length
+        internal FlowLayoutPanel RulerPanel { get { return timeline.RulerPanel; } }
+        
+        public int TimelineLength
         {
             get { return length; }
             set { SetLength(value); }
         }
-                
-        /// <summary>
-        /// Timeline horizontal zoom.
-        /// </summary>
-        public float Zoom
+
+        public float TimelineZoom
         {
             get { return zoom; }
-            set { SetZoom(value); }
+            set { if (value > 0) SetZoom(value); }
         }
 
-        public int Framerate { get { return framerate; } }
-        public int FrameWidth { get { return frameWidth; } }
-        public int FrameHeight { get { return frameHeight; } }
-
-        internal TimelineController(Timeline timeline)
+        public int ProjectFramerate { get { return framerate; } }
+        public int ProjectFrameWidth { get { return frameWidth; } }
+        public int ProjectFrameHeight { get { return frameHeight; } }
+        
+        private void Initialize(Timeline timeline, int length, int zoom, int framerate, int frameWidth, int frameHeight)
         {
-            length = 1800;
-            zoom = 10;
-            framerate = 30;
+            this.length = length;
+            this.zoom = zoom;
+            this.framerate = framerate;
+            this.frameWidth = frameWidth;
+            this.frameHeight = frameHeight;
 
             this.timeline = timeline;
             slices = new List<SliceController>();
             CreateSlice();
+
+            ruler = new RulerController(this);
+
+            UpdateUI();
+        }
+
+        internal TimelineController(Timeline timeline)
+        {
+            Initialize(timeline, defaultLength, defaultZoom, defaultFramerate, defaultFrameWidth, defaultFrameHeight);
+        }
+
+        internal TimelineController(Timeline timeline, int framerate, int frameWidth, int frameHeight)
+        {
+            Initialize(timeline, defaultLength, defaultZoom, framerate, frameWidth, frameHeight);
+        }
+
+        internal TimelineController(Timeline timeline, int length)
+        {
+            Initialize(timeline, length, defaultZoom, defaultFramerate, defaultFrameWidth, defaultFrameHeight);
+        }
+
+        internal TimelineController(Timeline timeline, int length, int framerate, int frameWidth, int frameHeight)
+        {
+            Initialize(timeline, length, defaultZoom, framerate, frameWidth, frameHeight);
         }
 
         private void SetLength(int length)
@@ -59,14 +87,13 @@ namespace Scissors.Timeline
             //check if length can be changed or not
 
             this.length = length;
+            UpdateUI();
         }
         
         private void SetZoom(float zoom)
         {
             this.zoom = zoom;
-
-            // resize slices, layers
-            // resize and reposition items
+            UpdateUI();
         }
 
         internal int GetSliceId(SliceController slice)
@@ -126,6 +153,26 @@ namespace Scissors.Timeline
             }
 
             return processed;
+        }
+
+        public void UpdateUI()
+        {
+            foreach (SliceController slice in slices)
+            {
+                slice.UpdateUI();
+            }
+
+            ruler.UpdateUI();
+        }
+
+        public void Dispose()
+        {
+            foreach (SliceController slice in slices)
+            {
+                slice.Dispose();
+            }
+            ruler.Dispose();
+            timeline.Dispose();
         }
     }
 }

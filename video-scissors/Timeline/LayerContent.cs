@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Scissors.Timeline
 {
-    public partial class LayerContent : UserControl
+    public partial class LayerContent : UserControl, IContent
     {
         internal Panel Panel { get { return panel1; } }
 

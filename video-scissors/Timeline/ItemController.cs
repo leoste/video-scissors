@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Scissors.Timeline
 {
-    internal class ItemController : IDisposable
+    internal class ItemController : IFrameController
     {
         private static ArgumentException EndTooBigException { get { return new ArgumentException("End position must be smaller than timeline length."); } }
         private static ArgumentException EndTooSmallException { get { return new ArgumentException("End position must be larger than start position."); } }
@@ -34,7 +34,7 @@ namespace Scissors.Timeline
             {
                 if (value >= 0)
                 {
-                    if (value + itemLength < layer.Length)
+                    if (value + itemLength < layer.TimelineLength)
                     {
                         startPosition = value;
                         endPosition = startPosition + itemLength;
@@ -51,7 +51,7 @@ namespace Scissors.Timeline
             get { return endPosition; }
             set
             {
-                if (value < layer.Length)
+                if (value < layer.TimelineLength)
                 {
                     if (value > startPosition)
                     {
@@ -72,7 +72,7 @@ namespace Scissors.Timeline
             {
                 if (value > 0)
                 {
-                    if (startPosition + value < layer.Length)
+                    if (startPosition + value < layer.TimelineLength)
                     {
                         itemLength = value;
                         endPosition = startPosition + value;
@@ -84,9 +84,11 @@ namespace Scissors.Timeline
             }
         }
 
-        internal int Length { get { return layer.Length; } }
-        internal int Framerate { get { return layer.Framerate; } }
-        internal float Zoom { get { return layer.Zoom; } }
+        public int TimelineLength { get { return layer.TimelineLength; } }
+        public int ProjectFramerate { get { return layer.ProjectFramerate; } }
+        public float TimelineZoom { get { return layer.TimelineZoom; } }
+        public int ProjectFrameWidth { get { return layer.ProjectFrameWidth; } }
+        public int ProjectFrameHeight { get { return layer.ProjectFrameHeight; } }
 
         internal ItemController(LayerController layer, int startPosition, int length)
         {
@@ -105,7 +107,7 @@ namespace Scissors.Timeline
             UpdateUI();
         }
 
-        internal void UpdateUI()
+        public void UpdateUI()
         {
             bool updatePos = false;
             bool updateWidth = false;
@@ -120,21 +122,21 @@ namespace Scissors.Timeline
                 oldItemLength = ItemLength;
                 updateWidth = true;
             }
-            if (Zoom != oldZoom)
+            if (TimelineZoom != oldZoom)
             {
-                oldZoom = Zoom;
+                oldZoom = TimelineZoom;
                 updatePos = true;
                 updateWidth = true;
             }
 
             if (updatePos)
             {
-                content.Left = (int)(startPosition * Zoom);
+                content.Left = (int)(startPosition * TimelineZoom);
             }
 
             if (updateWidth)
             {
-                content.Width = (int)(itemLength * Zoom);
+                content.Width = (int)(itemLength * TimelineZoom);
             }
         }
 
@@ -142,6 +144,11 @@ namespace Scissors.Timeline
         {
             contentsPanel.Controls.Remove(content);
             content.Dispose();
+        }
+
+        public Frame ProcessFrame(Frame frame, int position)
+        {
+            throw new NotImplementedException();
         }
     }
 }
