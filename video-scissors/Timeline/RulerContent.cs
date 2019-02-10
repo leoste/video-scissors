@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Scissors.Timeline
 {
-    public partial class RulerContent : UserControl
+    public partial class RulerContent : UserControl, IContent
     {
         public RulerContent()
         {

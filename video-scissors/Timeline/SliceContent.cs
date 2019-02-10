@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Scissors.Timeline
 {
-    public partial class SliceContent : UserControl
+    public partial class SliceContent : UserControl, IContent
     {
         internal FlowLayoutPanel Panel { get { return flowLayoutPanel1; } }
 

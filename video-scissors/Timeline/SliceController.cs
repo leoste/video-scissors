@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Scissors.Timeline
 {
-    class SliceController: IDisposable
+    class SliceController : IFrameController
     {
         private int id;
         private TimelineController timeline;
@@ -28,11 +28,11 @@ namespace Scissors.Timeline
         internal FlowLayoutPanel LayerControlsPanel { get { return control.Panel; } }
         internal FlowLayoutPanel LayerContentsPanel { get { return content.Panel; } }
 
-        internal int Length { get { return timeline.Length; } }
-        internal float Zoom { get { return timeline.Zoom; } }
-        internal int Framerate { get { return timeline.Framerate; } }
-        internal int FrameWidth { get { return timeline.FrameWidth; } }
-        internal int FrameHeight { get { return timeline.FrameHeight; } }
+        public int TimelineLength { get { return timeline.TimelineLength; } }
+        public float TimelineZoom { get { return timeline.TimelineZoom; } }
+        public int ProjectFramerate { get { return timeline.ProjectFramerate; } }
+        public int ProjectFrameWidth { get { return timeline.ProjectFrameWidth; } }
+        public int ProjectFrameHeight { get { return timeline.ProjectFrameHeight; } }
 
         private void Initialize(TimelineController timeline)
         {
@@ -164,7 +164,7 @@ namespace Scissors.Timeline
             layers[id2] = layer1;
         }
         
-        internal void UpdateUI()
+        public void UpdateUI()
         {
             if (LayerCount != oldLayerCount)
             {
@@ -175,12 +175,12 @@ namespace Scissors.Timeline
                 content.Height = height;
             }            
 
-            if (Length != oldLength || Zoom != oldZoom)
+            if (TimelineLength != oldLength || TimelineZoom != oldZoom)
             {
-                oldLength = Length;
-                oldZoom = Zoom;
+                oldLength = TimelineLength;
+                oldZoom = TimelineZoom;
 
-                content.Width = (int)(Length * Zoom);
+                content.Width = (int)(TimelineLength * TimelineZoom);
 
                 foreach (LayerController layer in layers)
                 {
@@ -189,7 +189,7 @@ namespace Scissors.Timeline
             }
         }
 
-        internal Frame ProcessFrame(Frame frame, int position)
+        public Frame ProcessFrame(Frame frame, int position)
         {
             Frame processed = new Frame(frame);
 

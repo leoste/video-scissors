@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Scissors.Timeline
 {
-    class LayerController : IDisposable
+    class LayerController : IFrameController
     {
         private int id;
         private SliceController slice;
@@ -25,11 +25,11 @@ namespace Scissors.Timeline
 
         internal Panel ItemContentsPanel { get { return content.Panel; } }
 
-        internal int Length { get { return slice.Length; } }
-        internal float Zoom { get { return slice.Zoom; } }
-        internal int Framerate { get { return slice.Framerate; } }
-        internal int FrameWidth { get { return slice.FrameWidth; } }
-        internal int FrameHeight { get { return slice.FrameHeight; } }
+        public int TimelineLength { get { return slice.TimelineLength; } }
+        public float TimelineZoom { get { return slice.TimelineZoom; } }
+        public int ProjectFramerate { get { return slice.ProjectFramerate; } }
+        public int ProjectFrameWidth { get { return slice.ProjectFrameWidth; } }
+        public int ProjectFrameHeight { get { return slice.ProjectFrameHeight; } }
 
         private void Initialize(SliceController slice)
         {
@@ -114,14 +114,14 @@ namespace Scissors.Timeline
             SetId();
         }
 
-        internal void UpdateUI()
+        public void UpdateUI()
         {
-            if (Length != oldLength || Zoom != oldZoom)
+            if (TimelineLength != oldLength || TimelineZoom != oldZoom)
             {
-                oldLength = Length;
-                oldZoom = Zoom;
+                oldLength = TimelineLength;
+                oldZoom = TimelineZoom;
 
-                content.Width = (int)(Length * Zoom);
+                content.Width = (int)(TimelineLength * TimelineZoom);
 
                 foreach (ItemController item in items)
                 {
@@ -130,13 +130,13 @@ namespace Scissors.Timeline
             }            
         }
 
-        internal Frame ProcessFrame(Frame frame, int position)
+        public Frame ProcessFrame(Frame frame, int position)
         {
             Frame processed;
 
             if (frame == null)
             {
-                processed = new Frame(new Bitmap(FrameWidth, FrameHeight), false);
+                processed = new Frame(new Bitmap(ProjectFrameWidth, ProjectFrameHeight), false);
             }
             else
             {

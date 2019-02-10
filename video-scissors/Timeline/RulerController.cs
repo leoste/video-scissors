@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Scissors.Timeline
 {
-    class RulerController : IDisposable
+    class RulerController : IController
     {
         private TimelineController timeline;
         private FlowLayoutPanel contentsPanel;
@@ -16,11 +16,11 @@ namespace Scissors.Timeline
         private int oldLength;
         private float oldZoom;
 
-        internal int Length { get { return timeline.Length; } }
-        internal float Zoom { get { return timeline.Zoom; } }
-        internal int Framerate { get { return timeline.Framerate; } }
-        internal int FrameWidth { get { return timeline.FrameWidth; } }
-        internal int FrameHeight { get { return timeline.FrameHeight; } }
+        public int TimelineLength { get { return timeline.TimelineLength; } }
+        public float TimelineZoom { get { return timeline.TimelineZoom; } }
+        public int ProjectFramerate { get { return timeline.ProjectFramerate; } }
+        public int ProjectFrameWidth { get { return timeline.ProjectFrameWidth; } }
+        public int ProjectFrameHeight { get { return timeline.ProjectFrameHeight; } }
 
         internal RulerController(TimelineController timeline)
         {
@@ -31,14 +31,14 @@ namespace Scissors.Timeline
             contentsPanel.Controls.Add(content);
         }
 
-        internal void UpdateUI()
+        public void UpdateUI()
         {
-            if (Length != oldLength || Zoom != oldZoom)
+            if (TimelineLength != oldLength || TimelineZoom != oldZoom)
             {
-                oldLength = Length;
-                oldZoom = Zoom;
+                oldLength = TimelineLength;
+                oldZoom = TimelineZoom;
 
-                content.Width = (int)(Length * Zoom);
+                content.Width = (int)(TimelineLength * TimelineZoom);
             }
         }
 
