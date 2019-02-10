@@ -11,6 +11,7 @@ namespace Scissors.Timeline
     {
         private Timeline timeline;
         private List<SliceController> slices;
+        private RulerController ruler;
         private int length;
         private float zoom;
         private int framerate;
@@ -20,6 +21,7 @@ namespace Scissors.Timeline
         internal int SliceCount { get { return slices.Count; } }
         internal FlowLayoutPanel ControlsPanel { get { return timeline.ControlsPanel; } }
         internal FlowLayoutPanel ContentsPanel { get { return timeline.ContentsPanel; } }
+        internal FlowLayoutPanel RulerPanel { get { return timeline.RulerPanel; } }
 
         /// <summary>
         /// Timeline length in frames.
@@ -53,6 +55,10 @@ namespace Scissors.Timeline
             this.timeline = timeline;
             slices = new List<SliceController>();
             CreateSlice();
+
+            ruler = new RulerController(this);
+
+            UpdateUI();
         }
 
         private void SetLength(int length)
@@ -134,6 +140,8 @@ namespace Scissors.Timeline
             {
                 slice.UpdateUI();
             }
+
+            ruler.UpdateUI();
         }
     }
 }

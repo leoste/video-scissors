@@ -17,6 +17,7 @@ namespace Scissors.Timeline
 
         internal FlowLayoutPanel ControlsPanel { get { return optionScroll; } }
         internal FlowLayoutPanel ContentsPanel { get { return sliceScroll; } }
+        internal FlowLayoutPanel RulerPanel { get { return rulerScroll; } }
 
         public Timeline()
         {

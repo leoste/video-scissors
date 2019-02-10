@@ -77,9 +77,9 @@
             // 
             this.vScrollBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.vScrollBar1.Location = new System.Drawing.Point(0, 0);
+            this.vScrollBar1.Location = new System.Drawing.Point(0, 40);
             this.vScrollBar1.Name = "vScrollBar1";
-            this.vScrollBar1.Size = new System.Drawing.Size(17, 275);
+            this.vScrollBar1.Size = new System.Drawing.Size(17, 235);
             this.vScrollBar1.TabIndex = 6;
             // 
             // optionScroll
@@ -87,10 +87,10 @@
             this.optionScroll.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.optionScroll.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.optionScroll.Location = new System.Drawing.Point(17, 51);
+            this.optionScroll.Location = new System.Drawing.Point(17, 40);
             this.optionScroll.Margin = new System.Windows.Forms.Padding(0);
             this.optionScroll.Name = "optionScroll";
-            this.optionScroll.Size = new System.Drawing.Size(144, 224);
+            this.optionScroll.Size = new System.Drawing.Size(144, 235);
             this.optionScroll.TabIndex = 7;
             this.optionScroll.WrapContents = false;
             // 
@@ -100,10 +100,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.sliceScroll.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.sliceScroll.Location = new System.Drawing.Point(161, 51);
+            this.sliceScroll.Location = new System.Drawing.Point(161, 40);
             this.sliceScroll.Margin = new System.Windows.Forms.Padding(0);
             this.sliceScroll.Name = "sliceScroll";
-            this.sliceScroll.Size = new System.Drawing.Size(479, 224);
+            this.sliceScroll.Size = new System.Drawing.Size(479, 235);
             this.sliceScroll.TabIndex = 8;
             this.sliceScroll.WrapContents = false;
             // 
@@ -114,7 +114,7 @@
             this.rulerScroll.Location = new System.Drawing.Point(161, 0);
             this.rulerScroll.Margin = new System.Windows.Forms.Padding(0);
             this.rulerScroll.Name = "rulerScroll";
-            this.rulerScroll.Size = new System.Drawing.Size(479, 51);
+            this.rulerScroll.Size = new System.Drawing.Size(479, 40);
             this.rulerScroll.TabIndex = 9;
             // 
             // Timeline
