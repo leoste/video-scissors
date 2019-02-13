@@ -148,7 +148,17 @@ namespace Scissors.Timeline
 
         public Frame ProcessFrame(Frame frame, int position)
         {
-            throw new NotImplementedException();
+            return new Frame(frame);
+        }
+        
+        public int GetPosition(int timelinePosition)
+        {
+            return timelinePosition - startPosition;
+        }
+
+        public bool IsOverlapping(int timelinePosition)
+        {
+            return timelinePosition >= startPosition && timelinePosition < endPosition;
         }
     }
 }

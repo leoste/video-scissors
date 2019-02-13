@@ -142,9 +142,20 @@ namespace Scissors.Timeline
             {
                 processed = new Frame(frame);
             }
-
-            //find current Item and send Frame through it get something processed and return it
-
+            
+            int c = items.Count;
+            for (int i = 0; i < c; i += 1)
+            {
+                if (items[i].IsOverlapping(position))
+                {
+                    int p = items[i].GetPosition(position);
+                    Frame temp = items[i].ProcessFrame(processed, position);
+                    processed.Dispose();
+                    processed = temp;
+                    break;
+                }
+            }
+            
             return processed;
         }
 
