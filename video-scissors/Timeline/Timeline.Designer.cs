@@ -100,10 +100,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.sliceScroll.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.sliceScroll.Location = new System.Drawing.Point(161, 40);
-            this.sliceScroll.Margin = new System.Windows.Forms.Padding(0);
+            this.sliceScroll.Location = new System.Drawing.Point(164, 40);
+            this.sliceScroll.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.sliceScroll.Name = "sliceScroll";
-            this.sliceScroll.Size = new System.Drawing.Size(479, 235);
+            this.sliceScroll.Size = new System.Drawing.Size(476, 235);
             this.sliceScroll.TabIndex = 8;
             this.sliceScroll.WrapContents = false;
             // 
@@ -111,10 +111,10 @@
             // 
             this.rulerScroll.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.rulerScroll.Location = new System.Drawing.Point(161, 0);
+            this.rulerScroll.Location = new System.Drawing.Point(164, 0);
             this.rulerScroll.Margin = new System.Windows.Forms.Padding(0);
             this.rulerScroll.Name = "rulerScroll";
-            this.rulerScroll.Size = new System.Drawing.Size(479, 40);
+            this.rulerScroll.Size = new System.Drawing.Size(476, 40);
             this.rulerScroll.TabIndex = 9;
             // 
             // Timeline
