@@ -9,12 +9,6 @@ namespace Scissors.Timeline
 {
     class TimelineController : IController
     {
-        private static int defaultLength = 1800;
-        private static int defaultZoom = 10;
-        private static int defaultFramerate = 30;
-        private static int defaultFrameWidth = 1920;
-        private static int defaultFrameHeight = 1080;
-
         private Timeline timeline;
         private List<SliceController> slices;
         private RulerController ruler;
@@ -45,7 +39,7 @@ namespace Scissors.Timeline
         public int ProjectFrameWidth { get { return frameWidth; } }
         public int ProjectFrameHeight { get { return frameHeight; } }
         
-        private void Initialize(Timeline timeline, int length, int zoom, int framerate, int frameWidth, int frameHeight)
+        private void Initialize(Timeline timeline, int length, float zoom, int framerate, int frameWidth, int frameHeight)
         {
             this.length = length;
             this.zoom = zoom;
@@ -64,22 +58,37 @@ namespace Scissors.Timeline
 
         internal TimelineController(Timeline timeline)
         {
-            Initialize(timeline, defaultLength, defaultZoom, defaultFramerate, defaultFrameWidth, defaultFrameHeight);
+            Initialize(timeline, 
+                GlobalConfig.DefaultTimelineLength,
+                GlobalConfig.DefaultTimelineZoom, 
+                GlobalConfig.DefaultProjectFramerate, 
+                GlobalConfig.DefaultProjectFrameWidth, 
+                GlobalConfig.DefaultProjectFrameHeight);
         }
 
         internal TimelineController(Timeline timeline, int framerate, int frameWidth, int frameHeight)
         {
-            Initialize(timeline, defaultLength, defaultZoom, framerate, frameWidth, frameHeight);
+            Initialize(timeline,
+                GlobalConfig.DefaultTimelineLength,
+                GlobalConfig.DefaultTimelineZoom,
+                framerate,
+                frameWidth,
+                frameHeight);
         }
 
         internal TimelineController(Timeline timeline, int length)
         {
-            Initialize(timeline, length, defaultZoom, defaultFramerate, defaultFrameWidth, defaultFrameHeight);
+            Initialize(timeline,
+                length,
+                GlobalConfig.DefaultTimelineZoom,
+                GlobalConfig.DefaultProjectFramerate,
+                GlobalConfig.DefaultProjectFrameWidth,
+                GlobalConfig.DefaultProjectFrameHeight);
         }
 
         internal TimelineController(Timeline timeline, int length, int framerate, int frameWidth, int frameHeight)
         {
-            Initialize(timeline, length, defaultZoom, framerate, frameWidth, frameHeight);
+            Initialize(timeline, length, GlobalConfig.DefaultTimelineZoom, framerate, frameWidth, frameHeight);
         }
 
         private void SetLength(int length)
