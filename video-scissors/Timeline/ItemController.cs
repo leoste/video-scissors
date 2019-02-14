@@ -100,11 +100,50 @@ namespace Scissors.Timeline
             contentsPanel = layer.ItemContentsPanel;
             content = new ItemContent();
             contentsPanel.Controls.Add(content);
+            content.MouseDown += Content_MouseDown;
+            content.MouseMove += Content_MouseMove;
+            content.MouseUp += Content_MouseUp;
+            content.MouseLeave += Content_MouseLeave;
 
             this.startPosition = startPosition;
             ItemLength = length;
 
             UpdateUI();
+        }
+
+        private bool ui_moving;
+        private int mouseOffsetX;
+
+        //change clip length by dragging either end
+        private bool ui_resizing;
+
+        //drag clip up or down to change layer
+        private int mouseOffsetY;
+
+        private void Content_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (layer.IsLocked) return;
+
+            ui_moving = true;
+            mouseOffsetX = e.X;
+            mouseOffsetY = e.Y;
+        }
+
+        private void Content_MouseUp(object sender, MouseEventArgs e)
+        {
+            ui_moving = false;
+        }
+
+        private void Content_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!ui_moving) return;
+            
+            try { StartPosition = (int)((e.X - mouseOffsetX) / TimelineZoom) + startPosition; } catch { }
+        }
+
+        private void Content_MouseLeave(object sender, EventArgs e)
+        {
+            if (!ui_moving) return;
         }
 
         public void UpdateUI()

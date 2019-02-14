@@ -12,19 +12,25 @@ namespace Scissors.Timeline
 {
     public partial class SliceControl : UserControl, IControl
     {
+        private bool toggleLock;
+
         public SliceControl()
         {
             InitializeComponent();
+            toggleLock = false;
+            toggleLockButton.BackColor = ColorProvider.GetToggleColor(false);
         }
 
         public event EventHandler RemoveClicked;
         public event EventHandler AddClicked;
         public event EventHandler MoveUpClicked;
         public event EventHandler MoveDownClicked;
-        public event EventHandler ToggleLockClicked;
+        public event EventHandler<ToggleEventArgs> ToggleLockClicked;
         public event EventHandler ToggleVisibilityClicked;
 
         internal FlowLayoutPanel Panel { get { return flowLayoutPanel1; } }
+
+        public bool IsLockToggled { get { return toggleLock; } }
 
         private void removeSlice_Click(object sender, EventArgs e)
         {
@@ -48,7 +54,9 @@ namespace Scissors.Timeline
 
         private void toggleLock_Click(object sender, EventArgs e)
         {
-            if (ToggleLockClicked != null) ToggleLockClicked.Invoke(this, EventArgs.Empty);
+            toggleLock = !toggleLock;
+            toggleLockButton.BackColor = ColorProvider.GetToggleColor(toggleLock);
+            if (ToggleLockClicked != null) ToggleLockClicked.Invoke(this, new ToggleEventArgs(toggleLock));
         }
 
         private void toggleVisibility_Click(object sender, EventArgs e)

@@ -8,5 +8,13 @@ namespace Scissors.Timeline
 {
     interface IControl
     {
+        event EventHandler RemoveClicked;
+        event EventHandler AddClicked;
+        event EventHandler MoveUpClicked;
+        event EventHandler MoveDownClicked;
+        event EventHandler<ToggleEventArgs> ToggleLockClicked;
+        event EventHandler ToggleVisibilityClicked;
+
+        bool IsLockToggled { get; }
     }
 }

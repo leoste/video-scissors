@@ -8,8 +8,9 @@ using System.Windows.Forms;
 
 namespace Scissors.Timeline
 {
-    class LayerController : IFrameController
+    class LayerController : IFrameController, IControlController
     {
+        private bool toggleLock;
         private int id;
         private SliceController slice;
         private FlowLayoutPanel controlsPanel;
@@ -30,6 +31,7 @@ namespace Scissors.Timeline
         public int ProjectFramerate { get { return slice.ProjectFramerate; } }
         public int ProjectFrameWidth { get { return slice.ProjectFrameWidth; } }
         public int ProjectFrameHeight { get { return slice.ProjectFrameHeight; } }
+        public bool IsLocked { get { return slice.IsLocked || toggleLock; } }
 
         private void Initialize(SliceController slice)
         {
@@ -49,6 +51,8 @@ namespace Scissors.Timeline
             control.RemoveClicked += Control_RemoveClicked;
             control.MoveUpClicked += Control_MoveUpClicked;
             control.MoveDownClicked += Control_MoveDownClicked;
+            control.ToggleLockClicked += Control_ToggleLockClicked;
+            toggleLock = control.IsLockToggled;
 
             content = new LayerContent();
             content.BackColor = color;
@@ -63,6 +67,11 @@ namespace Scissors.Timeline
             items.Add(new ItemController(this, 40, 5));
 
             UpdateUI();
+        }
+
+        private void Control_ToggleLockClicked(object sender, ToggleEventArgs e)
+        {
+            toggleLock = e.ToggleValue;
         }
 
         private void Control_AddClicked(object sender, EventArgs e)
