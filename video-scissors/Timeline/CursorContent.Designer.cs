@@ -36,7 +36,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Crimson;
             this.Name = "CursorContent";
-            this.Size = new System.Drawing.Size(4, 150);
+            this.Size = new System.Drawing.Size(2, 150);
             this.ResumeLayout(false);
 
         }
