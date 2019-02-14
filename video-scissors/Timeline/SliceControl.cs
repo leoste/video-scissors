@@ -20,6 +20,8 @@ namespace Scissors.Timeline
             InitializeComponent();
             toggleLock = false;
             toggleLockButton.BackColor = ColorProvider.GetToggleColor(false);
+            toggleVisibility = false;
+            toggleVisibilityButton.BackColor = ColorProvider.GetToggleColor(false);
         }
 
         public event EventHandler RemoveClicked;
