@@ -13,12 +13,15 @@ namespace Scissors.Timeline
     public partial class LayerControl : UserControl, IControl
     {
         private bool toggleLock;
+        private bool toggleVisibility;
 
         public LayerControl()
         {
             InitializeComponent();
             toggleLock = false;
             toggleLockButton.BackColor = ColorProvider.GetToggleColor(false);
+            toggleVisibility = false;
+            toggleVisibilityButton.BackColor = ColorProvider.GetToggleColor(false);
         }
 
         public event EventHandler RemoveClicked;
@@ -26,9 +29,10 @@ namespace Scissors.Timeline
         public event EventHandler MoveUpClicked;
         public event EventHandler MoveDownClicked;
         public event EventHandler<ToggleEventArgs> ToggleLockClicked;
-        public event EventHandler ToggleVisibilityClicked;
+        public event EventHandler<ToggleEventArgs> ToggleVisibilityClicked;
 
         public bool IsLockToggled { get { return toggleLock; } }
+        public bool IsVisibilityToggled { get { return toggleVisibility; } }
 
         private void removeLayer_Click(object sender, EventArgs e)
         {
@@ -59,7 +63,9 @@ namespace Scissors.Timeline
 
         private void toggleVisibility_Click(object sender, EventArgs e)
         {
-            if (ToggleVisibilityClicked != null) ToggleVisibilityClicked.Invoke(this, EventArgs.Empty);
+            toggleVisibility = !toggleVisibility;
+            toggleVisibilityButton.BackColor = ColorProvider.GetToggleColor(toggleVisibility);
+            if (ToggleVisibilityClicked != null) ToggleVisibilityClicked.Invoke(this, new ToggleEventArgs(toggleVisibility));
         }
     }
 }

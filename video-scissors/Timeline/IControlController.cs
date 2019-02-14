@@ -9,5 +9,6 @@ namespace Scissors.Timeline
     interface IControlController : IController
     {
         bool IsLocked { get; }
+        bool IsVisible { get; }
     }
 }

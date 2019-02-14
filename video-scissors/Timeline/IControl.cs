@@ -13,8 +13,9 @@ namespace Scissors.Timeline
         event EventHandler MoveUpClicked;
         event EventHandler MoveDownClicked;
         event EventHandler<ToggleEventArgs> ToggleLockClicked;
-        event EventHandler ToggleVisibilityClicked;
+        event EventHandler<ToggleEventArgs> ToggleVisibilityClicked;
 
         bool IsLockToggled { get; }
+        bool IsVisibilityToggled { get; }
     }
 }
