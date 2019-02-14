@@ -8,8 +8,10 @@ using System.Windows.Forms;
 
 namespace Scissors.Timeline
 {
-    class SliceController : IFrameController
+    class SliceController : IFrameController, IControlController
     {
+        private bool toggleLock;
+        private bool toggleVisibility;
         private int id;
         private TimelineController timeline;
         private FlowLayoutPanel controlsPanel;
@@ -33,6 +35,8 @@ namespace Scissors.Timeline
         public int ProjectFramerate { get { return timeline.ProjectFramerate; } }
         public int ProjectFrameWidth { get { return timeline.ProjectFrameWidth; } }
         public int ProjectFrameHeight { get { return timeline.ProjectFrameHeight; } }
+        public bool IsLocked { get { return toggleLock; } }
+        public bool IsVisible { get { return toggleVisibility; } }
 
         private void Initialize(TimelineController timeline)
         {
@@ -53,6 +57,10 @@ namespace Scissors.Timeline
             control.RemoveClicked += Control_RemoveClicked;
             control.MoveUpClicked += Control_MoveUpClicked;
             control.MoveDownClicked += Control_MoveDownClicked;
+            control.ToggleLockClicked += Control_ToggleLockClicked;
+            control.ToggleVisibilityClicked += Control_ToggleVisibilityClicked;
+            toggleLock = control.IsLockToggled;
+            toggleVisibility = control.IsVisibilityToggled;
 
             content = new SliceContent();
             content.BackColor = color;
@@ -64,7 +72,17 @@ namespace Scissors.Timeline
             CreateLayer();
 
             UpdateUI();
-        } 
+        }
+
+        private void Control_ToggleVisibilityClicked(object sender, ToggleEventArgs e)
+        {
+            toggleVisibility = e.ToggleValue;
+        }
+
+        private void Control_ToggleLockClicked(object sender, ToggleEventArgs e)
+        {
+            toggleLock = e.ToggleValue;
+        }
 
         private void Control_AddClicked(object sender, EventArgs e)
         {

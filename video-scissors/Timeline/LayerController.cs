@@ -8,8 +8,10 @@ using System.Windows.Forms;
 
 namespace Scissors.Timeline
 {
-    class LayerController : IFrameController
+    class LayerController : IFrameController, IControlController
     {
+        private bool toggleLock;
+        private bool toggleVisibility;
         private int id;
         private SliceController slice;
         private FlowLayoutPanel controlsPanel;
@@ -30,6 +32,8 @@ namespace Scissors.Timeline
         public int ProjectFramerate { get { return slice.ProjectFramerate; } }
         public int ProjectFrameWidth { get { return slice.ProjectFrameWidth; } }
         public int ProjectFrameHeight { get { return slice.ProjectFrameHeight; } }
+        public bool IsLocked { get { return slice.IsLocked || toggleLock; } }
+        public bool IsVisible { get { return slice.IsVisible || toggleVisibility; } }
 
         private void Initialize(SliceController slice)
         {
@@ -49,6 +53,10 @@ namespace Scissors.Timeline
             control.RemoveClicked += Control_RemoveClicked;
             control.MoveUpClicked += Control_MoveUpClicked;
             control.MoveDownClicked += Control_MoveDownClicked;
+            control.ToggleLockClicked += Control_ToggleLockClicked;
+            control.ToggleVisibilityClicked += Control_ToggleVisibilityClicked;
+            toggleLock = control.IsLockToggled;
+            toggleVisibility = control.IsVisibilityToggled;
 
             content = new LayerContent();
             content.BackColor = color;
@@ -63,6 +71,16 @@ namespace Scissors.Timeline
             items.Add(new ItemController(this, 40, 5));
 
             UpdateUI();
+        }
+
+        private void Control_ToggleVisibilityClicked(object sender, ToggleEventArgs e)
+        {
+            toggleVisibility = e.ToggleValue;
+        }
+
+        private void Control_ToggleLockClicked(object sender, ToggleEventArgs e)
+        {
+            toggleLock = e.ToggleValue;
         }
 
         private void Control_AddClicked(object sender, EventArgs e)
@@ -142,9 +160,20 @@ namespace Scissors.Timeline
             {
                 processed = new Frame(frame);
             }
-
-            //find current Item and send Frame through it get something processed and return it
-
+            
+            int c = items.Count;
+            for (int i = 0; i < c; i += 1)
+            {
+                if (items[i].IsOverlapping(position))
+                {
+                    int p = items[i].GetPosition(position);
+                    Frame temp = items[i].ProcessFrame(processed, position);
+                    processed.Dispose();
+                    processed = temp;
+                    break;
+                }
+            }
+            
             return processed;
         }
 

@@ -46,5 +46,11 @@ namespace Scissors
         {
             return GetRandomColor(layerColors);
         }
+        
+        public static Color GetToggleColor(bool toggle)
+        {
+            if (toggle) return Color.LightGreen;
+            else return Color.LightCoral;
+        }
     }
 }

@@ -23,6 +23,6 @@ namespace Scissors.Timeline
         {
             InitializeComponent();
             controller = new TimelineController(this, 90);
-        }        
+        }
     }
 }
