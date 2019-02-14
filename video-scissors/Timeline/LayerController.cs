@@ -189,5 +189,23 @@ namespace Scissors.Timeline
             control.Dispose();
             content.Dispose();
         }
+
+        public bool IsPositionOkay(ItemController item)
+        {
+            bool okay = true;
+
+            foreach (ItemController buddy in items)
+            {
+                if (item == buddy) continue;
+
+                if (item.EndPosition >= buddy.StartPosition && item.StartPosition <= buddy.EndPosition)
+                {
+                    okay = false;
+                    break;
+                }
+            }
+
+            return okay;
+        }
     }
 }
