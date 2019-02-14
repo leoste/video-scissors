@@ -31,7 +31,7 @@ namespace Scissors.Timeline
         /// <summary>
         /// Project frame height in pixels. Can't be changed.
         /// </summary>
-        int ProjectFrameHeight { get; }
+        int ProjectFrameHeight { get; }        
 
         void UpdateUI();        
     }

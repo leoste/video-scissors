@@ -7,11 +7,12 @@ using System.Windows.Forms;
 
 namespace Scissors.Timeline
 {
-    class TimelineController : IController
+    class TimelineController : IController, IChildController
     {
         private Timeline timeline;
         private List<SliceController> slices;
         private RulerController ruler;
+        private CursorController cursor;
         private int length;
         private float zoom;
         private int framerate;
@@ -22,7 +23,8 @@ namespace Scissors.Timeline
         internal FlowLayoutPanel ControlsPanel { get { return timeline.ControlsPanel; } }
         internal FlowLayoutPanel ContentsPanel { get { return timeline.ContentsPanel; } }
         internal FlowLayoutPanel RulerPanel { get { return timeline.RulerPanel; } }
-        
+        internal Panel CursorPanel { get { return timeline.CursorPanel; } }
+
         public int TimelineLength
         {
             get { return length; }
@@ -52,6 +54,7 @@ namespace Scissors.Timeline
             CreateSlice();
 
             ruler = new RulerController(this);
+            cursor = new CursorController(this);
 
             UpdateUI();
         }
@@ -181,7 +184,33 @@ namespace Scissors.Timeline
                 slice.Dispose();
             }
             ruler.Dispose();
+            cursor.Dispose();
             timeline.Dispose();
+        }
+
+        public List<IController> GetChildren()
+        {
+            List<IController> children = new List<IController>();
+            children.Add(cursor);
+            children.Add(ruler);
+            children.AddRange(slices);
+            return children;
+        }
+
+        public List<IController> GetChildrenDeep()
+        {
+            List<IController> children = new List<IController>();
+
+            children.Add(cursor);
+            children.Add(ruler);
+
+            foreach (SliceController slice in slices)
+            {
+                children.Add(slice);
+                children.AddRange(slice.GetChildrenDeep());
+            }
+
+            return children;
         }
     }
 }
