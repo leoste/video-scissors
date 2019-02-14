@@ -113,6 +113,7 @@ namespace Scissors.Timeline
 
         private bool ui_moving;
         private int mouseOffsetX;
+        private int originalStart;
 
         //change clip length by dragging either end
         private bool ui_resizing;
@@ -127,11 +128,17 @@ namespace Scissors.Timeline
             ui_moving = true;
             mouseOffsetX = e.X;
             mouseOffsetY = e.Y;
+            originalStart = startPosition;
         }
 
         private void Content_MouseUp(object sender, MouseEventArgs e)
         {
             ui_moving = false;
+
+            if (!layer.IsPositionOkay(this))
+            {
+                StartPosition = originalStart;
+            }
         }
 
         private void Content_MouseMove(object sender, MouseEventArgs e)
