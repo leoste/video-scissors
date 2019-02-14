@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Scissors.Timeline
 {
-    class SliceController : IFrameController, IControlController
+    class SliceController : IFrameController, IControlController, IChildController
     {
         private bool toggleLock;
         private bool toggleVisibility;
@@ -36,7 +36,7 @@ namespace Scissors.Timeline
         public int ProjectFrameWidth { get { return timeline.ProjectFrameWidth; } }
         public int ProjectFrameHeight { get { return timeline.ProjectFrameHeight; } }
         public bool IsLocked { get { return toggleLock; } }
-        public bool IsVisible { get { return toggleVisibility; } }
+        public bool IsVisible { get { return toggleVisibility; } }        
 
         private void Initialize(TimelineController timeline)
         {
@@ -232,6 +232,26 @@ namespace Scissors.Timeline
             contentsPanel.Controls.Remove(content);
             control.Dispose();
             content.Dispose();
+        }
+
+        public List<IController> GetChildren()
+        {
+            List<IController> children = new List<IController>();
+            children.AddRange(layers);
+            return children;
+        }
+
+        public List<IController> GetChildrenDeep()
+        {
+            List<IController> children = new List<IController>();
+            
+            foreach (LayerController layer in layers)
+            {
+                children.Add(layer);
+                children.AddRange(layer.GetChildrenDeep());
+            }
+
+            return children;
         }
     }
 }

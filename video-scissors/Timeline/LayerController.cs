@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Scissors.Timeline
 {
-    class LayerController : IFrameController, IControlController
+    class LayerController : IFrameController, IControlController, IChildController
     {
         private bool toggleLock;
         private bool toggleVisibility;
@@ -206,6 +206,18 @@ namespace Scissors.Timeline
             }
 
             return okay;
+        }
+
+        public List<IController> GetChildren()
+        {
+            List<IController> children = new List<IController>();
+            children.AddRange(items);
+            return children;
+        }
+
+        public List<IController> GetChildrenDeep()
+        {
+            return GetChildren();
         }
     }
 }

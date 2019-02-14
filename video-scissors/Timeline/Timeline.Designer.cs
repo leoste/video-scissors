@@ -35,7 +35,9 @@
             this.optionScroll = new System.Windows.Forms.FlowLayoutPanel();
             this.sliceScroll = new System.Windows.Forms.FlowLayoutPanel();
             this.rulerScroll = new System.Windows.Forms.FlowLayoutPanel();
+            this.cursorPanel = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            this.cursorPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // trackBar1
@@ -100,8 +102,8 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.sliceScroll.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.sliceScroll.Location = new System.Drawing.Point(164, 43);
-            this.sliceScroll.Margin = new System.Windows.Forms.Padding(3, 3, 0, 0);
+            this.sliceScroll.Location = new System.Drawing.Point(0, 43);
+            this.sliceScroll.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.sliceScroll.Name = "sliceScroll";
             this.sliceScroll.Size = new System.Drawing.Size(476, 232);
             this.sliceScroll.TabIndex = 8;
@@ -111,18 +113,30 @@
             // 
             this.rulerScroll.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.rulerScroll.Location = new System.Drawing.Point(164, 0);
+            this.rulerScroll.Location = new System.Drawing.Point(0, 0);
             this.rulerScroll.Margin = new System.Windows.Forms.Padding(0);
             this.rulerScroll.Name = "rulerScroll";
             this.rulerScroll.Size = new System.Drawing.Size(476, 40);
             this.rulerScroll.TabIndex = 9;
             // 
+            // cursorPanel
+            // 
+            this.cursorPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cursorPanel.Controls.Add(this.rulerScroll);
+            this.cursorPanel.Controls.Add(this.sliceScroll);
+            this.cursorPanel.Location = new System.Drawing.Point(164, 0);
+            this.cursorPanel.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.cursorPanel.Name = "cursorPanel";
+            this.cursorPanel.Size = new System.Drawing.Size(476, 275);
+            this.cursorPanel.TabIndex = 10;
+            // 
             // Timeline
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.rulerScroll);
-            this.Controls.Add(this.sliceScroll);
+            this.Controls.Add(this.cursorPanel);
             this.Controls.Add(this.optionScroll);
             this.Controls.Add(this.vScrollBar1);
             this.Controls.Add(this.button2);
@@ -131,6 +145,7 @@
             this.Name = "Timeline";
             this.Size = new System.Drawing.Size(640, 320);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            this.cursorPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -144,5 +159,6 @@
         private System.Windows.Forms.FlowLayoutPanel optionScroll;
         private System.Windows.Forms.FlowLayoutPanel sliceScroll;
         private System.Windows.Forms.FlowLayoutPanel rulerScroll;
+        private System.Windows.Forms.Panel cursorPanel;
     }
 }
