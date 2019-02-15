@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,43 +9,52 @@ using System.Windows.Forms;
 namespace Scissors.Timeline
 {
     class CursorController : IController
-    {
-        private CursorContent content;
+    {        
+        private static readonly Brush brush = new SolidBrush(Color.Crimson);
+        private static readonly int width = 8;
+        
+        private int oldLeft;
         private TimelineController timeline;
-
-        private Dictionary<Control, int> generations;
-
+        private Dictionary<Control, ControlInfo> generations;
+        private Panel panel;
+        
         public CursorController(TimelineController timeline)
         {
-            generations = new Dictionary<Control, int>();
+            generations = new Dictionary<Control, ControlInfo>();
+            oldLeft = 0;
 
-            this.timeline = timeline;
-            
-            Panel panel = timeline.CursorPanel;
-            AddEventsDeep(panel);
-            
-            content = new CursorContent();
-            content.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;            
-            content.Height = panel.Height;
-            content.Visible = false;
-            panel.Controls.Add(content);
-            content.BringToFront();
+            this.timeline = timeline;            
+            panel = timeline.CursorPanel;            
+
+            AddEventsDeep(panel);            
         }
         
         private void AddEventsDeep(Control control)
         {
-            if (!generations.TryGetValue(control.Parent, out int level)) level = -1;
-            generations.Add(control, level + 1);            
+            int level;
+            if (generations.TryGetValue(control.Parent, out ControlInfo info)) level = info.Level;
+            else level = -1;
+            
+            generations.Add(control, new ControlInfo(level + 1, Graphics.FromHwnd(control.Handle)));
 
             control.ControlAdded += Control_ControlAdded;
             control.ControlRemoved += Control_ControlRemoved;
-            control.MouseEnter += Panel_MouseEnter;
-            control.MouseLeave += Panel_MouseLeave;
             control.MouseMove += Panel_MouseMove;
+            control.Resize += Control_Resize;
 
             foreach (Control child in control.Controls)
             {
                 AddEventsDeep(child);
+            }
+        }
+
+        private void Control_Resize(object sender, EventArgs e)
+        {
+            Control control = sender as Control;
+            if (generations.TryGetValue(control, out ControlInfo info))
+            {                
+                generations[control] = new ControlInfo(info.Level, Graphics.FromHwnd(control.Handle));
+                info.Dispose();
             }
         }
 
@@ -58,9 +68,8 @@ namespace Scissors.Timeline
             generations.Remove(control);
             control.ControlAdded -= Control_ControlAdded;
             control.ControlRemoved -= Control_ControlRemoved;
-            control.MouseEnter -= Panel_MouseEnter;
-            control.MouseLeave -= Panel_MouseLeave;
             control.MouseMove -= Panel_MouseMove;
+            control.Resize -= Control_Resize;
 
             foreach (Control child in control.Controls)
             {
@@ -73,28 +82,46 @@ namespace Scissors.Timeline
             RemoveEventsDeep(e.Control);
         }
 
-        private void Panel_MouseEnter(object sender, EventArgs e)
-        {
-            content.Visible = true;
-        }
-
         private void Panel_MouseMove(object sender, MouseEventArgs e)
         {
-            content.Left = GetCursorAbsoluteX((Control)sender, e.X);
-        }
+            int left = GetCursorAbsoluteX((Control)sender, e.X);
+            int diff = left - oldLeft;
+            int diffw;
+            int abs = Math.Abs(diff);
 
-        private void Panel_MouseLeave(object sender, EventArgs e)
-        {
-            content.Visible = false;
+            if (abs < width)
+            {
+                diffw = abs;
+                if (diff < 0) diff = -width;
+            }
+            else diffw = width;
+            
+            foreach (KeyValuePair<Control, ControlInfo> pair in generations)
+            {
+                int x = GetCursorRelativeX(pair.Key, left);
+                if (abs > 0) pair.Key.Invalidate(new Rectangle(x - diff, 0, diffw, pair.Key.Height));
+                pair.Key.Update();
+                pair.Value.Graphics.FillRectangle(brush, x, 0, width, pair.Key.Height);
+            }
+
+            oldLeft = left;
         }
 
         private int GetCursorAbsoluteX(Control control, int x)
         {
-            generations.TryGetValue(control, out int level);
+            if (generations.TryGetValue(control, out ControlInfo info))
+            {
 
-            if (level > 0) x += GetCursorAbsoluteX(control.Parent, control.Left);
+                if (info.Level > 0) x += GetCursorAbsoluteX(control.Parent, control.Left);
 
-            return x;
+                return x;
+            }
+            else throw new ArgumentException();
+        }
+
+        private int GetCursorRelativeX(Control control, int x)
+        {
+            return x - GetCursorAbsoluteX(control, 0);
         }
 
         public int TimelineLength { get { return timeline.TimelineLength; } }
@@ -109,13 +136,32 @@ namespace Scissors.Timeline
 
         public void Dispose()
         {
-            timeline.CursorPanel.Controls.Remove(content);
-            content.Dispose();
+            foreach (KeyValuePair<Control, ControlInfo> pair in generations)
+            {
+                pair.Value.Dispose();
+            }
         }
 
         public void UpdateUI()
         {
             
+        }
+
+        class ControlInfo : IDisposable
+        {
+            public int Level { get; private set; }
+            public Graphics Graphics { get; private set; }
+
+            public ControlInfo(int level, Graphics graphics)
+            {
+                Level = level;
+                Graphics = graphics;
+            }
+
+            public void Dispose()
+            {
+                Graphics.Dispose();
+            }
         }
     }
 }

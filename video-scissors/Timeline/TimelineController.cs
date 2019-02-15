@@ -175,6 +175,7 @@ namespace Scissors.Timeline
             }
 
             ruler.UpdateUI();
+            cursor.UpdateUI();
         }
 
         public void Dispose()
