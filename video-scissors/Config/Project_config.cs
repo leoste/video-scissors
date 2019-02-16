@@ -15,5 +15,29 @@ namespace Scissors.Config
         public static int DefaultProjectFramerate { get { return defaultProjectFramerate; } }
         public static int DefaultProjectFrameWidth { get { return defaultProjectFrameWidth; } }
         public static int DefaultProjectFrameHeight { get { return defaultProjectFrameHeight; } }
+        
+        public static void SetDefaultProjectFramerate(Framerate framerate)
+        {
+            defaultProjectFrameHeight = (int)framerate;
+        }
+
+        public static void SetDefaultProjectResolution(Resolution resolution)
+        {
+            if (resolution == Resolution.XGA)
+            {
+                defaultProjectFrameWidth = 1024;
+                defaultProjectFrameHeight = 768;
+            }
+            else if (resolution == Resolution.HD)
+            {
+                defaultProjectFrameWidth = 1280;
+                defaultProjectFrameHeight = 720;
+            }
+            else if (resolution == Resolution.FullHD)
+            {
+                defaultProjectFrameWidth = 1920;
+                defaultProjectFrameHeight = 1080;
+            }
+        }
     }
 }
