@@ -11,9 +11,10 @@ namespace Scissors.Timeline
     class CursorController : IController
     {        
         private static readonly Brush brush = new SolidBrush(Color.Crimson);
-        private static readonly int width = 8;
+        private static readonly int width = 2;
         
         private int oldLeft;
+        private bool lockToControl;
         private TimelineController timeline;
         private Dictionary<Control, ControlInfo> generations;
         private Panel panel;
@@ -39,13 +40,59 @@ namespace Scissors.Timeline
 
             control.ControlAdded += Control_ControlAdded;
             control.ControlRemoved += Control_ControlRemoved;
-            control.MouseMove += Panel_MouseMove;
+            control.MouseMove += Control_MouseMove;
             control.Resize += Control_Resize;
+
+            if (control is ItemContent)
+            {
+                ItemContent item = control as ItemContent;
+                item.MouseDown += Item_MouseDown;
+                item.MouseUp += Item_MouseUp;
+            }
 
             foreach (Control child in control.Controls)
             {
                 AddEventsDeep(child);
             }
+        }
+
+        private void Item_MouseDown(object sender, MouseEventArgs e)
+        {
+            lockToControl = true;
+        }
+
+        private void Item_MouseUp(object sender, MouseEventArgs e)
+        {
+            lockToControl = false;
+        }
+
+        private void Control_MouseMove(object sender, MouseEventArgs e)
+        {
+            int cx;
+            if (lockToControl) cx = 0;
+            else cx = e.X;
+
+            int left = GetCursorAbsoluteX((Control)sender, cx);
+            int diff = left - oldLeft;
+            int diffw;
+            int abs = Math.Abs(diff);
+
+            if (abs < width)
+            {
+                diffw = abs;
+                if (diff < 0) diff = -width;
+            }
+            else diffw = width;
+
+            foreach (KeyValuePair<Control, ControlInfo> pair in generations)
+            {
+                int x = GetCursorRelativeX(pair.Key, left);
+                if (abs > 0) pair.Key.Invalidate(new Rectangle(x - diff, 0, diffw, pair.Key.Height));
+                pair.Key.Update();
+                pair.Value.Graphics.FillRectangle(brush, x, 0, width, pair.Key.Height);
+            }
+
+            oldLeft = left;
         }
 
         private void Control_Resize(object sender, EventArgs e)
@@ -68,8 +115,15 @@ namespace Scissors.Timeline
             generations.Remove(control);
             control.ControlAdded -= Control_ControlAdded;
             control.ControlRemoved -= Control_ControlRemoved;
-            control.MouseMove -= Panel_MouseMove;
+            control.MouseMove -= Control_MouseMove;
             control.Resize -= Control_Resize;
+
+            if (control is ItemContent)
+            {
+                ItemContent item = control as ItemContent;
+                item.MouseDown -= Item_MouseDown;
+                item.MouseUp -= Item_MouseUp;
+            }
 
             foreach (Control child in control.Controls)
             {
@@ -80,31 +134,6 @@ namespace Scissors.Timeline
         private void Control_ControlRemoved(object sender, ControlEventArgs e)
         {
             RemoveEventsDeep(e.Control);
-        }
-
-        private void Panel_MouseMove(object sender, MouseEventArgs e)
-        {
-            int left = GetCursorAbsoluteX((Control)sender, e.X);
-            int diff = left - oldLeft;
-            int diffw;
-            int abs = Math.Abs(diff);
-
-            if (abs < width)
-            {
-                diffw = abs;
-                if (diff < 0) diff = -width;
-            }
-            else diffw = width;
-            
-            foreach (KeyValuePair<Control, ControlInfo> pair in generations)
-            {
-                int x = GetCursorRelativeX(pair.Key, left);
-                if (abs > 0) pair.Key.Invalidate(new Rectangle(x - diff, 0, diffw, pair.Key.Height));
-                pair.Key.Update();
-                pair.Value.Graphics.FillRectangle(brush, x, 0, width, pair.Key.Height);
-            }
-
-            oldLeft = left;
         }
 
         private int GetCursorAbsoluteX(Control control, int x)
