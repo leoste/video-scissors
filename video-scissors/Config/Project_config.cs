@@ -39,5 +39,11 @@ namespace Scissors.Config
                 defaultProjectFrameHeight = 1080;
             }
         }
+
+        public static void SetDefaultProjectResolution(int width, int height)
+        {
+            defaultProjectFrameWidth = width;
+            defaultProjectFrameHeight = height;
+        }
     }
 }
