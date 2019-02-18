@@ -14,6 +14,7 @@ namespace Scissors.Timeline
         private static readonly int cursorWidth = 2;
         
         private int oldLeft;
+        private int oldWidth;
         private bool oldLockToControl;
         private bool lockToControl;
         private TimelineController timeline;
@@ -24,6 +25,7 @@ namespace Scissors.Timeline
         {
             generations = new Dictionary<Control, ControlInfo>();
             oldLeft = 0;
+            oldWidth = 0;
             oldLockToControl = false;
             lockToControl = false;
 
@@ -78,7 +80,7 @@ namespace Scissors.Timeline
         {
             Control control = sender as Control;
             int cx;
-            int width = 0;
+            int width = oldWidth;
             if (lockToControl)
             {
                 cx = 0;
@@ -106,7 +108,7 @@ namespace Scissors.Timeline
                     pair.Key.Invalidate(new Rectangle(x - diff, 0, diffw, pair.Key.Height));
                     if (lockToControl || oldLockToControl)
                     {
-                        pair.Key.Invalidate(new Rectangle(x - diff + width, 0, diffw, pair.Key.Height));
+                        pair.Key.Invalidate(new Rectangle(x - diff + oldWidth, 0, diffw, pair.Key.Height));
                     }
                 }
                 pair.Key.Update();
@@ -119,6 +121,7 @@ namespace Scissors.Timeline
             }
 
             oldLeft = left;
+            oldWidth = width;
             oldLockToControl = lockToControl;
         }
 
