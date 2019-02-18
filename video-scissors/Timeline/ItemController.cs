@@ -34,7 +34,7 @@ namespace Scissors.Timeline
             {
                 if (value >= 0)
                 {
-                    if (value + itemLength < layer.TimelineLength)
+                    if (value + itemLength <= layer.TimelineLength)
                     {
                         startPosition = value;
                         endPosition = startPosition + itemLength;
@@ -72,7 +72,7 @@ namespace Scissors.Timeline
             {
                 if (value > 0)
                 {
-                    if (startPosition + value < layer.TimelineLength)
+                    if (startPosition + value <= layer.TimelineLength)
                     {
                         itemLength = value;
                         endPosition = startPosition + value;
