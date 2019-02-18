@@ -68,7 +68,12 @@ namespace Scissors.Timeline
 
         private void Item_MouseUp(object sender, MouseEventArgs e)
         {
-            lockToControl = false;            
+            lockToControl = false;
+
+            Control control = sender as Control;
+
+            control.Invalidate(new Rectangle(0, 0, cursorWidth, control.Height));
+            control.Invalidate(new Rectangle(control.Width - cursorWidth, 0, cursorWidth, control.Height));
         }
 
         private void Control_MouseMove(object sender, MouseEventArgs e)
