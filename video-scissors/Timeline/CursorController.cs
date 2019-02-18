@@ -89,10 +89,12 @@ namespace Scissors.Timeline
             else cx = e.X;
 
             int left = GetCursorAbsoluteX(control, cx);
-            int diff = left - oldLeft;
+            int diff;
+            if (left == oldLeft) diff = width - oldWidth;
+            else diff = left - oldLeft;
+
             int diffw;
             int abs = Math.Abs(diff);
-
             if (abs < cursorWidth)
             {
                 diffw = abs;
@@ -108,7 +110,7 @@ namespace Scissors.Timeline
                     pair.Key.Invalidate(new Rectangle(x - diff, 0, diffw, pair.Key.Height));
                     if (lockToControl || oldLockToControl)
                     {
-                        pair.Key.Invalidate(new Rectangle(x - diff + oldWidth, 0, diffw, pair.Key.Height));
+                        pair.Key.Invalidate(new Rectangle(x - diff + width, 0, diffw, pair.Key.Height));
                     }
                 }
                 pair.Key.Update();
