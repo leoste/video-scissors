@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Scissors.Config;
 
 namespace Scissors.Timeline
 {
@@ -175,6 +176,7 @@ namespace Scissors.Timeline
             }
 
             ruler.UpdateUI();
+            cursor.UpdateUI();
         }
 
         public void Dispose()

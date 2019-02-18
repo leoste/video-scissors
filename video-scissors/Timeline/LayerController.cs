@@ -198,7 +198,7 @@ namespace Scissors.Timeline
             {
                 if (item == buddy) continue;
 
-                if (item.EndPosition >= buddy.StartPosition && item.StartPosition <= buddy.EndPosition)
+                if (item.EndPosition > buddy.StartPosition && item.StartPosition < buddy.EndPosition)
                 {
                     okay = false;
                     break;
