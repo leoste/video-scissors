@@ -5,15 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Scissors.Config;
 
 namespace Scissors.Timeline
 {
     class CursorController : IController
-    {        
-        private static readonly Brush brush = new SolidBrush(Color.Crimson);
-        private static readonly int width = 2;
+    {
+        private static readonly int cursorWidth = 2;
         
         private int oldLeft;
+        private int oldWidth;
+        private bool oldLockToControl;
         private bool lockToControl;
         private TimelineController timeline;
         private Dictionary<Control, ControlInfo> generations;
@@ -23,6 +25,9 @@ namespace Scissors.Timeline
         {
             generations = new Dictionary<Control, ControlInfo>();
             oldLeft = 0;
+            oldWidth = 0;
+            oldLockToControl = false;
+            lockToControl = false;
 
             this.timeline = timeline;            
             panel = timeline.CursorPanel;            
@@ -63,36 +68,56 @@ namespace Scissors.Timeline
 
         private void Item_MouseUp(object sender, MouseEventArgs e)
         {
-            lockToControl = false;
+            lockToControl = false;            
         }
 
         private void Control_MouseMove(object sender, MouseEventArgs e)
         {
+            Control control = sender as Control;
             int cx;
-            if (lockToControl) cx = 0;
+            int width = oldWidth;
+            if (lockToControl)
+            {
+                cx = 0;
+                width = control.Width - cursorWidth;
+            }
             else cx = e.X;
 
-            int left = GetCursorAbsoluteX((Control)sender, cx);
+            int left = GetCursorAbsoluteX(control, cx);
             int diff = left - oldLeft;
             int diffw;
             int abs = Math.Abs(diff);
 
-            if (abs < width)
+            if (abs < cursorWidth)
             {
                 diffw = abs;
-                if (diff < 0) diff = -width;
+                if (diff < 0) diff = -cursorWidth;
             }
-            else diffw = width;
+            else diffw = cursorWidth;
 
             foreach (KeyValuePair<Control, ControlInfo> pair in generations)
             {
                 int x = GetCursorRelativeX(pair.Key, left);
-                if (abs > 0) pair.Key.Invalidate(new Rectangle(x - diff, 0, diffw, pair.Key.Height));
+                if (abs > 0)
+                {
+                    pair.Key.Invalidate(new Rectangle(x - diff, 0, diffw, pair.Key.Height));
+                    if (lockToControl || oldLockToControl)
+                    {
+                        pair.Key.Invalidate(new Rectangle(x - diff + oldWidth, 0, diffw, pair.Key.Height));
+                    }
+                }
                 pair.Key.Update();
-                pair.Value.Graphics.FillRectangle(brush, x, 0, width, pair.Key.Height);
+                if (lockToControl)
+                {
+                    pair.Value.Graphics.FillRectangle(GlobalConfig.CursorMoveItemBrush, x, 0, cursorWidth, pair.Key.Height);
+                    pair.Value.Graphics.FillRectangle(GlobalConfig.CursorMoveItemBrush, x + width, 0, cursorWidth, pair.Key.Height);
+                }
+                else pair.Value.Graphics.FillRectangle(GlobalConfig.CursorRegularBrush, x, 0, cursorWidth, pair.Key.Height);
             }
 
             oldLeft = left;
+            oldWidth = width;
+            oldLockToControl = lockToControl;
         }
 
         private void Control_Resize(object sender, EventArgs e)

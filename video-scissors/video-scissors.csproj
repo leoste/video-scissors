@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColorProvider.cs" />
+    <Compile Include="Config\Cursor_config.cs" />
     <Compile Include="Config\Framerate.cs" />
     <Compile Include="Config\Project_config.cs" />
     <Compile Include="Config\Resolution.cs" />
