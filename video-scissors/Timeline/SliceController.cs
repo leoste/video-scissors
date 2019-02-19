@@ -207,18 +207,17 @@ namespace Scissors.Timeline
             }
         }
 
-        public Frame ProcessFrame(Frame frame, int position)
+        public void ProcessFrame(Frame frame, int position)
         {
-            Frame processed = new Frame(frame);
+            Frame sliceFrame = new Frame(new Bitmap(ProjectFrameWidth, ProjectFrameHeight), false);
 
             foreach (LayerController layer in layers)
             {
-                Frame temp = layer.ProcessFrame(processed, position);
-                processed.Dispose();
-                processed = temp;
-            }            
+                layer.ProcessFrame(sliceFrame, position);
+            }
 
-            return processed;
+            frame.CombineWith(sliceFrame);
+            sliceFrame.Dispose();
         }
 
         public void Dispose()

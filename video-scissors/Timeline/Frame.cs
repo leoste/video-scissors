@@ -13,17 +13,12 @@ namespace Scissors.Timeline
         private bool sameAsLastFrame;
 
         internal Bitmap Bitmap { get { return bitmap; } }
-        internal bool SameAsLastFrame { get { return sameAsLastFrame; } }
+        public bool SameAsLastFrame { get { return sameAsLastFrame; } set { sameAsLastFrame = value; } }
 
         private void Initialize(Bitmap bitmap, bool sameAsLastFrame)
         {
-            this.bitmap = new Bitmap(bitmap);
+            this.bitmap = bitmap;
             this.sameAsLastFrame = sameAsLastFrame;
-        }
-
-        internal Frame()
-        {
-            Initialize(null, false);
         }
 
         internal Frame(Bitmap bitmap, bool sameAsLastFrame = false)
@@ -33,12 +28,20 @@ namespace Scissors.Timeline
 
         internal Frame(Frame frame)
         {
-            Initialize(frame.Bitmap, frame.SameAsLastFrame);
+            Initialize(new Bitmap(frame.Bitmap), frame.SameAsLastFrame);
         }
 
         public void Dispose()
         {
             bitmap.Dispose();
+        }
+
+        public void CombineWith(Frame frame)
+        {
+            using (Graphics graphics = Graphics.FromImage(bitmap))
+            {
+                graphics.DrawImage(frame.bitmap, 0, 0, frame.bitmap.Width, frame.bitmap.Height);                
+            }
         }
     }
 }
