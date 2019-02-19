@@ -148,33 +148,17 @@ namespace Scissors.Timeline
             }            
         }
 
-        public Frame ProcessFrame(Frame frame, int position)
+        public void ProcessFrame(Frame frame, int position)
         {
-            Frame processed;
-
-            if (frame == null)
-            {
-                processed = new Frame(new Bitmap(ProjectFrameWidth, ProjectFrameHeight), false);
-            }
-            else
-            {
-                processed = new Frame(frame);
-            }
-            
             int c = items.Count;
             for (int i = 0; i < c; i += 1)
             {
                 if (items[i].IsOverlapping(position))
                 {
-                    int p = items[i].GetPosition(position);
-                    Frame temp = items[i].ProcessFrame(processed, position);
-                    processed.Dispose();
-                    processed = temp;
+                    items[i].ProcessFrame(frame, position);
                     break;
                 }
             }
-            
-            return processed;
         }
 
         public void Dispose()

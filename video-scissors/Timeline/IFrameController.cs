@@ -9,11 +9,11 @@ namespace Scissors.Timeline
     interface IFrameController : IController
     {
         /// <summary>
-        /// Processed inputted frame and returns the result.
+        /// Processes inputted frame, modifying the input variable.
         /// </summary>
         /// <param name="position">
         /// Position of the frame as counted from the absolute start position of the object.
         /// </param>
-        Frame ProcessFrame(Frame frame, int position);
+        void ProcessFrame(Frame frame, int position);
     }
 }

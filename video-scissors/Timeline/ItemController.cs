@@ -241,12 +241,12 @@ namespace Scissors.Timeline
             content.Dispose();
         }
 
-        public Frame ProcessFrame(Frame frame, int position)
+        public void ProcessFrame(Frame frame, int position)
         {
-            return new Frame(frame);
+            
         }
         
-        public int GetPosition(int timelinePosition)
+        public int GetRelativePosition(int timelinePosition)
         {
             return timelinePosition - startPosition;
         }

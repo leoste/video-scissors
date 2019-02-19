@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -156,16 +157,14 @@ namespace Scissors.Timeline
 
         internal Frame GetFrame(int position)
         {
-            Frame processed = new Frame();
+            Frame frame = new Frame(new Bitmap(ProjectFrameWidth, ProjectFrameHeight), false);
 
             foreach (SliceController slice in slices)
-            {
-                Frame temp = slice.ProcessFrame(processed, position);
-                processed.Dispose();
-                processed = temp;
+            {                
+                slice.ProcessFrame(frame, position);
             }
 
-            return processed;
+            return frame;
         }
 
         public void UpdateUI()
