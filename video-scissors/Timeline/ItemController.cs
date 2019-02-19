@@ -10,11 +10,6 @@ namespace Scissors.Timeline
 {
     internal class ItemController : IFrameController
     {
-        private static ArgumentException EndTooBigException { get { return new ArgumentException("End position must be smaller than timeline length."); } }
-        private static ArgumentException EndTooSmallException { get { return new ArgumentException("End position must be larger than start position."); } }
-        private static ArgumentException LengthTooSmallException { get { return new ArgumentException("Length must be at least 1."); } }
-        private static ArgumentException StartTooSmallException { get { return new ArgumentException("Start position can't be below 0."); } }
-
         private LayerController layer;
         private Panel contentsPanel;
 
@@ -41,9 +36,9 @@ namespace Scissors.Timeline
                         endPosition = startPosition + itemLength;
                         UpdateUI();
                     }
-                    else throw EndTooBigException;
+                    else throw Exceptions.EndTooBigException;
                 }
-                else throw StartTooSmallException;
+                else throw Exceptions.StartTooSmallException;
             }
         }
 
@@ -60,9 +55,9 @@ namespace Scissors.Timeline
                         itemLength = endPosition - startPosition;
                         UpdateUI();
                     }
-                    else throw EndTooSmallException;
+                    else throw Exceptions.EndTooSmallException;
                 }
-                else throw EndTooBigException;
+                else throw Exceptions.EndTooBigException;
             }
         }
 
@@ -79,9 +74,9 @@ namespace Scissors.Timeline
                         endPosition = startPosition + value;
                         UpdateUI();
                     }
-                    else throw EndTooBigException;
+                    else throw Exceptions.EndTooBigException;
                 }
-                else throw LengthTooSmallException;
+                else throw Exceptions.LengthTooSmallException;
             }
         }
 
