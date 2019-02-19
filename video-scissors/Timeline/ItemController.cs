@@ -246,7 +246,7 @@ namespace Scissors.Timeline
             
         }
         
-        public int GetPosition(int timelinePosition)
+        public int GetRelativePosition(int timelinePosition)
         {
             return timelinePosition - startPosition;
         }
