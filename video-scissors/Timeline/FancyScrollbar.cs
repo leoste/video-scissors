@@ -83,11 +83,10 @@ namespace Scissors.Timeline
             get { return scrollWidth; }
             set
             {
-                if (value <= maximum - minimum)
-                {
-                    scrollWidth = value;
-                    UpdateCacheAndUI();
-                }
+                int diff = maximum - minimum;
+                if (value <= diff) scrollWidth = value;
+                else scrollWidth = diff;
+                UpdateCacheAndUI();
             }
         }
 
