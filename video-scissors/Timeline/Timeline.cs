@@ -24,6 +24,50 @@ namespace Scissors.Timeline
         {
             InitializeComponent();
             controller = new TimelineController(this, 90);
+            horizontalScrollBar.Minimum = 0;
+        }
+
+        private void horizontalScrollBar_Resize(object sender, EventArgs e)
+        {
+            horizontalScrollBar.Maximum = (int)(controller.TimelineLength * controller.TimelineZoom);
+            horizontalScrollBar.ScrollWidth = timelineHorizontalScroll.Width;
+        }
+
+        private void horizontalScrollBar_Scroll(object sender, ScrollEventArgs e)
+        {
+            cursorPanel.Left = -horizontalScrollBar.Value;
+        }
+
+        private void verticalScrollbar_Resize(object sender, EventArgs e)
+        {
+            UpdateVerticalScrollbar();
+        }
+
+        private void verticalScrollbar_Scroll(object sender, ScrollEventArgs e)
+        {
+            optionScroll.Top = -verticalScrollbar.Value;
+            sliceScroll.Top = -verticalScrollbar.Value;
+        }
+
+        private void optionScroll_Resize(object sender, EventArgs e)
+        {
+            UpdateVerticalScrollbar();
+        }
+
+        private void UpdateVerticalScrollbar()
+        {
+            verticalScrollbar.Maximum = optionScroll.Height;
+            verticalScrollbar.ScrollWidth = panel1.Height;
+        }
+
+        private void sliceScroll_Resize(object sender, EventArgs e)
+        {
+            panel2.Width = sliceScroll.Width;
+        }
+
+        private void panel1_Resize(object sender, EventArgs e)
+        {
+            panel2.Height = panel1.Height;
         }
     }
 }
