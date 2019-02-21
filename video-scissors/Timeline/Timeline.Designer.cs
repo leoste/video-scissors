@@ -47,20 +47,19 @@
             this.optionScroll.Location = new System.Drawing.Point(17, 43);
             this.optionScroll.Margin = new System.Windows.Forms.Padding(0);
             this.optionScroll.Name = "optionScroll";
-            this.optionScroll.Size = new System.Drawing.Size(144, 353);
+            this.optionScroll.Size = new System.Drawing.Size(144, 463);
             this.optionScroll.TabIndex = 7;
             this.optionScroll.WrapContents = false;
             // 
             // sliceScroll
             // 
-            this.sliceScroll.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.sliceScroll.AutoSize = true;
+            this.sliceScroll.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.sliceScroll.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.sliceScroll.Location = new System.Drawing.Point(0, 43);
             this.sliceScroll.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.sliceScroll.Name = "sliceScroll";
-            this.sliceScroll.Size = new System.Drawing.Size(980, 350);
+            this.sliceScroll.Size = new System.Drawing.Size(0, 0);
             this.sliceScroll.TabIndex = 8;
             this.sliceScroll.WrapContents = false;
             // 
@@ -71,17 +70,19 @@
             this.rulerScroll.Location = new System.Drawing.Point(0, 0);
             this.rulerScroll.Margin = new System.Windows.Forms.Padding(0);
             this.rulerScroll.Name = "rulerScroll";
-            this.rulerScroll.Size = new System.Drawing.Size(980, 40);
+            this.rulerScroll.Size = new System.Drawing.Size(744, 40);
             this.rulerScroll.TabIndex = 9;
             // 
             // cursorPanel
             // 
+            this.cursorPanel.AutoSize = true;
+            this.cursorPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.cursorPanel.Controls.Add(this.rulerScroll);
             this.cursorPanel.Controls.Add(this.sliceScroll);
             this.cursorPanel.Location = new System.Drawing.Point(0, 0);
             this.cursorPanel.Margin = new System.Windows.Forms.Padding(0);
             this.cursorPanel.Name = "cursorPanel";
-            this.cursorPanel.Size = new System.Drawing.Size(980, 393);
+            this.cursorPanel.Size = new System.Drawing.Size(744, 43);
             this.cursorPanel.TabIndex = 10;
             // 
             // timelineHorizontalScroll
@@ -93,7 +94,7 @@
             this.timelineHorizontalScroll.Location = new System.Drawing.Point(164, 0);
             this.timelineHorizontalScroll.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.timelineHorizontalScroll.Name = "timelineHorizontalScroll";
-            this.timelineHorizontalScroll.Size = new System.Drawing.Size(980, 393);
+            this.timelineHorizontalScroll.Size = new System.Drawing.Size(744, 503);
             this.timelineHorizontalScroll.TabIndex = 11;
             this.timelineHorizontalScroll.Resize += new System.EventHandler(this.timelineHorizontalScroll_Resize);
             // 
@@ -101,9 +102,9 @@
             // 
             this.trackBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBar1.Location = new System.Drawing.Point(164, 396);
+            this.trackBar1.Location = new System.Drawing.Point(164, 506);
             this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(980, 45);
+            this.trackBar1.Size = new System.Drawing.Size(744, 45);
             this.trackBar1.TabIndex = 12;
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             // 
@@ -115,9 +116,11 @@
             this.Controls.Add(this.timelineHorizontalScroll);
             this.Controls.Add(this.optionScroll);
             this.Name = "Timeline";
-            this.Size = new System.Drawing.Size(1144, 441);
+            this.Size = new System.Drawing.Size(908, 551);
             this.cursorPanel.ResumeLayout(false);
+            this.cursorPanel.PerformLayout();
             this.timelineHorizontalScroll.ResumeLayout(false);
+            this.timelineHorizontalScroll.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -169,7 +169,6 @@ namespace Scissors.Timeline
 
         public void UpdateUI()
         {
-            CursorPanel.Width = (int)(length * zoom);
             foreach (SliceController slice in slices)
             {
                 slice.UpdateUI();
