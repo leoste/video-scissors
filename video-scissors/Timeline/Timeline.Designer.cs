@@ -33,10 +33,9 @@
             this.rulerScroll = new System.Windows.Forms.FlowLayoutPanel();
             this.cursorPanel = new System.Windows.Forms.Panel();
             this.timelineHorizontalScroll = new System.Windows.Forms.Panel();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.horizontalScrollBar = new Scissors.Timeline.FancyScrollbar();
             this.cursorPanel.SuspendLayout();
             this.timelineHorizontalScroll.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.SuspendLayout();
             // 
             // optionScroll
@@ -94,25 +93,33 @@
             this.timelineHorizontalScroll.Location = new System.Drawing.Point(164, 0);
             this.timelineHorizontalScroll.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.timelineHorizontalScroll.Name = "timelineHorizontalScroll";
-            this.timelineHorizontalScroll.Size = new System.Drawing.Size(744, 503);
+            this.timelineHorizontalScroll.Size = new System.Drawing.Size(744, 527);
             this.timelineHorizontalScroll.TabIndex = 11;
-            this.timelineHorizontalScroll.Resize += new System.EventHandler(this.timelineHorizontalScroll_Resize);
             // 
-            // trackBar1
+            // horizontalScrollBar
             // 
-            this.trackBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.horizontalScrollBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBar1.Location = new System.Drawing.Point(164, 506);
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(744, 45);
-            this.trackBar1.TabIndex = 12;
-            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            this.horizontalScrollBar.BackColor = System.Drawing.SystemColors.HotTrack;
+            this.horizontalScrollBar.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.horizontalScrollBar.Location = new System.Drawing.Point(164, 527);
+            this.horizontalScrollBar.Margin = new System.Windows.Forms.Padding(0);
+            this.horizontalScrollBar.Maximum = 10;
+            this.horizontalScrollBar.Minimum = 0;
+            this.horizontalScrollBar.Name = "horizontalScrollBar";
+            this.horizontalScrollBar.ScrollDirection = Scissors.Timeline.ScrollDirection.LeftToRight;
+            this.horizontalScrollBar.ScrollWidth = 3;
+            this.horizontalScrollBar.Size = new System.Drawing.Size(744, 24);
+            this.horizontalScrollBar.TabIndex = 11;
+            this.horizontalScrollBar.Value = 3;
+            this.horizontalScrollBar.Scroll += new System.EventHandler<System.Windows.Forms.ScrollEventArgs>(this.horizontalScrollBar_Scroll);
+            this.horizontalScrollBar.Resize += new System.EventHandler(this.horizontalScrollBar_Resize);
             // 
             // Timeline
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.trackBar1);
+            this.Controls.Add(this.horizontalScrollBar);
             this.Controls.Add(this.timelineHorizontalScroll);
             this.Controls.Add(this.optionScroll);
             this.Name = "Timeline";
@@ -121,9 +128,7 @@
             this.cursorPanel.PerformLayout();
             this.timelineHorizontalScroll.ResumeLayout(false);
             this.timelineHorizontalScroll.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -133,6 +138,6 @@
         private System.Windows.Forms.FlowLayoutPanel rulerScroll;
         private System.Windows.Forms.Panel cursorPanel;
         private System.Windows.Forms.Panel timelineHorizontalScroll;
-        private System.Windows.Forms.TrackBar trackBar1;
+        private FancyScrollbar horizontalScrollBar;
     }
 }

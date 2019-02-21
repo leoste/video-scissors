@@ -40,7 +40,6 @@
             this.timeline1.Name = "timeline1";
             this.timeline1.Size = new System.Drawing.Size(800, 477);
             this.timeline1.TabIndex = 0;
-            this.timeline1.Load += new System.EventHandler(this.timeline1_Load);
             // 
             // Form1
             // 
