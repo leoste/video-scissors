@@ -141,7 +141,9 @@ namespace Scissors.Timeline
 
             if (proposedValue != value)
             {
-                Value = proposedValue;
+                if (proposedValue >= 0)
+                    Value = Math.Min(proposedValue, maximum - scrollWidth);
+                else Value = 0;
 
                 if (Scroll != null) Scroll.Invoke(this, new ScrollEventArgs(ScrollEventType.SmallIncrement, value));
             }
@@ -164,7 +166,7 @@ namespace Scissors.Timeline
         {
             int left = (value - minimum);
             scrollerLeftX = (int)(left * relation);
-            scrollerWidthX = (int)(scrollWidth * relation);
+            scrollerWidthX = (int)Math.Ceiling(scrollWidth * relation);
             scrollerRightX = (int)((left + scrollWidth) * relation);
         }
 
