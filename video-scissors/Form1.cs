@@ -15,12 +15,12 @@ namespace Scissors
     {
         public Form1()
         {
-            InitializeComponent();            
+            InitializeComponent();
         }
 
         private void timeline1_Load(object sender, EventArgs e)
         {
-
+            
         }
     }
 }
