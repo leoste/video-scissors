@@ -126,17 +126,17 @@
             this.panel1.TabIndex = 13;
             this.panel1.Resize += new System.EventHandler(this.panel1_Resize);
             // 
-            // fancyScrollbar1
+            // verticalScrollbar
             // 
             this.verticalScrollbar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.verticalScrollbar.BackColor = System.Drawing.SystemColors.HotTrack;
-            this.verticalScrollbar.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.verticalScrollbar.BackColor = System.Drawing.Color.DarkSlateBlue;
+            this.verticalScrollbar.ForeColor = System.Drawing.Color.SlateBlue;
             this.verticalScrollbar.Location = new System.Drawing.Point(0, 42);
             this.verticalScrollbar.Margin = new System.Windows.Forms.Padding(0);
             this.verticalScrollbar.Maximum = 10;
             this.verticalScrollbar.Minimum = 0;
-            this.verticalScrollbar.Name = "fancyScrollbar1";
+            this.verticalScrollbar.Name = "verticalScrollbar";
             this.verticalScrollbar.ScrollDirection = Scissors.Timeline.ScrollDirection.UpToDown;
             this.verticalScrollbar.ScrollWidth = 3;
             this.verticalScrollbar.Size = new System.Drawing.Size(24, 482);
@@ -149,8 +149,8 @@
             // 
             this.horizontalScrollBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.horizontalScrollBar.BackColor = System.Drawing.SystemColors.HotTrack;
-            this.horizontalScrollBar.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.horizontalScrollBar.BackColor = System.Drawing.Color.DarkSlateBlue;
+            this.horizontalScrollBar.ForeColor = System.Drawing.Color.SlateBlue;
             this.horizontalScrollBar.Location = new System.Drawing.Point(174, 527);
             this.horizontalScrollBar.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.horizontalScrollBar.Maximum = 10;
@@ -168,6 +168,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.verticalScrollbar);
             this.Controls.Add(this.horizontalScrollBar);

@@ -11,7 +11,7 @@ namespace Scissors.Timeline
     class RulerController : IController
     {
         private int markWidth = 2;
-        private Color markColor = Color.Black;
+        private Color markColor = Color.Goldenrod;
 
         private TimelineController timeline;
         private FlowLayoutPanel contentsPanel;

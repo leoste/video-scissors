@@ -23,7 +23,7 @@ namespace Scissors.Timeline
         public Timeline()
         {
             InitializeComponent();
-            controller = new TimelineController(this, 90);
+            controller = new TimelineController(this, 900);
             horizontalScrollBar.Minimum = 0;
         }
 
