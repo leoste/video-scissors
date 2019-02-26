@@ -109,6 +109,8 @@ namespace Scissors.Timeline
 
         private void FancyScrollbar_Resize(object sender, EventArgs e)
         {
+            if (Width == 0 || Height == 0) return;
+
             pictureBox1.Image.Dispose();
             pictureBox1.Image = new Bitmap(Width, Height);
             UpdateCacheAndUI();
