@@ -85,6 +85,18 @@
     </Compile>
     <Compile Include="Timeline\RulerController.cs" />
     <Compile Include="Timeline\ScrollDirection.cs" />
+    <Compile Include="Timeline\TimelineContent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Timeline\TimelineContent.Designer.cs">
+      <DependentUpon>TimelineContent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Timeline\TimelineControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Timeline\TimelineControl.Designer.cs">
+      <DependentUpon>TimelineControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Timeline\TimelineController.cs" />
     <Compile Include="Timeline\ItemContent.cs">
       <SubType>UserControl</SubType>

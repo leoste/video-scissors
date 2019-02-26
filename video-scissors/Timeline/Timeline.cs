@@ -15,27 +15,27 @@ namespace Scissors.Timeline
     {
         private TimelineController controller;
 
-        internal FlowLayoutPanel ControlsPanel { get { return optionScroll; } }
-        internal FlowLayoutPanel ContentsPanel { get { return sliceScroll; } }
-        internal FlowLayoutPanel RulerPanel { get { return rulerScroll; } }
-        internal Panel CursorPanel { get { return cursorPanel; } }
+        internal FlowLayoutPanel ControlsPanel { get { return new FlowLayoutPanel(); } }
+        internal FlowLayoutPanel ContentsPanel { get { return new FlowLayoutPanel(); } }
+        internal FlowLayoutPanel RulerPanel { get { return new FlowLayoutPanel(); } }
+        internal Panel CursorPanel { get { return new Panel(); } }
 
         public Timeline()
         {
             InitializeComponent();
-            controller = new TimelineController(this, 900);
+            controller = new TimelineController(this, timelineControl1, timelineContent1, 900);
             horizontalScrollBar.Minimum = 0;
         }
 
         private void horizontalScrollBar_Resize(object sender, EventArgs e)
         {
             horizontalScrollBar.Maximum = (int)(controller.TimelineLength * controller.TimelineZoom);
-            horizontalScrollBar.ScrollWidth = timelineHorizontalScroll.Width;
+            //horizontalScrollBar.ScrollWidth = timelineHorizontalScroll.Width;
         }
 
         private void horizontalScrollBar_Scroll(object sender, ScrollEventArgs e)
         {
-            cursorPanel.Left = -horizontalScrollBar.Value;
+            //cursorPanel.Left = -horizontalScrollBar.Value;
         }
 
         private void verticalScrollbar_Resize(object sender, EventArgs e)
@@ -45,8 +45,8 @@ namespace Scissors.Timeline
 
         private void verticalScrollbar_Scroll(object sender, ScrollEventArgs e)
         {
-            optionScroll.Top = -verticalScrollbar.Value;
-            sliceScroll.Top = -verticalScrollbar.Value;
+            //optionScroll.Top = -verticalScrollbar.Value;
+            //sliceScroll.Top = -verticalScrollbar.Value;
         }
 
         private void optionScroll_Resize(object sender, EventArgs e)
@@ -56,18 +56,18 @@ namespace Scissors.Timeline
 
         private void UpdateVerticalScrollbar()
         {
-            verticalScrollbar.Maximum = optionScroll.Height;
-            verticalScrollbar.ScrollWidth = panel1.Height;
+            //verticalScrollbar.Maximum = optionScroll.Height;
+            //verticalScrollbar.ScrollWidth = panel1.Height;
         }
 
         private void sliceScroll_Resize(object sender, EventArgs e)
         {
-            panel2.Width = sliceScroll.Width;
+            //panel2.Width = sliceScroll.Width;
         }
 
         private void panel1_Resize(object sender, EventArgs e)
         {
-            panel2.Height = panel1.Height;
+            //panel2.Height = panel1.Height;
         }
     }
 }

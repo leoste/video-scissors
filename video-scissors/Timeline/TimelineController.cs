@@ -20,6 +20,8 @@ namespace Scissors.Timeline
         private int framerate;
         private int frameWidth;
         private int frameHeight;
+        private TimelineControl control;
+        private TimelineContent content;
 
         internal int SliceCount { get { return slices.Count; } }
         internal FlowLayoutPanel ControlsPanel { get { return timeline.ControlsPanel; } }
@@ -43,27 +45,29 @@ namespace Scissors.Timeline
         public int ProjectFrameWidth { get { return frameWidth; } }
         public int ProjectFrameHeight { get { return frameHeight; } }
         
-        private void Initialize(Timeline timeline, int length, float zoom, int framerate, int frameWidth, int frameHeight)
+        private void Initialize(Timeline timeline, TimelineControl control, TimelineContent content, int length, float zoom, int framerate, int frameWidth, int frameHeight)
         {
             this.length = length;
             this.zoom = zoom;
             this.framerate = framerate;
             this.frameWidth = frameWidth;
             this.frameHeight = frameHeight;
+            this.control = control;
+            this.content = content;
 
             this.timeline = timeline;
             slices = new List<SliceController>();
-            CreateSlice();
+            //CreateSlice();
 
-            ruler = new RulerController(this);
-            cursor = new CursorController(this);
+            //ruler = new RulerController(this);
+            //cursor = new CursorController(this);
 
-            UpdateUI();
+            //UpdateUI();
         }
 
-        internal TimelineController(Timeline timeline)
+        internal TimelineController(Timeline timeline, TimelineControl control, TimelineContent content)
         {
-            Initialize(timeline, 
+            Initialize(timeline, control, content,
                 GlobalConfig.DefaultTimelineLength,
                 GlobalConfig.DefaultTimelineZoom, 
                 GlobalConfig.DefaultProjectFramerate, 
@@ -71,9 +75,9 @@ namespace Scissors.Timeline
                 GlobalConfig.DefaultProjectFrameHeight);
         }
 
-        internal TimelineController(Timeline timeline, int framerate, int frameWidth, int frameHeight)
+        internal TimelineController(Timeline timeline, TimelineControl control, TimelineContent content, int framerate, int frameWidth, int frameHeight)
         {
-            Initialize(timeline,
+            Initialize(timeline, control, content,
                 GlobalConfig.DefaultTimelineLength,
                 GlobalConfig.DefaultTimelineZoom,
                 framerate,
@@ -81,19 +85,18 @@ namespace Scissors.Timeline
                 frameHeight);
         }
 
-        internal TimelineController(Timeline timeline, int length)
+        internal TimelineController(Timeline timeline, TimelineControl control, TimelineContent content, int length)
         {
-            Initialize(timeline,
-                length,
+            Initialize(timeline, control, content, length,
                 GlobalConfig.DefaultTimelineZoom,
                 GlobalConfig.DefaultProjectFramerate,
                 GlobalConfig.DefaultProjectFrameWidth,
                 GlobalConfig.DefaultProjectFrameHeight);
         }
 
-        internal TimelineController(Timeline timeline, int length, int framerate, int frameWidth, int frameHeight)
+        internal TimelineController(Timeline timeline, TimelineControl control, TimelineContent content, int length, int framerate, int frameWidth, int frameHeight)
         {
-            Initialize(timeline, length, GlobalConfig.DefaultTimelineZoom, framerate, frameWidth, frameHeight);
+            Initialize(timeline, control, content, length, GlobalConfig.DefaultTimelineZoom, framerate, frameWidth, frameHeight);
         }
 
         private void SetLength(int length)
