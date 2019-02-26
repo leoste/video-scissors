@@ -27,7 +27,7 @@ namespace Scissors.Timeline
         internal FlowLayoutPanel ControlsPanel { get { return timeline.ControlsPanel; } }
         internal FlowLayoutPanel ContentsPanel { get { return timeline.ContentsPanel; } }
         internal FlowLayoutPanel RulerPanel { get { return timeline.RulerPanel; } }
-        internal Panel CursorPanel { get { return timeline.CursorPanel; } }
+        internal Panel CursorPanel { get { return timeline.CursorPanel; } }        
 
         public int TimelineLength
         {

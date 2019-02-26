@@ -28,8 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // TimelineContent
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Name = "TimelineContent";
+            this.Size = new System.Drawing.Size(548, 358);
+            this.Resize += new System.EventHandler(this.TimelineContent_Resize);
+            this.ResumeLayout(false);
+
         }
 
         #endregion

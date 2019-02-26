@@ -28,11 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.timelineControl1 = new Scissors.Timeline.TimelineControl();
             this.timelineContent1 = new Scissors.Timeline.TimelineContent();
             this.verticalScrollbar = new Scissors.Timeline.FancyScrollbar();
             this.horizontalScrollBar = new Scissors.Timeline.FancyScrollbar();
-            this.timelineControl1 = new Scissors.Timeline.TimelineControl();
             this.SuspendLayout();
+            // 
+            // timelineControl1
+            // 
+            this.timelineControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.timelineControl1.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.timelineControl1.Location = new System.Drawing.Point(27, 42);
+            this.timelineControl1.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.timelineControl1.Name = "timelineControl1";
+            this.timelineControl1.Size = new System.Drawing.Size(144, 482);
+            this.timelineControl1.TabIndex = 15;
             // 
             // timelineContent1
             // 
@@ -83,17 +94,6 @@
             this.horizontalScrollBar.Value = 3;
             this.horizontalScrollBar.Scroll += new System.EventHandler<System.Windows.Forms.ScrollEventArgs>(this.horizontalScrollBar_Scroll);
             this.horizontalScrollBar.Resize += new System.EventHandler(this.horizontalScrollBar_Resize);
-            // 
-            // timelineControl1
-            // 
-            this.timelineControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.timelineControl1.BackColor = System.Drawing.Color.LightSkyBlue;
-            this.timelineControl1.Location = new System.Drawing.Point(27, 42);
-            this.timelineControl1.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.timelineControl1.Name = "timelineControl1";
-            this.timelineControl1.Size = new System.Drawing.Size(144, 482);
-            this.timelineControl1.TabIndex = 15;
             // 
             // Timeline
             // 
