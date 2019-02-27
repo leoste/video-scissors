@@ -28,34 +28,33 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.timelineControl1 = new Scissors.Timeline.TimelineControl();
             this.timelineContent1 = new Scissors.Timeline.TimelineContent();
+            this.timelineControl1 = new Scissors.Timeline.TimelineControl();
             this.verticalScrollbar = new Scissors.Timeline.FancyScrollbar();
             this.horizontalScrollBar = new Scissors.Timeline.FancyScrollbar();
             this.SuspendLayout();
+            // 
+            // timelineContent1
+            // 
+            this.timelineContent1.BackColor = System.Drawing.Color.LightSalmon;
+            this.timelineContent1.Location = new System.Drawing.Point(174, 0);
+            this.timelineContent1.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.timelineContent1.Name = "timelineContent1";
+            this.timelineContent1.RulerHeight = 40;
+            this.timelineContent1.SeparatorHeight = 3;
+            this.timelineContent1.Size = new System.Drawing.Size(734, 524);
+            this.timelineContent1.TabIndex = 17;
             // 
             // timelineControl1
             // 
             this.timelineControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.timelineControl1.BackColor = System.Drawing.Color.LightSkyBlue;
-            this.timelineControl1.Location = new System.Drawing.Point(27, 42);
+            this.timelineControl1.Location = new System.Drawing.Point(27, 43);
             this.timelineControl1.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
             this.timelineControl1.Name = "timelineControl1";
-            this.timelineControl1.Size = new System.Drawing.Size(144, 482);
+            this.timelineControl1.Size = new System.Drawing.Size(141, 481);
             this.timelineControl1.TabIndex = 15;
-            // 
-            // timelineContent1
-            // 
-            this.timelineContent1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.timelineContent1.BackColor = System.Drawing.Color.LightSalmon;
-            this.timelineContent1.Location = new System.Drawing.Point(174, 0);
-            this.timelineContent1.Margin = new System.Windows.Forms.Padding(0);
-            this.timelineContent1.Name = "timelineContent1";
-            this.timelineContent1.Size = new System.Drawing.Size(734, 524);
-            this.timelineContent1.TabIndex = 14;
             // 
             // verticalScrollbar
             // 
@@ -100,8 +99,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.Controls.Add(this.timelineControl1);
             this.Controls.Add(this.timelineContent1);
+            this.Controls.Add(this.timelineControl1);
             this.Controls.Add(this.verticalScrollbar);
             this.Controls.Add(this.horizontalScrollBar);
             this.Name = "Timeline";
@@ -113,7 +112,7 @@
         #endregion
         private FancyScrollbar horizontalScrollBar;
         private FancyScrollbar verticalScrollbar;
-        private TimelineContent timelineContent1;
         private TimelineControl timelineControl1;
+        private TimelineContent timelineContent1;
     }
 }

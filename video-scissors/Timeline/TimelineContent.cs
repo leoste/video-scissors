@@ -7,9 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.Design;
+using System.Windows.Forms.Design.Behavior;
+using System.ComponentModel.Design;
+using System.Collections;
 
 namespace Scissors.Timeline
 {
+    [Designer(typeof(TimelineContentDesigner))]
     public partial class TimelineContent : UserControl
     {
         private int rulerHeight = 40;
@@ -50,7 +55,7 @@ namespace Scissors.Timeline
 
                     if (protoSlicesHeight > 0)
                     {
-                        rulerHeight = value;
+                        separatorHeight = value;
                         slicesBegin = protoSlicesBegin;
                         slicesHeight = protoSlicesHeight;
                     }

@@ -91,6 +91,9 @@
     <Compile Include="Timeline\TimelineContent.Designer.cs">
       <DependentUpon>TimelineContent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Timeline\TimelineContentDesigner.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Timeline\TimelineControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -174,6 +177,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Timeline\Timeline.resx">
       <DependentUpon>Timeline.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Timeline\TimelineContent.resx">
+      <DependentUpon>TimelineContent.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
