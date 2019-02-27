@@ -146,10 +146,14 @@ namespace Scissors.Timeline
             if (proposedValue != value)
             {
                 if (proposedValue >= 0)
-                    Value = Math.Min(proposedValue, maximum - scrollWidth);
-                else Value = 0;
+                    proposedValue = Math.Min(proposedValue, maximum - scrollWidth);
+                else proposedValue = 0;
 
-                InvokeScroll();
+                if (proposedValue != value)
+                {
+                    Value = proposedValue;
+                    InvokeScroll();
+                }
             }
         }
 
