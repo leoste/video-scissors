@@ -40,6 +40,8 @@ namespace Scissors.Timeline
                         slicesHeight = protoSlicesHeight;
                         InvokeInternalHeightsChanged(this, EventArgs.Empty);
                     }
+
+                    Refresh();
                 }
             }
         }
@@ -61,6 +63,50 @@ namespace Scissors.Timeline
                         slicesHeight = protoSlicesHeight;
                         InvokeInternalHeightsChanged(this, EventArgs.Empty);
                     }
+
+                    Refresh();
+                }
+            }
+        }
+
+        public new int Height
+        {
+            get { return base.Height; }
+            set
+            {
+                int protoValue;
+                int protoSlicesHeight = CalculateSlicesHeight(value, slicesBegin);
+
+                if (protoSlicesHeight > 0) protoValue = value;
+                else
+                {
+                    protoSlicesHeight = 1;
+                    protoValue = slicesBegin + protoSlicesHeight;
+                }
+
+                slicesHeight = protoSlicesHeight;
+                base.Height = protoValue;
+            }
+        }
+
+        public new Size Size
+        {
+            get { return base.Size; }
+            set
+            {
+                if (value.Height != Height)
+                {
+                    int protoSlicesHeight = CalculateSlicesHeight(value.Height, slicesBegin);
+
+                    Size protoValue = value;
+                    if (protoSlicesHeight <= 0)
+                    {
+                        protoSlicesHeight = 1;
+                        protoValue.Height = slicesBegin + protoSlicesHeight;
+                    }
+
+                    slicesHeight = protoSlicesHeight;
+                    base.Size = protoValue;
                 }
             }
         }
@@ -69,7 +115,7 @@ namespace Scissors.Timeline
         { get { return new Rectangle(0, 0, Width, rulerHeight); } }
 
         public Rectangle SlicesRectangle
-        { get { return new Rectangle(slicesBegin, 0, Width, slicesHeight); } }
+        { get { return new Rectangle(0, slicesBegin, Width, slicesHeight); } }
 
         public event EventHandler InternalHeightsChanged;
         private void InvokeInternalHeightsChanged(object sender, EventArgs e)
