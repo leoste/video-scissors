@@ -19,6 +19,7 @@ namespace Scissors.Timeline
     {
         private int rulerHeight = 40;
         private int separatorHeight = 3;
+        private int horizontalScroll;
 
         private int slicesHeight;
         private int slicesBegin;
@@ -107,6 +108,19 @@ namespace Scissors.Timeline
 
                     slicesHeight = protoSlicesHeight;
                     base.Size = protoValue;
+                }
+            }
+        }
+
+        public new int HorizontalScroll
+        {
+            get { return horizontalScroll; }
+            set
+            {
+                if (value >= 0)
+                {
+                    horizontalScroll = value;
+                    Refresh();
                 }
             }
         }

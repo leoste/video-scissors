@@ -27,7 +27,8 @@ namespace Scissors.Timeline
         internal FlowLayoutPanel ControlsPanel { get { return timeline.ControlsPanel; } }
         internal FlowLayoutPanel ContentsPanel { get { return timeline.ContentsPanel; } }
         internal FlowLayoutPanel RulerPanel { get { return timeline.RulerPanel; } }
-        internal Panel CursorPanel { get { return timeline.CursorPanel; } }        
+        internal Panel CursorPanel { get { return timeline.CursorPanel; } }    
+        internal TimelineContent Content { get { return timeline.Content; } }
 
         public int TimelineLength
         {
@@ -59,10 +60,11 @@ namespace Scissors.Timeline
             slices = new List<SliceController>();
             //CreateSlice();
 
-            //ruler = new RulerController(this);
+            ruler = new RulerController(this);
+
             //cursor = new CursorController(this);
 
-            //UpdateUI();
+            UpdateUI();
         }
 
         internal TimelineController(Timeline timeline, TimelineControl control, TimelineContent content)
@@ -172,13 +174,13 @@ namespace Scissors.Timeline
 
         public void UpdateUI()
         {
-            foreach (SliceController slice in slices)
+            /*foreach (SliceController slice in slices)
             {
                 slice.UpdateUI();
-            }
+            }*/
 
             ruler.UpdateUI();
-            cursor.UpdateUI();
+            //cursor.UpdateUI();
         }
 
         public void Dispose()

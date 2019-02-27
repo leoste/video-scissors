@@ -19,6 +19,7 @@ namespace Scissors.Timeline
         internal FlowLayoutPanel ContentsPanel { get { return new FlowLayoutPanel(); } }
         internal FlowLayoutPanel RulerPanel { get { return new FlowLayoutPanel(); } }
         internal Panel CursorPanel { get { return new Panel(); } }
+        internal TimelineContent Content { get { return timelineContent1; } }
 
         public Timeline()
         {
@@ -30,12 +31,12 @@ namespace Scissors.Timeline
         private void horizontalScrollBar_Resize(object sender, EventArgs e)
         {
             horizontalScrollBar.Maximum = (int)(controller.TimelineLength * controller.TimelineZoom);
-            //horizontalScrollBar.ScrollWidth = timelineHorizontalScroll.Width;
+            horizontalScrollBar.ScrollWidth = timelineContent1.Width;
         }
 
         private void horizontalScrollBar_Scroll(object sender, ScrollEventArgs e)
         {
-            //cursorPanel.Left = -horizontalScrollBar.Value;
+           timelineContent1.HorizontalScroll = horizontalScrollBar.Value;
         }
 
         private void verticalScrollbar_Resize(object sender, EventArgs e)
