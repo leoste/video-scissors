@@ -34,9 +34,11 @@ namespace Scissors.Timeline
             {
                 if (value <= maximum - scrollWidth)
                 {
-                    if (this.value < value) this.value = value;
+                    bool changeValue = this.value < value;
+                    if (changeValue) this.value = value;
                     minimum = value;
                     UpdateCacheAndUI();
+                    if (changeValue) InvokeScroll();
                 }
             }
         }
@@ -48,9 +50,11 @@ namespace Scissors.Timeline
             {
                 if (value >= minimum + scrollWidth)
                 {
-                    if (this.value + scrollWidth > value) this.value = maximum - scrollWidth;
+                    bool changeValue = this.value + scrollWidth > value;
+                    if (changeValue) this.value = maximum - scrollWidth;
                     maximum = value;
                     UpdateCacheAndUI();
+                    if (changeValue) InvokeScroll();
                 }
             }
         }
@@ -145,8 +149,13 @@ namespace Scissors.Timeline
                     Value = Math.Min(proposedValue, maximum - scrollWidth);
                 else Value = 0;
 
-                if (Scroll != null) Scroll.Invoke(this, new ScrollEventArgs(ScrollEventType.SmallIncrement, value));
+                InvokeScroll();
             }
+        }
+
+        private void InvokeScroll()
+        {
+            if (Scroll != null) Scroll.Invoke(this, new ScrollEventArgs(ScrollEventType.SmallIncrement, value));
         }
 
         private void FancyScrollbar_MouseUp(object sender, MouseEventArgs e)
