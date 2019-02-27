@@ -51,9 +51,9 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.timelineControl1.BackColor = System.Drawing.Color.LightSkyBlue;
             this.timelineControl1.Location = new System.Drawing.Point(27, 43);
-            this.timelineControl1.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.timelineControl1.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.timelineControl1.Name = "timelineControl1";
-            this.timelineControl1.Size = new System.Drawing.Size(141, 481);
+            this.timelineControl1.Size = new System.Drawing.Size(144, 481);
             this.timelineControl1.TabIndex = 15;
             // 
             // verticalScrollbar
@@ -62,14 +62,14 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.verticalScrollbar.BackColor = System.Drawing.Color.Gray;
             this.verticalScrollbar.ForeColor = System.Drawing.Color.DarkGray;
-            this.verticalScrollbar.Location = new System.Drawing.Point(0, 42);
+            this.verticalScrollbar.Location = new System.Drawing.Point(0, 43);
             this.verticalScrollbar.Margin = new System.Windows.Forms.Padding(0);
             this.verticalScrollbar.Maximum = 10;
             this.verticalScrollbar.Minimum = 0;
             this.verticalScrollbar.Name = "verticalScrollbar";
             this.verticalScrollbar.ScrollDirection = Scissors.Timeline.ScrollDirection.UpToDown;
             this.verticalScrollbar.ScrollWidth = 3;
-            this.verticalScrollbar.Size = new System.Drawing.Size(24, 482);
+            this.verticalScrollbar.Size = new System.Drawing.Size(24, 481);
             this.verticalScrollbar.TabIndex = 12;
             this.verticalScrollbar.Value = 3;
             this.verticalScrollbar.Scroll += new System.EventHandler<System.Windows.Forms.ScrollEventArgs>(this.verticalScrollbar_Scroll);
