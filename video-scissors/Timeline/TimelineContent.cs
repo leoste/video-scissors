@@ -38,6 +38,7 @@ namespace Scissors.Timeline
                         rulerHeight = value;
                         slicesBegin = protoSlicesBegin;
                         slicesHeight = protoSlicesHeight;
+                        InvokeInternalHeightsChanged(this, EventArgs.Empty);
                     }
                 }
             }
@@ -58,6 +59,7 @@ namespace Scissors.Timeline
                         separatorHeight = value;
                         slicesBegin = protoSlicesBegin;
                         slicesHeight = protoSlicesHeight;
+                        InvokeInternalHeightsChanged(this, EventArgs.Empty);
                     }
                 }
             }
@@ -69,10 +71,14 @@ namespace Scissors.Timeline
         public Rectangle SlicesRectangle
         { get { return new Rectangle(slicesBegin, 0, Width, slicesHeight); } }
 
+        public event EventHandler InternalHeightsChanged;
+        private void InvokeInternalHeightsChanged(object sender, EventArgs e)
+        { if (InternalHeightsChanged != null) InternalHeightsChanged.Invoke(sender, e); }
+
         public TimelineContent()
         {
             InitializeComponent();
-            UpdateSlicesCache();          
+            UpdateSlicesCache();
         }
 
         private void TimelineContent_Resize(object sender, EventArgs e)
@@ -94,6 +100,6 @@ namespace Scissors.Timeline
         {
             slicesBegin = CalculateSlicesBegin(rulerHeight, separatorHeight);
             slicesHeight = CalculateSlicesHeight(Height, slicesBegin);
-        }
+        }       
     }
 }
