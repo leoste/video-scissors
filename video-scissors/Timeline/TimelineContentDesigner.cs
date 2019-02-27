@@ -2,6 +2,7 @@
 using System.Collections;
 using System.ComponentModel;
 using System.ComponentModel.Design;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,17 @@ namespace Scissors.Timeline
     {
         private class TimelineContentDesigner : ControlDesigner
         {
+            protected override void OnPaintAdornments(PaintEventArgs pe)
+            {
+                if (!(Control is TimelineContent control)) return;
+
+                Brush rulerBrush = new SolidBrush(Color.FromArgb(128, Color.CornflowerBlue));
+                pe.Graphics.FillRectangle(rulerBrush, control.RulerRectangle);
+
+                Brush slicesBrush = new SolidBrush(Color.FromArgb(128, Color.LightGoldenrodYellow));
+                pe.Graphics.FillRectangle(slicesBrush, control.SlicesRectangle);
+            }            
+
             public override IList SnapLines
             {
                 get
