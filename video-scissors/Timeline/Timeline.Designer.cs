@@ -40,6 +40,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.timelineContent1.BackColor = System.Drawing.Color.LightSalmon;
+            this.timelineContent1.HorizontalScroll = 0;
             this.timelineContent1.Location = new System.Drawing.Point(174, 0);
             this.timelineContent1.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.timelineContent1.Name = "timelineContent1";
@@ -47,6 +48,7 @@
             this.timelineContent1.SeparatorHeight = 3;
             this.timelineContent1.Size = new System.Drawing.Size(734, 524);
             this.timelineContent1.TabIndex = 17;
+            this.timelineContent1.Resize += new System.EventHandler(this.timelineContent1_Resize);
             // 
             // timelineControl1
             // 
@@ -95,7 +97,6 @@
             this.horizontalScrollBar.TabIndex = 11;
             this.horizontalScrollBar.Value = 3;
             this.horizontalScrollBar.Scroll += new System.EventHandler<System.Windows.Forms.ScrollEventArgs>(this.horizontalScrollBar_Scroll);
-            this.horizontalScrollBar.Resize += new System.EventHandler(this.horizontalScrollBar_Resize);
             // 
             // Timeline
             // 

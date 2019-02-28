@@ -21,6 +21,7 @@ namespace Scissors.Timeline
         private float oldZoom;
         private int[] markPattern;
         private Rectangle oldRect;
+        private Rectangle oldScreenRect;
 
         public int TimelineLength { get { return timeline.TimelineLength; } }
         public float TimelineZoom { get { return timeline.TimelineZoom; } }
@@ -70,8 +71,10 @@ namespace Scissors.Timeline
         internal RulerController(TimelineController timeline)
         {
             this.timeline = timeline;
+
             timelineContent = timeline.Content;
             oldRect = timelineContent.RulerRectangle;
+            oldScreenRect = GetScreenRectangle();
 
             if (ProjectFramerate == 24)
             {
@@ -92,7 +95,7 @@ namespace Scissors.Timeline
 
             timelineContent.Paint += TimelineContent_Paint;
             timelineContent.Resize += TimelineContent_Resize;
-            
+                        
             UpdateUI();
         }
 
@@ -106,8 +109,29 @@ namespace Scissors.Timeline
 
         public void UpdateUI()
         {
-            timelineContent.Invalidate(oldRect);
-            timelineContent.Invalidate(timelineContent.RulerRectangle);
+            Rectangle screenRect = GetScreenRectangle();
+
+            //if location or height has changed the entirety of old and new areas need redrawing
+            if (screenRect.Location != oldScreenRect.Location || screenRect.Height != oldScreenRect.Height)
+            {
+                timelineContent.Invalidate(oldRect);
+                timelineContent.Invalidate(timelineContent.RulerRectangle);
+            }
+            //if width has increased then only the new area needs redrawing
+            else if (screenRect.Width != oldScreenRect.Width)
+            {
+                if (screenRect.Width > oldScreenRect.Width)
+                {
+                    timelineContent.Invalidate(new Rectangle(
+                        oldScreenRect.Width, oldScreenRect.Y, 
+                        screenRect.X - oldScreenRect.X, oldScreenRect.Height));
+                }
+            }
+            //if nothing has changed then there's no need to redraw
+            else return;
+                        
+            oldRect = timelineContent.RulerRectangle;
+            oldScreenRect = screenRect;
             timelineContent.Update();
         }
 
@@ -117,20 +141,23 @@ namespace Scissors.Timeline
             {
                 oldLength = TimelineLength;
                 oldZoom = TimelineZoom;
-                oldRect = timelineContent.RulerRectangle;
 
                 Rectangle rect = timelineContent.RulerRectangle;
                 int width = (int)(TimelineLength * TimelineZoom);
                 Pen pen = new Pen(markColor, markWidth);
                 Brush brush = new SolidBrush(backColor);          
 
-                e.Graphics.FillRectangle(brush, timelineContent.RulerRectangle);                
-                
-                int x;
-                int i = (int)(timelineContent.HorizontalScroll / TimelineZoom);
-                int offset = (int)(timelineContent.HorizontalScroll - i * TimelineZoom + pen.Width / 2);
-                int m = rect.Width + timelineContent.HorizontalScroll;
+                e.Graphics.FillRectangle(brush, new Rectangle(
+                    e.ClipRectangle.X,
+                    timelineContent.RulerRectangle.Y,
+                    e.ClipRectangle.Width,
+                    timelineContent.RulerRectangle.Height));
 
+                int startX = timelineContent.HorizontalScroll + e.ClipRectangle.X;
+                int i = (int)(startX / TimelineZoom);
+                int offset = (int)(pen.Width / 2);
+                int m = Math.Min(rect.Width + startX, (int)(TimelineLength * TimelineZoom));
+                int x;
                 for (; (x = (int)(i * TimelineZoom + offset)) < m; i += 1)
                 {
                     int y1 = i % ProjectFramerate == 0 ? 0 : markPattern[i % markPattern.Length];
@@ -141,6 +168,11 @@ namespace Scissors.Timeline
 
                 e.Dispose();
             }
+        }
+
+        private Rectangle GetScreenRectangle()
+        {
+            return timelineContent.RectangleToScreen(timelineContent.ClientRectangle);
         }
 
         public void Dispose()
