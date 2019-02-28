@@ -52,6 +52,9 @@ namespace Scissors.Timeline
         public Color BackColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public Color ForeColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
+        public event EventHandler TimelineLengthChanged;
+        public event EventHandler TimelineZoomChanged;
+
         private void Initialize(Timeline timeline, TimelineControl control, TimelineContent content, int length, float zoom, int framerate, int frameWidth, int frameHeight)
         {
             this.length = length;
@@ -64,6 +67,9 @@ namespace Scissors.Timeline
 
             this.timeline = timeline;
             slices = new List<SliceController>();
+            CreateSlice();
+            CreateSlice();
+            CreateSlice();
             CreateSlice();
 
             ruler = new RulerController(this);
@@ -112,12 +118,14 @@ namespace Scissors.Timeline
             //check if length can be changed or not
 
             this.length = length;
+            if (TimelineLengthChanged != null) TimelineLengthChanged.Invoke(this, EventArgs.Empty);
             UpdateUI();
         }
         
         private void SetZoom(float zoom)
         {
             this.zoom = zoom;
+            if (TimelineZoomChanged != null) TimelineZoomChanged.Invoke(this, EventArgs.Empty);
             UpdateUI();
         }
 

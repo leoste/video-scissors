@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Scissors.Timeline
 {
-    interface IController : IDisposable
+    interface IController
     {
         /// <summary>
         /// Timeline length in frames. Can be changed.

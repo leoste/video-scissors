@@ -9,7 +9,9 @@ using System.Windows.Forms;
 namespace Scissors.Timeline
 {
     class LayerController : IFrameController, IControlController, IChildController
-    {        
+    {
+        public static readonly int height = 40;
+
         private bool toggleLock;
         private bool toggleVisibility;
         private int id;

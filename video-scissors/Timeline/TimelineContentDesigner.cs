@@ -21,10 +21,10 @@ namespace Scissors.Timeline
                 if (!(Control is TimelineContent control)) return;
 
                 Brush rulerBrush = new SolidBrush(Color.FromArgb(128, Color.CornflowerBlue));
-                pe.Graphics.FillRectangle(rulerBrush, control.RulerRectangle);
+                pe.Graphics.FillRectangle(rulerBrush, control.RulerContainerRectangle);
 
                 Brush slicesBrush = new SolidBrush(Color.FromArgb(128, Color.LightGoldenrodYellow));
-                pe.Graphics.FillRectangle(slicesBrush, control.SlicesRectangle);
+                pe.Graphics.FillRectangle(slicesBrush, control.SlicesContainerRectangle);
             }            
 
             public override IList SnapLines

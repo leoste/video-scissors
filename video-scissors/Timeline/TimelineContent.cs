@@ -19,7 +19,8 @@ namespace Scissors.Timeline
     {
         private int rulerHeight = 40;
         private int separatorHeight = 3;
-        private int horizontalScroll;
+        private int horizontalScroll = 0;
+        private int verticalScroll = 0;
 
         private int slicesHeight;
         private int slicesBegin;
@@ -128,10 +129,26 @@ namespace Scissors.Timeline
             }
         }
 
-        public Rectangle RulerRectangle
+        public new int VerticalScroll
+        {
+            get { return verticalScroll; }
+            set
+            {
+                if (value >= 0)
+                {
+                    if (verticalScroll != value)
+                    {
+                        verticalScroll = value;
+                        InvokeVerticalScrolled(new ScrollEventArgs(ScrollEventType.SmallDecrement, verticalScroll));
+                    }
+                }
+            }
+        }
+
+        public Rectangle RulerContainerRectangle
         { get { return new Rectangle(0, 0, Width, rulerHeight); } }
 
-        public Rectangle SlicesRectangle
+        public Rectangle SlicesContainerRectangle
         { get { return new Rectangle(0, slicesBegin, Width, slicesHeight); } }
 
         public event EventHandler InternalHeightsChanged;
@@ -141,6 +158,10 @@ namespace Scissors.Timeline
         public event EventHandler<ScrollEventArgs> HorizontalScrolled;
         private void InvokeHorizontalScrolled(ScrollEventArgs e)
         { if (HorizontalScrolled != null) HorizontalScrolled.Invoke(this, e); }
+
+        public event EventHandler<ScrollEventArgs> VerticalScrolled;
+        private void InvokeVerticalScrolled(ScrollEventArgs e)
+        { if (VerticalScrolled != null) VerticalScrolled.Invoke(this, e); }
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {

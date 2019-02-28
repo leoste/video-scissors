@@ -17,17 +17,20 @@ namespace Scissors.Timeline
         private TimelineController timeline;
         private TimelineContent timelineContent;
         
-        private int oldLength;
-        private float oldZoom;
         private int[] markPattern;
         private Rectangle oldRect;
         private Rectangle oldScreenRect;
+        private Rectangle rulerRectangle;
 
         public int TimelineLength { get { return timeline.TimelineLength; } }
         public float TimelineZoom { get { return timeline.TimelineZoom; } }
         public int ProjectFramerate { get { return timeline.ProjectFramerate; } }
         public int ProjectFrameWidth { get { return timeline.ProjectFrameWidth; } }
         public int ProjectFrameHeight { get { return timeline.ProjectFrameHeight; } }
+
+
+        public Rectangle RulerRectangle
+        { get { return rulerRectangle; } }
 
         public int MarkWidth
         {
@@ -75,8 +78,11 @@ namespace Scissors.Timeline
             this.timeline = timeline;
 
             timelineContent = timeline.TimelineContent;
-            oldRect = timelineContent.RulerRectangle;
+            oldRect = timelineContent.RulerContainerRectangle;
             oldScreenRect = GetScreenRectangle();
+
+            rulerRectangle = new Rectangle();
+            UpdateCache();
 
             if (ProjectFramerate == 24)
             {
@@ -97,23 +103,40 @@ namespace Scissors.Timeline
 
             timelineContent.Paint += TimelineContent_Paint;
             timelineContent.Resize += TimelineContent_Resize;
-            timelineContent.HorizontalScrolled += TimelineContent_HorizontalScrolled;            
+            timelineContent.HorizontalScrolled += TimelineContent_HorizontalScrolled;
+            timeline.TimelineZoomChanged += Timeline_Changed;
+            timeline.TimelineLengthChanged += Timeline_Changed;
                         
             UpdateUI();
         }
 
+        private void Timeline_Changed(object sender, EventArgs e)
+        {
+            UpdateCache();
+        }
+
         private void TimelineContent_HorizontalScrolled(object sender, ScrollEventArgs e)
         {
-            timelineContent.Invalidate(timelineContent.RulerRectangle);
+            UpdateCache();
+            timelineContent.Invalidate(timelineContent.RulerContainerRectangle);
             timelineContent.Update();
         }
 
         private void TimelineContent_Resize(object sender, EventArgs e)
         {
-            if (!oldRect.Equals(timelineContent.RulerRectangle))
+            if (!oldRect.Equals(timelineContent.RulerContainerRectangle))
             {
+                UpdateCache();
                 UpdateUI();
             }
+        }
+
+        private void UpdateCache()
+        {
+            rulerRectangle.X = timelineContent.RulerContainerRectangle.X - timelineContent.HorizontalScroll;
+            rulerRectangle.Y = timelineContent.RulerContainerRectangle.Y;
+            rulerRectangle.Width = (int)(timeline.TimelineLength * timeline.TimelineZoom);
+            rulerRectangle.Height = timelineContent.RulerContainerRectangle.Height;
         }
 
         public void UpdateUI()
@@ -124,7 +147,7 @@ namespace Scissors.Timeline
             if (screenRect.Location != oldScreenRect.Location || screenRect.Height != oldScreenRect.Height)
             {
                 timelineContent.Invalidate(oldRect);
-                timelineContent.Invalidate(timelineContent.RulerRectangle);
+                timelineContent.Invalidate(timelineContent.RulerContainerRectangle);
             }
             //if width has increased then only the new area needs redrawing
             else if (screenRect.Width != oldScreenRect.Width)
@@ -139,38 +162,33 @@ namespace Scissors.Timeline
             //if nothing has changed then there's no need to redraw
             else return;
                         
-            oldRect = timelineContent.RulerRectangle;
+            oldRect = timelineContent.RulerContainerRectangle;
             oldScreenRect = screenRect;
             timelineContent.Update();
         }
 
         private void TimelineContent_Paint(object sender, PaintEventArgs e)
         {
-            if (e.ClipRectangle.IntersectsWith(timelineContent.RulerRectangle))
+            if (e.ClipRectangle.IntersectsWith(timelineContent.RulerContainerRectangle))
             {
-                oldLength = TimelineLength;
-                oldZoom = TimelineZoom;
-
-                Rectangle rect = timelineContent.RulerRectangle;
-                int width = (int)(TimelineLength * TimelineZoom);
+                Rectangle rect = timelineContent.RulerContainerRectangle;
                 Brush markBrush = new SolidBrush(markColor);
                 Brush brush = new SolidBrush(backColor);
 
                 e.Graphics.FillRectangle(brush, new Rectangle(
                     e.ClipRectangle.X,
-                    timelineContent.RulerRectangle.Y,
+                    timelineContent.RulerContainerRectangle.Y,
                     e.ClipRectangle.Width,
-                    timelineContent.RulerRectangle.Height));
+                    timelineContent.RulerContainerRectangle.Height));
 
-                int startX = timelineContent.HorizontalScroll + e.ClipRectangle.X;
+                int startX = e.ClipRectangle.X - rulerRectangle.X;
                 int i = (int)(startX / TimelineZoom);
-                int m = Math.Min(rect.Width + startX, (int)(TimelineLength * TimelineZoom));
+                int m = Math.Min(rect.Width + startX, rulerRectangle.Width);
                 int x;
                 for (; (x = (int)(i * TimelineZoom)) < m; i += 1)
                 {
                     int y1 = i % ProjectFramerate == 0 ? 0 : markPattern[i % markPattern.Length];
-                    int corrected_x = x - timelineContent.HorizontalScroll;
-                    Rectangle markRect = new Rectangle(corrected_x, y1, markWidth, 40 - y1);
+                    Rectangle markRect = new Rectangle(rulerRectangle.X + x, y1, markWidth, 40 - y1);
                     e.Graphics.FillRectangle(markBrush, markRect);
                 }
 
