@@ -10,5 +10,7 @@ namespace Scissors.Timeline
     {
         bool IsLocked { get; }
         bool IsVisible { get; }
+        
+        TimelineControl TimelineControl { get; }
     }
 }

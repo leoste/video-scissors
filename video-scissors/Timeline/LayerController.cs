@@ -9,16 +9,21 @@ using System.Windows.Forms;
 namespace Scissors.Timeline
 {
     class LayerController : IFrameController, IControlController, IChildController
-    {
+    {        
         private bool toggleLock;
         private bool toggleVisibility;
         private int id;
         private SliceController slice;
         private FlowLayoutPanel controlsPanel;
         private FlowLayoutPanel contentsPanel;
+        private TimelineContent timelineContent;
+        private TimelineControl timelineControl;
 
         private LayerControl control;
         private LayerContent content;
+
+        public TimelineContent TimelineContent { get { return timelineContent; } }
+        public TimelineControl TimelineControl { get { return timelineControl; } }
 
         private List<ItemController> items;
         
@@ -34,6 +39,9 @@ namespace Scissors.Timeline
         public int ProjectFrameHeight { get { return slice.ProjectFrameHeight; } }
         public bool IsLocked { get { return slice.IsLocked || toggleLock; } }
         public bool IsVisible { get { return slice.IsVisible || toggleVisibility; } }
+
+        public Color BackColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Color ForeColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         private void Initialize(SliceController slice)
         {

@@ -55,7 +55,7 @@ namespace Scissors.Timeline
             }
         }
 
-        public Color MarkColor
+        public Color ForeColor
         {
             get { return markColor; }
             set
@@ -68,11 +68,13 @@ namespace Scissors.Timeline
             }
         }
 
+        public TimelineContent TimelineContent { get { return timelineContent; } }
+
         internal RulerController(TimelineController timeline)
         {
             this.timeline = timeline;
 
-            timelineContent = timeline.Content;
+            timelineContent = timeline.TimelineContent;
             oldRect = timelineContent.RulerRectangle;
             oldScreenRect = GetScreenRectangle();
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,7 +32,11 @@ namespace Scissors.Timeline
         /// <summary>
         /// Project frame height in pixels. Can't be changed.
         /// </summary>
-        int ProjectFrameHeight { get; }        
+        int ProjectFrameHeight { get; }
+
+        TimelineContent TimelineContent { get; }
+        Color BackColor { get; set; }
+        Color ForeColor { get; set; }
 
         void UpdateUI();        
     }

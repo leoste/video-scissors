@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -85,6 +86,11 @@ namespace Scissors.Timeline
         public float TimelineZoom { get { return layer.TimelineZoom; } }
         public int ProjectFrameWidth { get { return layer.ProjectFrameWidth; } }
         public int ProjectFrameHeight { get { return layer.ProjectFrameHeight; } }
+
+        public TimelineContent TimelineContent => throw new NotImplementedException();
+
+        public Color BackColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Color ForeColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         internal ItemController(LayerController layer, int startPosition, int length)
         {

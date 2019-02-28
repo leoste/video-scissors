@@ -10,15 +10,15 @@ namespace Scissors.Timeline
 {
     class SliceController : IFrameController, IControlController, IChildController
     {
+        private int sliceHeight = 46;
+        private int padding = 3;
+
         private bool toggleLock;
         private bool toggleVisibility;
         private int id;
         private TimelineController timeline;
-        private FlowLayoutPanel controlsPanel;
-        private FlowLayoutPanel contentsPanel;
-
-        private SliceControl control;
-        private SliceContent content;
+        private TimelineContent timelineContent;
+        private TimelineControl timelineControl;
                 
         private List<LayerController> layers;
 
@@ -27,8 +27,12 @@ namespace Scissors.Timeline
         private float oldZoom;
         
         internal int LayerCount { get { return layers.Count; } }
-        internal FlowLayoutPanel LayerControlsPanel { get { return control.Panel; } }
-        internal FlowLayoutPanel LayerContentsPanel { get { return content.Panel; } }
+                
+        internal FlowLayoutPanel LayerControlsPanel { get { return new FlowLayoutPanel(); } }
+        internal FlowLayoutPanel LayerContentsPanel { get { return new FlowLayoutPanel(); } }
+
+        public Rectangle LayersRectangle
+        { get { throw new NotImplementedException(); } }
 
         public int TimelineLength { get { return timeline.TimelineLength; } }
         public float TimelineZoom { get { return timeline.TimelineZoom; } }
@@ -37,6 +41,10 @@ namespace Scissors.Timeline
         public int ProjectFrameHeight { get { return timeline.ProjectFrameHeight; } }
         public bool IsLocked { get { return toggleLock; } }
         public bool IsVisible { get { return toggleVisibility; } }        
+        public TimelineContent TimelineContent { get { return timelineContent; } }
+        public TimelineControl TimelineControl { get { return timelineControl; } }
+        public Color BackColor { get; set; }
+        public Color ForeColor { get; set; }
 
         private void Initialize(TimelineController timeline)
         {
@@ -45,12 +53,12 @@ namespace Scissors.Timeline
             oldZoom = -1;
 
             this.timeline = timeline;
-            controlsPanel = timeline.ControlsPanel;
-            contentsPanel = timeline.ContentsPanel;
+            timelineContent = timeline.TimelineContent;
+            timelineControl = timeline.TimelineControl;
 
-            Color color = ColorProvider.GetRandomSliceColor();
+            BackColor = ColorProvider.GetRandomSliceColor();
 
-            control = new SliceControl();
+            /*control = new SliceControl();
             control.BackColor = color;
             controlsPanel.Controls.Add(control);
             control.AddClicked += Control_AddClicked;
@@ -64,7 +72,7 @@ namespace Scissors.Timeline
 
             content = new SliceContent();
             content.BackColor = color;
-            contentsPanel.Controls.Add(content);
+            contentsPanel.Controls.Add(content);*/
 
             SetId();
 
@@ -118,8 +126,8 @@ namespace Scissors.Timeline
 
         private void SetId()
         {
-            controlsPanel.Controls.SetChildIndex(control, id);
-            contentsPanel.Controls.SetChildIndex(content, id);
+            /*controlsPanel.Controls.SetChildIndex(control, id);
+            contentsPanel.Controls.SetChildIndex(content, id);*/
         }
 
         internal int GetId()
@@ -184,7 +192,7 @@ namespace Scissors.Timeline
         
         public void UpdateUI()
         {
-            if (LayerCount != oldLayerCount)
+            /*if (LayerCount != oldLayerCount)
             {
                 oldLayerCount = LayerCount;
 
@@ -204,7 +212,7 @@ namespace Scissors.Timeline
                 {
                     layer.UpdateUI();
                 }
-            }
+            }*/
         }
 
         public void ProcessFrame(Frame frame, int position)
@@ -222,7 +230,7 @@ namespace Scissors.Timeline
 
         public void Dispose()
         {
-            foreach (LayerController layer in layers)
+            /*foreach (LayerController layer in layers)
             {
                 layer.Dispose();
             }
@@ -230,7 +238,7 @@ namespace Scissors.Timeline
             controlsPanel.Controls.Remove(control);
             contentsPanel.Controls.Remove(content);
             control.Dispose();
-            content.Dispose();
+            content.Dispose();*/
         }
 
         public List<IController> GetChildren()

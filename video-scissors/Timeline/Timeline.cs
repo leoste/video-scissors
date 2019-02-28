@@ -19,7 +19,6 @@ namespace Scissors.Timeline
         internal FlowLayoutPanel ContentsPanel { get { return new FlowLayoutPanel(); } }
         internal FlowLayoutPanel RulerPanel { get { return new FlowLayoutPanel(); } }
         internal Panel CursorPanel { get { return new Panel(); } }
-        internal TimelineContent Content { get { return timelineContent1; } }
         private int oldScroll = 0;
 
         public Timeline()

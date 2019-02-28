@@ -9,7 +9,7 @@ using Scissors.Config;
 
 namespace Scissors.Timeline
 {
-    class TimelineController : IController, IChildController
+    class TimelineController : IControlController, IChildController
     {
         private Timeline timeline;
         private List<SliceController> slices;
@@ -27,9 +27,8 @@ namespace Scissors.Timeline
         internal FlowLayoutPanel ControlsPanel { get { return timeline.ControlsPanel; } }
         internal FlowLayoutPanel ContentsPanel { get { return timeline.ContentsPanel; } }
         internal FlowLayoutPanel RulerPanel { get { return timeline.RulerPanel; } }
-        internal Panel CursorPanel { get { return timeline.CursorPanel; } }    
-        internal TimelineContent Content { get { return timeline.Content; } }
-
+        internal Panel CursorPanel { get { return timeline.CursorPanel; } }
+        
         public int TimelineLength
         {
             get { return length; }
@@ -45,7 +44,14 @@ namespace Scissors.Timeline
         public int ProjectFramerate { get { return framerate; } }
         public int ProjectFrameWidth { get { return frameWidth; } }
         public int ProjectFrameHeight { get { return frameHeight; } }
-        
+        public bool IsLocked { get; }
+        public bool IsVisible { get; }
+        public TimelineContent TimelineContent { get { return content; } }
+        public TimelineControl TimelineControl { get { return control; } }
+
+        public Color BackColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Color ForeColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         private void Initialize(Timeline timeline, TimelineControl control, TimelineContent content, int length, float zoom, int framerate, int frameWidth, int frameHeight)
         {
             this.length = length;
@@ -58,7 +64,7 @@ namespace Scissors.Timeline
 
             this.timeline = timeline;
             slices = new List<SliceController>();
-            //CreateSlice();
+            CreateSlice();
 
             ruler = new RulerController(this);
 
