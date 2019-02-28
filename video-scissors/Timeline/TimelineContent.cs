@@ -145,6 +145,14 @@ namespace Scissors.Timeline
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             //do not call base.OnPaintBackground(), it will cause flickering with controls drawing onto here
+
+            Rectangle rect = new Rectangle(e.ClipRectangle.X, rulerHeight, e.ClipRectangle.Width, separatorHeight);
+
+            if (rect.IntersectsWith(e.ClipRectangle))
+            {
+                Brush brush = new SolidBrush(BackColor);
+                e.Graphics.FillRectangle(brush, rect);
+            }
         }
 
         public TimelineContent()
