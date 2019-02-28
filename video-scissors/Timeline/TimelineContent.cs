@@ -39,7 +39,7 @@ namespace Scissors.Timeline
                         rulerHeight = value;
                         slicesBegin = protoSlicesBegin;
                         slicesHeight = protoSlicesHeight;
-                        InvokeInternalHeightsChanged(this, EventArgs.Empty);
+                        InvokeInternalHeightsChanged(EventArgs.Empty);
                     }
 
                     Refresh();
@@ -62,7 +62,7 @@ namespace Scissors.Timeline
                         separatorHeight = value;
                         slicesBegin = protoSlicesBegin;
                         slicesHeight = protoSlicesHeight;
-                        InvokeInternalHeightsChanged(this, EventArgs.Empty);
+                        InvokeInternalHeightsChanged(EventArgs.Empty);
                     }
 
                     Refresh();
@@ -119,8 +119,11 @@ namespace Scissors.Timeline
             {
                 if (value >= 0)
                 {
-                    horizontalScroll = value;
-                    Refresh();
+                    if (horizontalScroll != value)
+                    {
+                        horizontalScroll = value;
+                        InvokeHorizontalScrolled(new ScrollEventArgs(ScrollEventType.SmallDecrement, horizontalScroll));
+                    }
                 }
             }
         }
@@ -132,18 +135,22 @@ namespace Scissors.Timeline
         { get { return new Rectangle(0, slicesBegin, Width, slicesHeight); } }
 
         public event EventHandler InternalHeightsChanged;
-        private void InvokeInternalHeightsChanged(object sender, EventArgs e)
-        { if (InternalHeightsChanged != null) InternalHeightsChanged.Invoke(sender, e); }
+        private void InvokeInternalHeightsChanged(EventArgs e)
+        { if (InternalHeightsChanged != null) InternalHeightsChanged.Invoke(this, e); }
+
+        public event EventHandler<ScrollEventArgs> HorizontalScrolled;
+        private void InvokeHorizontalScrolled(ScrollEventArgs e)
+        { if (HorizontalScrolled != null) HorizontalScrolled.Invoke(this, e); }
+
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
+            //do not call base.OnPaintBackground(), it will cause flickering with controls drawing onto here
+        }
 
         public TimelineContent()
         {
             InitializeComponent();
             UpdateSlicesCache();
-        }
-
-        private void TimelineContent_Resize(object sender, EventArgs e)
-        {
-            
         }
 
         private int CalculateSlicesBegin(int rulerHeight, int separatorHeight)
@@ -160,6 +167,6 @@ namespace Scissors.Timeline
         {
             slicesBegin = CalculateSlicesBegin(rulerHeight, separatorHeight);
             slicesHeight = CalculateSlicesHeight(Height, slicesBegin);
-        }       
+        }
     }
 }

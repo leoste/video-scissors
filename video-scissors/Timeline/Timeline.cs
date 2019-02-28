@@ -25,7 +25,7 @@ namespace Scissors.Timeline
         public Timeline()
         {
             InitializeComponent();
-            controller = new TimelineController(this, timelineControl1, timelineContent1, 90);
+            controller = new TimelineController(this, timelineControl1, timelineContent1, 540);
             horizontalScrollBar.Minimum = 0;
             UpdateHorizontalScrollbar();
         }

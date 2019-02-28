@@ -95,8 +95,15 @@ namespace Scissors.Timeline
 
             timelineContent.Paint += TimelineContent_Paint;
             timelineContent.Resize += TimelineContent_Resize;
+            timelineContent.HorizontalScrolled += TimelineContent_HorizontalScrolled;            
                         
             UpdateUI();
+        }
+
+        private void TimelineContent_HorizontalScrolled(object sender, ScrollEventArgs e)
+        {
+            timelineContent.Invalidate(timelineContent.RulerRectangle);
+            timelineContent.Update();
         }
 
         private void TimelineContent_Resize(object sender, EventArgs e)
@@ -144,8 +151,8 @@ namespace Scissors.Timeline
 
                 Rectangle rect = timelineContent.RulerRectangle;
                 int width = (int)(TimelineLength * TimelineZoom);
-                Pen pen = new Pen(markColor, markWidth);
-                Brush brush = new SolidBrush(backColor);          
+                Brush markBrush = new SolidBrush(markColor);
+                Brush brush = new SolidBrush(backColor);
 
                 e.Graphics.FillRectangle(brush, new Rectangle(
                     e.ClipRectangle.X,
@@ -155,15 +162,14 @@ namespace Scissors.Timeline
 
                 int startX = timelineContent.HorizontalScroll + e.ClipRectangle.X;
                 int i = (int)(startX / TimelineZoom);
-                int offset = (int)(pen.Width / 2);
                 int m = Math.Min(rect.Width + startX, (int)(TimelineLength * TimelineZoom));
                 int x;
-                for (; (x = (int)(i * TimelineZoom + offset)) < m; i += 1)
+                for (; (x = (int)(i * TimelineZoom)) < m; i += 1)
                 {
                     int y1 = i % ProjectFramerate == 0 ? 0 : markPattern[i % markPattern.Length];
-                    int y2 = 40;
                     int corrected_x = x - timelineContent.HorizontalScroll;
-                    e.Graphics.DrawLine(pen, corrected_x, y1, corrected_x, y2);
+                    Rectangle markRect = new Rectangle(corrected_x, y1, markWidth, 40 - y1);
+                    e.Graphics.FillRectangle(markBrush, markRect);
                 }
 
                 e.Dispose();
