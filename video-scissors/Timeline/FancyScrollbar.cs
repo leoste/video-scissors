@@ -19,6 +19,7 @@ namespace Scissors.Timeline
         private int scrollWidth = 3;
 
         Brush brush;
+        Brush backBrush;
         private float relation;
         private int scrollerLeftX;
         private int scrollerRightX;
@@ -101,20 +102,18 @@ namespace Scissors.Timeline
             InitializeComponent();
             
             brush = new SolidBrush(ForeColor);
-            pictureBox1.Image = new Bitmap(Width, Height);
 
             UpdateCacheAndUI();
         }
 
-        private void FancyScrollbar_UpdateUI(object sender, EventArgs e)
+        private void FancyScrollbar_BackColorChanged(object sender, EventArgs e)
         {
+            backBrush = new SolidBrush(BackColor);
             UpdateCacheAndUI();
         }
 
         private void FancyScrollbar_Resize(object sender, EventArgs e)
         {
-            pictureBox1.Image.Dispose();
-            pictureBox1.Image = new Bitmap(Width, Height);
             UpdateCacheAndUI();
         }
 
@@ -191,23 +190,22 @@ namespace Scissors.Timeline
 
         private void UpdateUI()
         {
-            Bitmap bitmap = (Bitmap)pictureBox1.Image;
+            Refresh();
+        }
 
+        private void FancyScrollbar_Paint(object sender, PaintEventArgs e)
+        {
             Rectangle scrollRectangle = scrollDirection == ScrollDirection.LeftToRight
                 ? new Rectangle(scrollerLeftX, 0, scrollerWidthX, Height)
                 : new Rectangle(0, scrollerLeftX, Width, scrollerWidthX);
 
-            bitmap.MakeTransparent(ForeColor);
-
-            using (Graphics graphics = Graphics.FromImage(bitmap))
+            if (scrollRectangle.IntersectsWith(e.ClipRectangle))
             {
-                graphics.FillRectangle(brush, scrollRectangle);
+                e.Graphics.FillRectangle(backBrush, oldRectangle);
+                e.Graphics.FillRectangle(brush, scrollRectangle);
+
+                oldRectangle = scrollRectangle;
             }
-
-            pictureBox1.Invalidate(oldRectangle);
-            pictureBox1.Invalidate(scrollRectangle);
-
-            oldRectangle = scrollRectangle;
         }
     }
 }
