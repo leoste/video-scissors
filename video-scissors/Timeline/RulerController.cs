@@ -75,6 +75,13 @@ namespace Scissors.Timeline
 
         public TimelineContent TimelineContent { get { return timelineContent; } }
 
+        public event EventHandler TimelineLengthChanged;
+        public event EventHandler TimelineZoomChanged;
+        
+        public event EventHandler LocationChanged;
+        private void InvokeLocationChanged()
+        { if (LocationChanged != null) LocationChanged.Invoke(this, EventArgs.Empty); }
+
         internal RulerController(TimelineController timeline)
         {
             this.timeline = timeline;
@@ -105,23 +112,32 @@ namespace Scissors.Timeline
 
             timelineContent.Paint += TimelineContent_Paint;
             timelineContent.Resize += TimelineContent_Resize;
-            timelineContent.HorizontalScrolled += TimelineContent_HorizontalScrolled;
-            timeline.TimelineZoomChanged += Timeline_Changed;
-            timeline.TimelineLengthChanged += Timeline_Changed;
-                        
+            timeline.TimelineZoomChanged += Timeline_TimelineZoomChanged;
+            timeline.TimelineLengthChanged += Timeline_TimelineLengthChanged;
+            timeline.LocationChanged += TimelineContent_LocationChanged;
+
             UpdateUI();
         }
 
-        private void Timeline_Changed(object sender, EventArgs e)
+        private void Timeline_TimelineZoomChanged(object sender, EventArgs e)
         {
             UpdateCache();
+            if (TimelineZoomChanged != null) TimelineZoomChanged.Invoke(this, EventArgs.Empty);
+            UpdateUI();
         }
 
-        private void TimelineContent_HorizontalScrolled(object sender, ScrollEventArgs e)
+        private void Timeline_TimelineLengthChanged(object sender, EventArgs e)
         {
             UpdateCache();
-            timelineContent.Invalidate(timelineContent.RulerContainerRectangle);
-            timelineContent.Update();
+            if (TimelineLengthChanged != null) TimelineLengthChanged.Invoke(this, EventArgs.Empty);
+            UpdateUI();
+        }
+
+        private void TimelineContent_LocationChanged(object sender, EventArgs e)
+        {
+            UpdateCache();
+            InvokeLocationChanged();
+            timelineContent.Invalidate(timelineContent.RulerContainerRectangle);         
         }
 
         private void TimelineContent_Resize(object sender, EventArgs e)
@@ -166,7 +182,6 @@ namespace Scissors.Timeline
                         
             oldRect = timelineContent.RulerContainerRectangle;
             oldScreenRect = screenRect;
-            timelineContent.Update();
         }
 
         private void TimelineContent_Paint(object sender, PaintEventArgs e)

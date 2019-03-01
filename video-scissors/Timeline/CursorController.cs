@@ -22,6 +22,9 @@ namespace Scissors.Timeline
         private Panel panel;
 
         public event EventHandler SizeChanged;
+        public event EventHandler TimelineLengthChanged;
+        public event EventHandler TimelineZoomChanged;
+        public event EventHandler LocationChanged;
 
         public CursorController(TimelineController timeline)
         {

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Scissors.Timeline
 {
@@ -39,6 +40,9 @@ namespace Scissors.Timeline
         Color ForeColor { get; set; }
 
         event EventHandler SizeChanged;
+        event EventHandler LocationChanged;
+        event EventHandler TimelineLengthChanged;
+        event EventHandler TimelineZoomChanged;
 
         void UpdateUI();        
     }

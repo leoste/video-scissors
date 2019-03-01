@@ -72,9 +72,14 @@ namespace Scissors.Timeline
 
         public event EventHandler TimelineLengthChanged;
         public event EventHandler TimelineZoomChanged;
+
         public event EventHandler SizeChanged;
         private void InvokeSizeChanged()
         { if (SizeChanged != null) SizeChanged.Invoke(this, EventArgs.Empty); }
+
+        public event EventHandler LocationChanged;
+        private void InvokeLocationChanged()
+        { if (LocationChanged != null) LocationChanged.Invoke(this, EventArgs.Empty); }
 
         public Rectangle SlicesRectangle
         {
@@ -121,7 +126,10 @@ namespace Scissors.Timeline
             this.frameWidth = frameWidth;
             this.frameHeight = frameHeight;
             this.control = control;
-            this.content = content;            
+
+            this.content = content;
+            content.VerticalScrolled += Content_VerticalScrolled;
+            content.HorizontalScrolled += Content_HorizontalScrolled;
 
             this.timeline = timeline;
             slices = new List<SliceController>();
@@ -135,6 +143,16 @@ namespace Scissors.Timeline
             //cursor = new CursorController(this);
 
             UpdateUI();
+        }
+
+        private void Content_HorizontalScrolled(object sender, ScrollEventArgs e)
+        {
+            InvokeLocationChanged();
+        }
+
+        private void Content_VerticalScrolled(object sender, ScrollEventArgs e)
+        {
+            InvokeLocationChanged();
         }
 
         internal TimelineController(Timeline timeline, TimelineControl control, TimelineContent content)
@@ -195,6 +213,7 @@ namespace Scissors.Timeline
         private void Slice_SizeChanged(object sender, EventArgs e)
         {
             InvokeSizeChanged();
+            TimelineContent.Update();
         }
 
         internal void RemoveSlice(int id)
@@ -237,13 +256,7 @@ namespace Scissors.Timeline
 
         public void UpdateUI()
         {
-            /*foreach (SliceController slice in slices)
-            {
-                slice.UpdateUI();
-            }*/
-
-            ruler.UpdateUI();
-            //cursor.UpdateUI();
+            
         }
 
         public void Dispose()

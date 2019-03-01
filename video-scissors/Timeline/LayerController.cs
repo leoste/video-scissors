@@ -16,25 +16,18 @@ namespace Scissors.Timeline
         private bool toggleVisibility;
         private int id;
         private SliceController slice;
-        private FlowLayoutPanel controlsPanel;
-        private FlowLayoutPanel contentsPanel;
         private TimelineContent timelineContent;
         private TimelineControl timelineControl;
 
-        private LayerControl control;
-        private LayerContent content;
+        private Rectangle layerRectangle;
+        private Color backColor;
 
         public TimelineContent TimelineContent { get { return timelineContent; } }
         public TimelineControl TimelineControl { get { return timelineControl; } }
 
         private List<ItemController> items;
         
-        private int oldLength;
-        private float oldZoom;
-
-        public event EventHandler SizeChanged;
-
-        internal Panel ItemContentsPanel { get { return content.Panel; } }
+        internal Panel ItemContentsPanel { get { return new Panel(); } }
 
         public int TimelineLength { get { return slice.TimelineLength; } }
         public float TimelineZoom { get { return slice.TimelineZoom; } }
@@ -44,21 +37,43 @@ namespace Scissors.Timeline
         public bool IsLocked { get { return slice.IsLocked || toggleLock; } }
         public bool IsVisible { get { return slice.IsVisible || toggleVisibility; } }
 
-        public Color BackColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public Color ForeColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Color BackColor {
+            get { return backColor; }
+            set
+            {
+                backColor = value;
+                UpdateUI();
+            }
+        }
+        public Color ForeColor { get; set; }
+
+        public event EventHandler SizeChanged;
+        private void InvokeSizeChanged()
+        { if (SizeChanged != null) SizeChanged.Invoke(this, EventArgs.Empty); }
+
+        public event EventHandler LocationChanged;
+        private void InvokeLocationChanged()
+        { if (LocationChanged != null) LocationChanged.Invoke(this, EventArgs.Empty); }
+
+        public event EventHandler TimelineLengthChanged;
+        public event EventHandler TimelineZoomChanged;
 
         private void Initialize(SliceController slice)
         {
-            oldLength = -1;
-            oldZoom = -1;
-
             this.slice = slice;
-            controlsPanel = slice.LayerControlsPanel;
-            contentsPanel = slice.LayerContentsPanel;
+            timelineControl = slice.TimelineControl;
 
-            Color color = ColorProvider.GetRandomLayerColor();
+            timelineContent = slice.TimelineContent;
+            timelineContent.Paint += TimelineContent_Paint;
+            timelineContent.Resize += TimelineContent_Resize;
 
-            control = new LayerControl();
+            slice.TimelineZoomChanged += Timeline_TimelineZoomChanged;
+            slice.TimelineLengthChanged += Timeline_TimelineLengthChanged;
+            slice.LocationChanged += Slice_LocationChanged;
+
+            backColor = ColorProvider.GetRandomLayerColor();
+
+            /*control = new LayerControl();
             control.BackColor = color;
             controlsPanel.Controls.Add(control);
             control.AddClicked += Control_AddClicked;
@@ -72,7 +87,7 @@ namespace Scissors.Timeline
 
             content = new LayerContent();
             content.BackColor = color;
-            contentsPanel.Controls.Add(content);
+            contentsPanel.Controls.Add(content);*/
 
             SetId();
 
@@ -83,6 +98,41 @@ namespace Scissors.Timeline
             items.Add(new ItemController(this, 40, 5));
 
             UpdateUI();
+        }
+
+        private void Slice_LocationChanged(object sender, EventArgs e)
+        {
+            UpdateCache();
+            InvokeLocationChanged();
+            UpdateUI();
+        }
+
+        private void TimelineContent_Resize(object sender, EventArgs e)
+        {
+            UpdateCache();
+            UpdateUI();
+        }
+
+        private void Timeline_TimelineZoomChanged(object sender, EventArgs e)
+        {
+            UpdateCache();
+            if (TimelineZoomChanged != null) TimelineZoomChanged.Invoke(this, EventArgs.Empty);
+            UpdateUI();
+        }
+
+        private void Timeline_TimelineLengthChanged(object sender, EventArgs e)
+        {
+            UpdateCache();
+            if (TimelineLengthChanged != null) TimelineLengthChanged.Invoke(this, EventArgs.Empty);
+            UpdateUI();
+        }
+
+        private void UpdateCache()
+        {
+            layerRectangle.X = slice.LayersRectangle.X;
+            layerRectangle.Y = slice.LayersRectangle.Y + id * (height + SliceController.layerMargin);
+            layerRectangle.Width = slice.LayersRectangle.Width;
+            layerRectangle.Height = height;
         }
 
         private void Control_ToggleVisibilityClicked(object sender, ToggleEventArgs e)
@@ -129,8 +179,8 @@ namespace Scissors.Timeline
 
         private void SetId()
         {
-            controlsPanel.Controls.SetChildIndex(control, id);
-            contentsPanel.Controls.SetChildIndex(content, id);
+            /*controlsPanel.Controls.SetChildIndex(control, id);
+            contentsPanel.Controls.SetChildIndex(content, id);*/
         }
 
         internal int GetId()
@@ -146,18 +196,25 @@ namespace Scissors.Timeline
 
         public void UpdateUI()
         {
-            if (TimelineLength != oldLength || TimelineZoom != oldZoom)
+            Rectangle rect = layerRectangle;
+            if (rect.Y < timelineContent.SlicesContainerRectangle.Y)
             {
-                oldLength = TimelineLength;
-                oldZoom = TimelineZoom;
+                rect.Height -= timelineContent.SlicesContainerRectangle.Y - rect.Y;
+                rect.Y = timelineContent.SlicesContainerRectangle.Y;
+            }
+            timelineContent.Invalidate(rect);
+        }
+        
+        private void TimelineContent_Paint(object sender, PaintEventArgs e)
+        {
+            if (e.ClipRectangle.IntersectsWith(layerRectangle))
+            {
+                Brush brush = new SolidBrush(backColor);
 
-                content.Width = (int)(TimelineLength * TimelineZoom);
-
-                foreach (ItemController item in items)
-                {
-                    item.UpdateUI();
-                }
-            }            
+                e.Graphics.FillRectangle(brush, new Rectangle(
+                    e.ClipRectangle.X, layerRectangle.Y,
+                    e.ClipRectangle.Width, height));
+            }
         }
 
         public void ProcessFrame(Frame frame, int position)
@@ -175,7 +232,7 @@ namespace Scissors.Timeline
 
         public void Dispose()
         {
-            foreach (ItemController item in items)
+            /*foreach (ItemController item in items)
             {
                 item.Dispose();
             }
@@ -183,7 +240,7 @@ namespace Scissors.Timeline
             controlsPanel.Controls.Remove(control);
             contentsPanel.Controls.Remove(content);
             control.Dispose();
-            content.Dispose();
+            content.Dispose();*/
         }
 
         public bool IsPositionOkay(ItemController item)

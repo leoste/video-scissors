@@ -164,7 +164,7 @@ namespace Scissors.Timeline
         public TimelineContent()
         {
             InitializeComponent();
-            UpdateSlicesCache();
+            UpdateSlicesCache();            
         }
 
         private int CalculateSlicesBegin(int rulerHeight, int separatorHeight)

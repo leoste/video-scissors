@@ -53,7 +53,7 @@ namespace Scissors.Timeline
         public Color ForeColor { get; set; }
 
         public Rectangle LayersRectangle
-        { get { return new Rectangle(sliceRectangle.X, sliceRectangle.Width, padding, layersHeight); } }
+        { get { return new Rectangle(sliceRectangle.X, sliceRectangle.Y + padding, sliceRectangle.Width, layersHeight); } }
                 
         public Rectangle SliceRectangle
         { get { return sliceRectangle; } }
@@ -62,6 +62,13 @@ namespace Scissors.Timeline
         private void InvokeSizeChanged()
         { if (SizeChanged != null) SizeChanged.Invoke(this, EventArgs.Empty); }
 
+        public event EventHandler LocationChanged;
+        private void InvokeLocationChanged()
+        { if (LocationChanged != null) LocationChanged.Invoke(this, EventArgs.Empty); }
+
+        public event EventHandler TimelineLengthChanged;
+        public event EventHandler TimelineZoomChanged;
+
         private void Initialize(TimelineController timeline)
         {
             this.timeline = timeline;
@@ -69,12 +76,11 @@ namespace Scissors.Timeline
 
             timelineContent = timeline.TimelineContent;
             timelineContent.Paint += TimelineContent_Paint;
-            timelineContent.VerticalScrolled += TimelineContent_VerticalScrolled;
-            timelineContent.HorizontalScrolled += TimelineContent_HorizontalScrolled;
             timelineContent.Resize += TimelineContent_Resize;
 
-            timeline.TimelineZoomChanged += Timeline_Changed;
-            timeline.TimelineLengthChanged += Timeline_Changed;
+            timeline.TimelineZoomChanged += Timeline_TimelineZoomChanged;
+            timeline.TimelineLengthChanged += Timeline_TimelineLengthChanged;
+            timeline.LocationChanged += Timeline_LocationChanged;
 
             BackColor = ColorProvider.GetRandomSliceColor();
 
@@ -99,30 +105,35 @@ namespace Scissors.Timeline
             layers = new List<LayerController>();
             CreateLayer();
             CreateLayer();
+            CreateLayer();
+            CreateLayer();
 
             UpdateCache();
             UpdateUI();
         }
 
-        private void Timeline_Changed(object sender, EventArgs e)
+        private void Timeline_LocationChanged(object sender, EventArgs e)
         {
             UpdateCache();
+            InvokeLocationChanged();
+            UpdateUI();
+        }
+
+        private void Timeline_TimelineZoomChanged(object sender, EventArgs e)
+        {
+            UpdateCache();
+            if (TimelineZoomChanged != null) TimelineZoomChanged.Invoke(this, EventArgs.Empty);
+        }
+
+        private void Timeline_TimelineLengthChanged(object sender, EventArgs e)
+        {
+            UpdateCache();
+            if (TimelineLengthChanged != null) TimelineLengthChanged.Invoke(this, EventArgs.Empty);
         }
 
         private void TimelineContent_Resize(object sender, EventArgs e)
         {
             UpdateCache();
-        }
-
-        private void TimelineContent_HorizontalScrolled(object sender, ScrollEventArgs e)
-        {
-            UpdateCache();
-        }
-
-        private void TimelineContent_VerticalScrolled(object sender, ScrollEventArgs e)
-        {
-            UpdateCache();
-            UpdateUI();
         }
 
         private void UpdateCache()
@@ -255,21 +266,20 @@ namespace Scissors.Timeline
             Rectangle rect = sliceRectangle;
             if (rect.Y < timelineContent.SlicesContainerRectangle.Y)
             {
-                rect.Height -= timelineContent.SlicesContainerRectangle.Y - rect.Y;
+                rect.Height = rect.Height - timelineContent.SlicesContainerRectangle.Y - rect.Y;
                 rect.Y = timelineContent.SlicesContainerRectangle.Y;
             }
             timelineContent.Invalidate(rect);
-            timelineContent.Update();
         }
 
         private void TimelineContent_Paint(object sender, PaintEventArgs e)
         {
             if (e.ClipRectangle.IntersectsWith(sliceRectangle))
             {
-                Brush brush = new SolidBrush(backColor);
+                Brush brush = new SolidBrush(backColor);                
                 
                 e.Graphics.FillRectangle(brush, new Rectangle(
-                    e.ClipRectangle.X, Math.Max(sliceRectangle.Y, timelineContent.SlicesContainerRectangle.Y),
+                    e.ClipRectangle.X, sliceRectangle.Y,
                     e.ClipRectangle.Width, padding));
 
                 for (int i = 1; i < layers.Count; i += 1)

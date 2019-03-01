@@ -123,6 +123,9 @@ namespace Scissors.Timeline
         private int mouseOffsetY;
 
         public event EventHandler SizeChanged;
+        public event EventHandler TimelineLengthChanged;
+        public event EventHandler TimelineZoomChanged;
+        public event EventHandler LocationChanged;
 
         private void Content_MouseDown(object sender, MouseEventArgs e)
         {
