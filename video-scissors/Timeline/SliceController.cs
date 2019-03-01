@@ -71,6 +71,8 @@ namespace Scissors.Timeline
 
         private void Initialize(TimelineController timeline)
         {
+            layers = new List<LayerController>();
+
             this.timeline = timeline;
             timelineControl = timeline.TimelineControl;
 
@@ -83,7 +85,7 @@ namespace Scissors.Timeline
             timeline.LocationChanged += Timeline_LocationChanged;
 
             BackColor = ColorProvider.GetRandomSliceColor();
-
+            
             /*control = new SliceControl();
             control.BackColor = color;
             controlsPanel.Controls.Add(control);
@@ -102,7 +104,8 @@ namespace Scissors.Timeline
 
             SetId();
 
-            layers = new List<LayerController>();
+            CreateLayer();
+            CreateLayer();
             CreateLayer();
             CreateLayer();
             CreateLayer();
@@ -123,22 +126,25 @@ namespace Scissors.Timeline
         {
             UpdateCache();
             if (TimelineZoomChanged != null) TimelineZoomChanged.Invoke(this, EventArgs.Empty);
+            UpdateUI();
         }
 
         private void Timeline_TimelineLengthChanged(object sender, EventArgs e)
         {
             UpdateCache();
             if (TimelineLengthChanged != null) TimelineLengthChanged.Invoke(this, EventArgs.Empty);
+            UpdateUI();
         }
 
         private void TimelineContent_Resize(object sender, EventArgs e)
         {
             UpdateCache();
+            UpdateUI();
         }
 
         private void UpdateCache()
         {
-            layersHeight = layers.Count * LayerController.height + Math.Max((layers.Count - 1) * layerMargin, 0);
+            layersHeight = layers.Count * LayerController.height + Math.Max(layers.Count - 1, 0) * layerMargin;
             int height = padding * 2 + layersHeight;
             sliceRectangle.X = timelineContent.SlicesContainerRectangle.X - timelineContent.HorizontalScroll;
             sliceRectangle.Y = timelineContent.SlicesContainerRectangle.Y + id * height - timelineContent.VerticalScroll;
@@ -193,6 +199,8 @@ namespace Scissors.Timeline
         {
             /*controlsPanel.Controls.SetChildIndex(control, id);
             contentsPanel.Controls.SetChildIndex(content, id);*/
+            UpdateCache();
+            UpdateUI();
         }
 
         internal int GetId()
@@ -266,21 +274,23 @@ namespace Scissors.Timeline
             Rectangle rect = sliceRectangle;
             if (rect.Y < timelineContent.SlicesContainerRectangle.Y)
             {
-                rect.Height = rect.Height - timelineContent.SlicesContainerRectangle.Y - rect.Y;
+                rect.Height = rect.Height - timelineContent.SlicesContainerRectangle.Y + rect.Y;                
                 rect.Y = timelineContent.SlicesContainerRectangle.Y;
             }
             timelineContent.Invalidate(rect);
         }
 
         private void TimelineContent_Paint(object sender, PaintEventArgs e)
-        {
+        {            
             if (e.ClipRectangle.IntersectsWith(sliceRectangle))
             {
-                Brush brush = new SolidBrush(backColor);                
-                
-                e.Graphics.FillRectangle(brush, new Rectangle(
-                    e.ClipRectangle.X, sliceRectangle.Y,
-                    e.ClipRectangle.Width, padding));
+                Rectangle clip = e.ClipRectangle;
+                Rectangle slice = sliceRectangle;
+
+                Brush brush = new SolidBrush(backColor);
+
+                Rectangle pad1 = new Rectangle(e.ClipRectangle.X, sliceRectangle.Y, e.ClipRectangle.Width, padding);
+                e.Graphics.FillRectangle(brush, pad1);
 
                 for (int i = 1; i < layers.Count; i += 1)
                 {
@@ -290,9 +300,9 @@ namespace Scissors.Timeline
                         e.ClipRectangle.Width, layerMargin));
                 }
 
-                e.Graphics.FillRectangle(brush, new Rectangle(
-                    e.ClipRectangle.X, sliceRectangle.Y + padding + layersHeight,
-                    e.ClipRectangle.Width, padding));
+                Rectangle pad2 = new Rectangle(
+                    e.ClipRectangle.X, sliceRectangle.Bottom - padding, e.ClipRectangle.Width, padding);
+                e.Graphics.FillRectangle(brush, pad2);
             }
         }
 
