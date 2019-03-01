@@ -12,7 +12,7 @@ namespace Scissors.Timeline
     {
         private int markWidth = 2;
         private Color markColor = Color.Black;
-        private Color backColor = Color.AntiqueWhite;
+        private Color backColor = Color.AntiqueWhite;        
 
         private TimelineController timeline;
         private TimelineContent timelineContent;
@@ -21,6 +21,7 @@ namespace Scissors.Timeline
         private Rectangle oldRect;
         private Rectangle oldScreenRect;
         private Rectangle rulerRectangle;
+        private int oldScroll;
 
         public event EventHandler SizeChanged;
 
@@ -89,6 +90,7 @@ namespace Scissors.Timeline
             timelineContent = timeline.TimelineContent;
             oldRect = timelineContent.RulerContainerRectangle;
             oldScreenRect = GetScreenRectangle();
+            oldScroll = timelineContent.HorizontalScroll;
 
             rulerRectangle = new Rectangle();
             UpdateCache();
@@ -135,9 +137,13 @@ namespace Scissors.Timeline
 
         private void TimelineContent_LocationChanged(object sender, EventArgs e)
         {
-            UpdateCache();
-            InvokeLocationChanged();
-            timelineContent.Invalidate(timelineContent.RulerContainerRectangle);         
+            if (timelineContent.HorizontalScroll != oldScroll)
+            {
+                oldScroll = timelineContent.HorizontalScroll;
+                UpdateCache();
+                InvokeLocationChanged();
+                timelineContent.Invalidate(timelineContent.RulerContainerRectangle);
+            }
         }
 
         private void TimelineContent_Resize(object sender, EventArgs e)

@@ -196,24 +196,23 @@ namespace Scissors.Timeline
 
         public void UpdateUI()
         {
-            Rectangle rect = layerRectangle;
-            if (rect.Y < timelineContent.SlicesContainerRectangle.Y)
-            {
-                rect.Height -= timelineContent.SlicesContainerRectangle.Y - rect.Y;
-                rect.Y = timelineContent.SlicesContainerRectangle.Y;
-            }
-            timelineContent.Invalidate(rect);
+            timelineContent.InvalidateSlicesContainerRectangle(layerRectangle);
         }
         
         private void TimelineContent_Paint(object sender, PaintEventArgs e)
         {
             if (e.ClipRectangle.IntersectsWith(layerRectangle))
             {
+                Region graphicsClip = e.Graphics.Clip;
+                e.Graphics.Clip = new Region(timelineContent.SlicesContainerRectangle);
+
                 Brush brush = new SolidBrush(backColor);
 
                 e.Graphics.FillRectangle(brush, new Rectangle(
                     e.ClipRectangle.X, layerRectangle.Y,
                     e.ClipRectangle.Width, height));
+
+                e.Graphics.Clip = graphicsClip;
             }
         }
 

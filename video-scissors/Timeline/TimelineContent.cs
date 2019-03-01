@@ -182,5 +182,18 @@ namespace Scissors.Timeline
             slicesBegin = CalculateSlicesBegin(rulerHeight, separatorHeight);
             slicesHeight = CalculateSlicesHeight(Height, slicesBegin);
         }
+
+        public void InvalidateSlicesContainerRectangle(Rectangle rect)
+        {
+            if (rect.Y < slicesBegin + slicesHeight && rect.Bottom > slicesBegin)
+            {
+                if (rect.Y < slicesBegin)
+                {
+                    rect.Height = rect.Height - (slicesBegin - rect.Y);
+                    rect.Y = slicesBegin;
+                }
+                Invalidate(rect);
+            }
+        }
     }
 }

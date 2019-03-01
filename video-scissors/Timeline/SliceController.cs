@@ -107,9 +107,6 @@ namespace Scissors.Timeline
             CreateLayer();
             CreateLayer();
             CreateLayer();
-            CreateLayer();
-            CreateLayer();
-            CreateLayer();
 
             UpdateCache();
             UpdateUI();
@@ -271,21 +268,15 @@ namespace Scissors.Timeline
         
         public void UpdateUI()
         {
-            Rectangle rect = sliceRectangle;
-            if (rect.Y < timelineContent.SlicesContainerRectangle.Y)
-            {
-                rect.Height = rect.Height - timelineContent.SlicesContainerRectangle.Y + rect.Y;                
-                rect.Y = timelineContent.SlicesContainerRectangle.Y;
-            }
-            timelineContent.Invalidate(rect);
+            timelineContent.InvalidateSlicesContainerRectangle(sliceRectangle);
         }
 
         private void TimelineContent_Paint(object sender, PaintEventArgs e)
-        {            
+        {
             if (e.ClipRectangle.IntersectsWith(sliceRectangle))
             {
-                Rectangle clip = e.ClipRectangle;
-                Rectangle slice = sliceRectangle;
+                Region graphicsClip = e.Graphics.Clip;
+                e.Graphics.Clip = new Region(timelineContent.SlicesContainerRectangle);
 
                 Brush brush = new SolidBrush(backColor);
 
@@ -303,6 +294,8 @@ namespace Scissors.Timeline
                 Rectangle pad2 = new Rectangle(
                     e.ClipRectangle.X, sliceRectangle.Bottom - padding, e.ClipRectangle.Width, padding);
                 e.Graphics.FillRectangle(brush, pad2);
+
+                e.Graphics.Clip = graphicsClip;
             }
         }
 

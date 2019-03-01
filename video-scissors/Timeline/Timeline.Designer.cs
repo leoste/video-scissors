@@ -39,7 +39,7 @@
             this.timelineContent1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.timelineContent1.BackColor = System.Drawing.Color.LightSalmon;
+            this.timelineContent1.BackColor = System.Drawing.Color.Black;
             this.timelineContent1.HorizontalScroll = 0;
             this.timelineContent1.Location = new System.Drawing.Point(174, 0);
             this.timelineContent1.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
