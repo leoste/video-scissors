@@ -38,7 +38,8 @@ namespace Scissors.Timeline
                 //add better check in the future to prevent size change when items would be left outside
                 if (value > 0)
                 {
-                    this.length = value;
+                    length = value;
+                    UpdateCache();
                     if (TimelineLengthChanged != null) TimelineLengthChanged.Invoke(this, EventArgs.Empty);
                     InvokeSizeChanged();
                     UpdateUI();
@@ -54,6 +55,7 @@ namespace Scissors.Timeline
                 if (value > 0)
                 {
                     zoom = value;
+                    UpdateCache();
                     if (TimelineZoomChanged != null) TimelineZoomChanged.Invoke(this, EventArgs.Empty);
                     InvokeSizeChanged();
                     UpdateUI();

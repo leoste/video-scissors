@@ -25,7 +25,7 @@ namespace Scissors.Timeline
         {
             InitializeComponent();
             controller = new TimelineController(this, timelineControl1, timelineContent1, 540);
-            controller.SizeChanged += VerticalSizeChanged;
+            controller.SizeChanged += Timeline_SizeChanged;                
             horizontalScrollBar.Minimum = 0;
             UpdateHorizontalScrollbar();
         }
@@ -58,8 +58,9 @@ namespace Scissors.Timeline
             horizontalScrollBar.ScrollWidth = timelineContent1.Width;
         }
 
-        private void VerticalSizeChanged(object sender, EventArgs e)
+        private void Timeline_SizeChanged(object sender, EventArgs e)
         {
+            UpdateHorizontalScrollbar();
             UpdateVerticalScrollbar();
         }
 
