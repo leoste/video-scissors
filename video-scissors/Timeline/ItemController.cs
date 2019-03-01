@@ -122,6 +122,8 @@ namespace Scissors.Timeline
         //drag clip up or down to change layer
         private int mouseOffsetY;
 
+        public event EventHandler SizeChanged;
+
         private void Content_MouseDown(object sender, MouseEventArgs e)
         {
             if (layer.IsLocked) return;

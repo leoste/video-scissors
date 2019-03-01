@@ -22,6 +22,8 @@ namespace Scissors.Timeline
         private Rectangle oldScreenRect;
         private Rectangle rulerRectangle;
 
+        public event EventHandler SizeChanged;
+
         public int TimelineLength { get { return timeline.TimelineLength; } }
         public float TimelineZoom { get { return timeline.TimelineZoom; } }
         public int ProjectFramerate { get { return timeline.ProjectFramerate; } }

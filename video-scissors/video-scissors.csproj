@@ -128,12 +128,6 @@
       <DependentUpon>SliceControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Timeline\SliceController.cs" />
-    <Compile Include="Timeline\SliceContent.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Timeline\SliceContent.Designer.cs">
-      <DependentUpon>SliceContent.cs</DependentUpon>
-    </Compile>
     <Compile Include="Timeline\Timeline.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -171,9 +165,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Timeline\SliceControl.resx">
       <DependentUpon>SliceControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Timeline\SliceContent.resx">
-      <DependentUpon>SliceContent.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Timeline\Timeline.resx">
       <DependentUpon>Timeline.cs</DependentUpon>

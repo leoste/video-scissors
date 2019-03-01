@@ -76,18 +76,7 @@ namespace Scissors.Timeline
             get { return base.Height; }
             set
             {
-                int protoValue;
-                int protoSlicesHeight = CalculateSlicesHeight(value, slicesBegin);
-
-                if (protoSlicesHeight > 0) protoValue = value;
-                else
-                {
-                    protoSlicesHeight = 1;
-                    protoValue = slicesBegin + protoSlicesHeight;
-                }
-
-                slicesHeight = protoSlicesHeight;
-                base.Height = protoValue;
+                base.Height = value;
             }
         }
 
@@ -96,20 +85,7 @@ namespace Scissors.Timeline
             get { return base.Size; }
             set
             {
-                if (value.Height != Height)
-                {
-                    int protoSlicesHeight = CalculateSlicesHeight(value.Height, slicesBegin);
-
-                    Size protoValue = value;
-                    if (protoSlicesHeight <= 0)
-                    {
-                        protoSlicesHeight = 1;
-                        protoValue.Height = slicesBegin + protoSlicesHeight;
-                    }
-
-                    slicesHeight = protoSlicesHeight;
-                    base.Size = protoValue;
-                }
+                base.Size = value;
             }
         }
 
@@ -174,6 +150,15 @@ namespace Scissors.Timeline
                 Brush brush = new SolidBrush(BackColor);
                 e.Graphics.FillRectangle(brush, rect);
             }
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            int protoSlicesHeight = CalculateSlicesHeight(Size.Height, slicesBegin);            
+            if (protoSlicesHeight <= 0) protoSlicesHeight = 1;
+            slicesHeight = protoSlicesHeight;
+
+            base.OnResize(e);
         }
 
         public TimelineContent()

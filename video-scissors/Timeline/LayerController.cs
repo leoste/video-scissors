@@ -32,6 +32,8 @@ namespace Scissors.Timeline
         private int oldLength;
         private float oldZoom;
 
+        public event EventHandler SizeChanged;
+
         internal Panel ItemContentsPanel { get { return content.Panel; } }
 
         public int TimelineLength { get { return slice.TimelineLength; } }

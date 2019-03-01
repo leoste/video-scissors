@@ -38,6 +38,8 @@ namespace Scissors.Timeline
         Color BackColor { get; set; }
         Color ForeColor { get; set; }
 
+        event EventHandler SizeChanged;
+
         void UpdateUI();        
     }
 }

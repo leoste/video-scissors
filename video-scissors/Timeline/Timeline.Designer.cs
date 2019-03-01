@@ -48,6 +48,7 @@
             this.timelineContent1.SeparatorHeight = 3;
             this.timelineContent1.Size = new System.Drawing.Size(734, 524);
             this.timelineContent1.TabIndex = 17;
+            this.timelineContent1.VerticalScroll = 0;
             this.timelineContent1.Resize += new System.EventHandler(this.timelineContent1_Resize);
             // 
             // timelineControl1
@@ -78,7 +79,6 @@
             this.verticalScrollbar.TabIndex = 12;
             this.verticalScrollbar.Value = 3;
             this.verticalScrollbar.Scroll += new System.EventHandler<System.Windows.Forms.ScrollEventArgs>(this.verticalScrollbar_Scroll);
-            this.verticalScrollbar.Resize += new System.EventHandler(this.verticalScrollbar_Resize);
             // 
             // horizontalScrollBar
             // 

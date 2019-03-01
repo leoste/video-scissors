@@ -11,6 +11,7 @@ namespace Scissors.Timeline
     class SliceController : IFrameController, IControlController, IChildController
     {
         public static readonly int padding = 3;
+        public static readonly int layerMargin = 2;
         
         private int layersHeight = 40;
 
@@ -57,6 +58,10 @@ namespace Scissors.Timeline
         public Rectangle SliceRectangle
         { get { return sliceRectangle; } }
 
+        public event EventHandler SizeChanged;
+        private void InvokeSizeChanged()
+        { if (SizeChanged != null) SizeChanged.Invoke(this, EventArgs.Empty); }
+
         private void Initialize(TimelineController timeline)
         {
             this.timeline = timeline;
@@ -93,7 +98,9 @@ namespace Scissors.Timeline
 
             layers = new List<LayerController>();
             CreateLayer();
+            CreateLayer();
 
+            UpdateCache();
             UpdateUI();
         }
 
@@ -115,16 +122,15 @@ namespace Scissors.Timeline
         private void TimelineContent_VerticalScrolled(object sender, ScrollEventArgs e)
         {
             UpdateCache();
+            UpdateUI();
         }
 
         private void UpdateCache()
         {
-            //layersHeight = layers.Count * LayerController.height;
-            layersHeight = 40;
-
+            layersHeight = layers.Count * LayerController.height + Math.Max((layers.Count - 1) * layerMargin, 0);
             int height = padding * 2 + layersHeight;
             sliceRectangle.X = timelineContent.SlicesContainerRectangle.X - timelineContent.HorizontalScroll;
-            sliceRectangle.Y = timelineContent.SlicesContainerRectangle.Y + id * height;
+            sliceRectangle.Y = timelineContent.SlicesContainerRectangle.Y + id * height - timelineContent.VerticalScroll;
             sliceRectangle.Width = (int)(timeline.TimelineLength * timeline.TimelineZoom);
             sliceRectangle.Height = height;
         }
@@ -196,18 +202,19 @@ namespace Scissors.Timeline
 
         internal void CreateLayer()
         {
-            CreateLayer(LayerCount);
+            CreateLayer(LayerCount);            
         }
 
         internal void CreateLayer(int id)
         {
-            layers.Insert(id, new LayerController(this, id));
+            LayerController layer = new LayerController(this, id);
+            layers.Insert(id, layer);
             for (int i = LayerCount - 1; i > id; i -= 1)
             {
                 layers[i].SetId(i);
             }
-
             UpdateCache();
+            InvokeSizeChanged();
             UpdateUI();
         }
 
@@ -227,6 +234,7 @@ namespace Scissors.Timeline
             }
 
             UpdateCache();
+            InvokeSizeChanged();
             UpdateUI();
         }
 
@@ -253,14 +261,26 @@ namespace Scissors.Timeline
             if (e.ClipRectangle.IntersectsWith(sliceRectangle))
             {
                 Brush brush = new SolidBrush(backColor);
-
+                /*
                 e.Graphics.FillRectangle(brush, new Rectangle(
                     e.ClipRectangle.X, sliceRectangle.Y,
                     e.ClipRectangle.Width, padding));
 
+                for (int i = 1; i < layers.Count; i += 1)
+                {
+                    int y = sliceRectangle.Y + padding + LayerController.height * i + (i - 1) * layerMargin;
+                    e.Graphics.FillRectangle(brush, new Rectangle(
+                        e.ClipRectangle.X, y,
+                        e.ClipRectangle.Width, layerMargin));
+                }
+
                 e.Graphics.FillRectangle(brush, new Rectangle(
                     e.ClipRectangle.X, sliceRectangle.Y + padding + layersHeight,
                     e.ClipRectangle.Width, padding));
+                */
+                e.Graphics.FillRectangle(brush, new Rectangle(
+                    e.ClipRectangle.X, Math.Max(sliceRectangle.Y, timelineContent.SlicesContainerRectangle.Y),
+                    e.ClipRectangle.Width, sliceRectangle.Height));
             }
         }
 

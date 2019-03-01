@@ -32,13 +32,32 @@ namespace Scissors.Timeline
         public int TimelineLength
         {
             get { return length; }
-            set { SetLength(value); }
+            set
+            {
+                //add better check in the future to prevent size change when items would be left outside
+                if (value > 0)
+                {
+                    this.length = value;
+                    if (TimelineLengthChanged != null) TimelineLengthChanged.Invoke(this, EventArgs.Empty);
+                    InvokeSizeChanged();
+                    UpdateUI();
+                }
+            }
         }
 
         public float TimelineZoom
         {
             get { return zoom; }
-            set { if (value > 0) SetZoom(value); }
+            set
+            {
+                if (value > 0)
+                {
+                    zoom = value;
+                    if (TimelineZoomChanged != null) TimelineZoomChanged.Invoke(this, EventArgs.Empty);
+                    InvokeSizeChanged();
+                    UpdateUI();
+                }
+            }
         }
 
         public int ProjectFramerate { get { return framerate; } }
@@ -48,12 +67,51 @@ namespace Scissors.Timeline
         public bool IsVisible { get; }
         public TimelineContent TimelineContent { get { return content; } }
         public TimelineControl TimelineControl { get { return control; } }
-
         public Color BackColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public Color ForeColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public event EventHandler TimelineLengthChanged;
         public event EventHandler TimelineZoomChanged;
+        public event EventHandler SizeChanged;
+        private void InvokeSizeChanged()
+        { if (SizeChanged != null) SizeChanged.Invoke(this, EventArgs.Empty); }
+
+        public Rectangle SlicesRectangle
+        {
+            get
+            {
+                Rectangle rectangle = new Rectangle();
+
+                SliceController firstSlice = slices.First();
+                rectangle.X = firstSlice.SliceRectangle.X;
+                rectangle.Y = firstSlice.SliceRectangle.Y;
+                rectangle.Width = firstSlice.SliceRectangle.Width;
+                rectangle.Height = GetHeight() - firstSlice.SliceRectangle.Y;
+
+                return rectangle;
+            }
+        }
+
+        public Rectangle TimelineRectangle
+        {
+            get
+            {
+                Rectangle rectangle = new Rectangle();
+
+                rectangle.X = ruler.RulerRectangle.X;
+                rectangle.Y = ruler.RulerRectangle.Y;
+                rectangle.Width = ruler.RulerRectangle.Width;
+                rectangle.Height = GetHeight();
+
+                return rectangle;
+            }
+        }
+
+        private int GetHeight()
+        {
+            SliceController lastSlice = slices.Last();
+            return lastSlice.SliceRectangle.Bottom;
+        }
 
         private void Initialize(Timeline timeline, TimelineControl control, TimelineContent content, int length, float zoom, int framerate, int frameWidth, int frameHeight)
         {
@@ -63,7 +121,7 @@ namespace Scissors.Timeline
             this.frameWidth = frameWidth;
             this.frameHeight = frameHeight;
             this.control = control;
-            this.content = content;
+            this.content = content;            
 
             this.timeline = timeline;
             slices = new List<SliceController>();
@@ -113,22 +171,6 @@ namespace Scissors.Timeline
             Initialize(timeline, control, content, length, GlobalConfig.DefaultTimelineZoom, framerate, frameWidth, frameHeight);
         }
 
-        private void SetLength(int length)
-        {
-            //check if length can be changed or not
-
-            this.length = length;
-            if (TimelineLengthChanged != null) TimelineLengthChanged.Invoke(this, EventArgs.Empty);
-            UpdateUI();
-        }
-        
-        private void SetZoom(float zoom)
-        {
-            this.zoom = zoom;
-            if (TimelineZoomChanged != null) TimelineZoomChanged.Invoke(this, EventArgs.Empty);
-            UpdateUI();
-        }
-
         internal int GetSliceId(SliceController slice)
         {
             return slices.IndexOf(slice);
@@ -141,11 +183,18 @@ namespace Scissors.Timeline
 
         internal void CreateSlice(int id)
         {
-            slices.Insert(id, new SliceController(this, id));
+            SliceController slice = new SliceController(this, id);
+            slice.SizeChanged += Slice_SizeChanged;
+            slices.Insert(id, slice);
             for (int i = SliceCount - 1; i > id; i -= 1)
             {
                 slices[i].SetId(i);
             }
+        }
+
+        private void Slice_SizeChanged(object sender, EventArgs e)
+        {
+            InvokeSizeChanged();
         }
 
         internal void RemoveSlice(int id)

@@ -20,7 +20,9 @@ namespace Scissors.Timeline
         private TimelineController timeline;
         private Dictionary<Control, ControlInfo> generations;
         private Panel panel;
-        
+
+        public event EventHandler SizeChanged;
+
         public CursorController(TimelineController timeline)
         {
             generations = new Dictionary<Control, ControlInfo>();
