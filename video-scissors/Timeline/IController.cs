@@ -38,12 +38,14 @@ namespace Scissors.Timeline
         TimelineContent TimelineContent { get; }
         Color BackColor { get; set; }
         Color ForeColor { get; set; }
+        Rectangle Rectangle { get; }
+        Rectangle ParentRectangle { get; }
 
         event EventHandler SizeChanged;
         event EventHandler LocationChanged;
         event EventHandler TimelineLengthChanged;
         event EventHandler TimelineZoomChanged;
-
+        
         void UpdateUI();        
     }
 }

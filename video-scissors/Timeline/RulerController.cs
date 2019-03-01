@@ -32,8 +32,11 @@ namespace Scissors.Timeline
         public int ProjectFrameHeight { get { return timeline.ProjectFrameHeight; } }
 
 
-        public Rectangle RulerRectangle
+        public Rectangle Rectangle
         { get { return rulerRectangle; } }
+
+        public Rectangle ParentRectangle
+        { get { return timelineContent.RulerContainerRectangle; } }
 
         public int MarkWidth
         {
@@ -157,9 +160,9 @@ namespace Scissors.Timeline
 
         private void UpdateCache()
         {
-            rulerRectangle.X = timelineContent.RulerContainerRectangle.X - timelineContent.HorizontalScroll;
-            rulerRectangle.Y = timelineContent.RulerContainerRectangle.Y;
-            rulerRectangle.Width = (int)(timeline.TimelineLength * timeline.TimelineZoom);
+            rulerRectangle.X = timeline.Rectangle.X;
+            rulerRectangle.Y = timeline.Rectangle.Y;
+            rulerRectangle.Width = timeline.Rectangle.Width;
             rulerRectangle.Height = timelineContent.RulerContainerRectangle.Height;
         }
 
@@ -171,7 +174,7 @@ namespace Scissors.Timeline
             if (screenRect.Location != oldScreenRect.Location || screenRect.Height != oldScreenRect.Height)
             {
                 timelineContent.Invalidate(oldRect);
-                timelineContent.Invalidate(timelineContent.RulerContainerRectangle);
+                timelineContent.Invalidate(ParentRectangle);
             }
             //if width has increased then only the new area needs redrawing
             else if (screenRect.Width != oldScreenRect.Width)
@@ -185,24 +188,22 @@ namespace Scissors.Timeline
             }
             //if nothing has changed then there's no need to redraw
             else return;
-                        
-            oldRect = timelineContent.RulerContainerRectangle;
+
+            oldRect = ParentRectangle;
             oldScreenRect = screenRect;
         }
 
         private void TimelineContent_Paint(object sender, PaintEventArgs e)
         {
-            if (e.ClipRectangle.IntersectsWith(timelineContent.RulerContainerRectangle))
+            if (e.ClipRectangle.IntersectsWith(ParentRectangle))
             {
-                Rectangle rect = timelineContent.RulerContainerRectangle;
+                Rectangle rect = ParentRectangle;
                 Brush markBrush = new SolidBrush(markColor);
                 Brush brush = new SolidBrush(backColor);
 
                 e.Graphics.FillRectangle(brush, new Rectangle(
-                    e.ClipRectangle.X,
-                    timelineContent.RulerContainerRectangle.Y,
-                    e.ClipRectangle.Width,
-                    timelineContent.RulerContainerRectangle.Height));
+                    e.ClipRectangle.X, ParentRectangle.Y,
+                    e.ClipRectangle.Width, ParentRectangle.Height));
 
                 int startX = e.ClipRectangle.X - rulerRectangle.X;
                 int i = (int)(startX / TimelineZoom);

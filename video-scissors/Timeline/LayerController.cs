@@ -47,6 +47,9 @@ namespace Scissors.Timeline
         }
         public Color ForeColor { get; set; }
 
+        public Rectangle Rectangle { get { return layerRectangle; } }
+        public Rectangle ParentRectangle { get { return slice.ParentRectangle; } }
+
         public event EventHandler SizeChanged;
         private void InvokeSizeChanged()
         { if (SizeChanged != null) SizeChanged.Invoke(this, EventArgs.Empty); }
@@ -204,13 +207,16 @@ namespace Scissors.Timeline
             if (e.ClipRectangle.IntersectsWith(layerRectangle))
             {
                 Region graphicsClip = e.Graphics.Clip;
-                e.Graphics.Clip = new Region(timelineContent.SlicesContainerRectangle);
+                e.Graphics.Clip = new Region(ParentRectangle);
 
                 Brush brush = new SolidBrush(backColor);
 
                 e.Graphics.FillRectangle(brush, new Rectangle(
                     e.ClipRectangle.X, layerRectangle.Y,
                     e.ClipRectangle.Width, height));
+
+                //writes scroll position for debug
+                //e.Graphics.DrawString(Rectangle.X.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.Black), ParentRectangle.X + 3, Rectangle.Y + 3);
 
                 e.Graphics.Clip = graphicsClip;
             }

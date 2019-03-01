@@ -55,8 +55,11 @@ namespace Scissors.Timeline
         public Rectangle LayersRectangle
         { get { return new Rectangle(sliceRectangle.X, sliceRectangle.Y + padding, sliceRectangle.Width, layersHeight); } }
                 
-        public Rectangle SliceRectangle
+        public Rectangle Rectangle
         { get { return sliceRectangle; } }
+
+        public Rectangle ParentRectangle
+        { get { return timelineContent.SlicesContainerRectangle; } }
 
         public event EventHandler SizeChanged;
         private void InvokeSizeChanged()
@@ -143,9 +146,9 @@ namespace Scissors.Timeline
         {
             layersHeight = layers.Count * LayerController.height + Math.Max(layers.Count - 1, 0) * layerMargin;
             int height = padding * 2 + layersHeight;
-            sliceRectangle.X = timelineContent.SlicesContainerRectangle.X - timelineContent.HorizontalScroll;
-            sliceRectangle.Y = timelineContent.SlicesContainerRectangle.Y + id * height - timelineContent.VerticalScroll;
-            sliceRectangle.Width = (int)(timeline.TimelineLength * timeline.TimelineZoom);
+            sliceRectangle.X = timeline.Rectangle.X;
+            sliceRectangle.Y = ParentRectangle.Y + id * height - timelineContent.VerticalScroll;
+            sliceRectangle.Width = timeline.Rectangle.Width;
             sliceRectangle.Height = height;
         }
 
@@ -276,7 +279,7 @@ namespace Scissors.Timeline
             if (e.ClipRectangle.IntersectsWith(sliceRectangle))
             {
                 Region graphicsClip = e.Graphics.Clip;
-                e.Graphics.Clip = new Region(timelineContent.SlicesContainerRectangle);
+                e.Graphics.Clip = new Region(ParentRectangle);
 
                 Brush brush = new SolidBrush(backColor);
 

@@ -205,6 +205,10 @@ namespace Scissors.Timeline
         public Color BackColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public Color ForeColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
+        public Rectangle Rectangle => throw new NotImplementedException();
+
+        public Rectangle ParentRectangle => throw new NotImplementedException();
+
         public void Dispose()
         {
             foreach (KeyValuePair<Control, ControlInfo> pair in generations)

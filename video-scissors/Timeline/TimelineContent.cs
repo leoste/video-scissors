@@ -127,6 +127,9 @@ namespace Scissors.Timeline
         public Rectangle SlicesContainerRectangle
         { get { return new Rectangle(0, slicesBegin, Width, slicesHeight); } }
 
+        public Rectangle ContainerRectangle
+        { get { return new Rectangle(0, 0, Width, slicesBegin + slicesHeight); } }
+
         public event EventHandler InternalHeightsChanged;
         private void InvokeInternalHeightsChanged(EventArgs e)
         { if (InternalHeightsChanged != null) InternalHeightsChanged.Invoke(this, e); }

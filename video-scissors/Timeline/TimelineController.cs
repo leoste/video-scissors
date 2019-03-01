@@ -22,6 +22,7 @@ namespace Scissors.Timeline
         private int frameHeight;
         private TimelineControl control;
         private TimelineContent content;
+        private Rectangle timelineRectangle;
 
         internal int SliceCount { get { return slices.Count; } }
         internal FlowLayoutPanel ControlsPanel { get { return timeline.ControlsPanel; } }
@@ -88,36 +89,25 @@ namespace Scissors.Timeline
                 Rectangle rectangle = new Rectangle();
 
                 SliceController firstSlice = slices.First();
-                rectangle.X = firstSlice.SliceRectangle.X;
-                rectangle.Y = firstSlice.SliceRectangle.Y;
-                rectangle.Width = firstSlice.SliceRectangle.Width;
-                rectangle.Height = GetHeight() - firstSlice.SliceRectangle.Y;
+                rectangle.X = firstSlice.Rectangle.X;
+                rectangle.Y = firstSlice.Rectangle.Y;
+                rectangle.Width = firstSlice.Rectangle.Width;
+                SliceController lastSlice = slices.Last();
+                rectangle.Height = lastSlice.Rectangle.Bottom - firstSlice.Rectangle.Y;
 
                 return rectangle;
             }
         }
 
-        public Rectangle TimelineRectangle
-        {
-            get
-            {
-                Rectangle rectangle = new Rectangle();
+        public Rectangle RulerRectangle
+        { get { return ruler.Rectangle; } }
 
-                rectangle.X = ruler.RulerRectangle.X;
-                rectangle.Y = ruler.RulerRectangle.Y;
-                rectangle.Width = ruler.RulerRectangle.Width;
-                rectangle.Height = GetHeight();
+        public Rectangle Rectangle
+        { get { return timelineRectangle; } }
 
-                return rectangle;
-            }
-        }
-
-        private int GetHeight()
-        {
-            SliceController lastSlice = slices.Last();
-            return lastSlice.SliceRectangle.Bottom;
-        }
-
+        public Rectangle ParentRectangle
+        { get { return TimelineContent.ContainerRectangle; } }
+        
         private void Initialize(Timeline timeline, TimelineControl control, TimelineContent content, int length, float zoom, int framerate, int frameWidth, int frameHeight)
         {
             this.length = length;
@@ -126,10 +116,13 @@ namespace Scissors.Timeline
             this.frameWidth = frameWidth;
             this.frameHeight = frameHeight;
             this.control = control;
-
+                        
             this.content = content;
             content.VerticalScrolled += Content_VerticalScrolled;
             content.HorizontalScrolled += Content_HorizontalScrolled;
+
+            timelineRectangle = new Rectangle();
+            UpdateCache();
 
             this.timeline = timeline;
             slices = new List<SliceController>();
@@ -147,12 +140,22 @@ namespace Scissors.Timeline
 
         private void Content_HorizontalScrolled(object sender, ScrollEventArgs e)
         {
+            UpdateCache();
             InvokeLocationChanged();
         }
 
         private void Content_VerticalScrolled(object sender, ScrollEventArgs e)
         {
+            UpdateCache();
             InvokeLocationChanged();
+        }
+
+        private void UpdateCache()
+        {
+            timelineRectangle.X = ParentRectangle.X - content.HorizontalScroll;
+            timelineRectangle.Y = ParentRectangle.Y;
+            timelineRectangle.Width = (int)(TimelineLength * TimelineZoom);
+            timelineRectangle.Height = ParentRectangle.Height;
         }
 
         internal TimelineController(Timeline timeline, TimelineControl control, TimelineContent content)
@@ -212,6 +215,7 @@ namespace Scissors.Timeline
 
         private void Slice_SizeChanged(object sender, EventArgs e)
         {
+            UpdateCache();
             InvokeSizeChanged();
             TimelineContent.Update();
         }
