@@ -252,7 +252,13 @@ namespace Scissors.Timeline
         
         public void UpdateUI()
         {
-            timelineContent.Invalidate();
+            Rectangle rect = sliceRectangle;
+            if (rect.Y < timelineContent.SlicesContainerRectangle.Y)
+            {
+                rect.Height -= timelineContent.SlicesContainerRectangle.Y - rect.Y;
+                rect.Y = timelineContent.SlicesContainerRectangle.Y;
+            }
+            timelineContent.Invalidate(rect);
             timelineContent.Update();
         }
 
