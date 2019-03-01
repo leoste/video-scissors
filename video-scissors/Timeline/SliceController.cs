@@ -37,8 +37,8 @@ namespace Scissors.Timeline
         public int ProjectFramerate { get { return timeline.ProjectFramerate; } }
         public int ProjectFrameWidth { get { return timeline.ProjectFrameWidth; } }
         public int ProjectFrameHeight { get { return timeline.ProjectFrameHeight; } }
-        public bool IsLocked { get { return toggleLock; } }
-        public bool IsVisible { get { return toggleVisibility; } }        
+        public bool IsLocked { get { return timeline.IsLocked || toggleLock; } }
+        public bool IsVisible { get { return timeline.IsLocked || toggleVisibility; } }        
         public TimelineContent TimelineContent { get { return timelineContent; } }
         public TimelineControl TimelineControl { get { return timelineControl; } }
         public Color BackColor
@@ -267,9 +267,9 @@ namespace Scissors.Timeline
             if (e.ClipRectangle.IntersectsWith(sliceRectangle))
             {
                 Brush brush = new SolidBrush(backColor);
-                /*
+                
                 e.Graphics.FillRectangle(brush, new Rectangle(
-                    e.ClipRectangle.X, sliceRectangle.Y,
+                    e.ClipRectangle.X, Math.Max(sliceRectangle.Y, timelineContent.SlicesContainerRectangle.Y),
                     e.ClipRectangle.Width, padding));
 
                 for (int i = 1; i < layers.Count; i += 1)
@@ -283,10 +283,6 @@ namespace Scissors.Timeline
                 e.Graphics.FillRectangle(brush, new Rectangle(
                     e.ClipRectangle.X, sliceRectangle.Y + padding + layersHeight,
                     e.ClipRectangle.Width, padding));
-                */
-                e.Graphics.FillRectangle(brush, new Rectangle(
-                    e.ClipRectangle.X, Math.Max(sliceRectangle.Y, timelineContent.SlicesContainerRectangle.Y),
-                    e.ClipRectangle.Width, sliceRectangle.Height));
             }
         }
 
