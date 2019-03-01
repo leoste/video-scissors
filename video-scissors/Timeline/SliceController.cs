@@ -53,7 +53,7 @@ namespace Scissors.Timeline
         public Color ForeColor { get; set; }
 
         public Rectangle LayersRectangle
-        { get { throw new NotImplementedException(); } }
+        { get { return new Rectangle(sliceRectangle.X, sliceRectangle.Width, padding, layersHeight); } }
                 
         public Rectangle SliceRectangle
         { get { return sliceRectangle; } }
