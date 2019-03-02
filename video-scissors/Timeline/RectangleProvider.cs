@@ -229,7 +229,7 @@ namespace Scissors.Timeline
         private int CalculateRulerWidth(int width, int rulerBegin)
         { return width - rulerBegin; }
 
-        public void InvalidateSlicesContainerRectangle(Rectangle rect)
+        public void InvalidateVerticalContainerRectangle(Rectangle rect)
         {
             if (rect.Y < contentBegin + contentHeight && rect.Bottom > contentBegin)
             {
@@ -239,6 +239,19 @@ namespace Scissors.Timeline
                     rect.Y = contentBegin;
                 }
                 Invalidate(rect);
+            }
+        }
+
+        public void InvalidateContentContainerRectangle(Rectangle rect)
+        {
+            if (rect.X < rulerBegin + rulerWidth && rect.Right > rulerBegin)
+            {
+                if (rect.X < rulerBegin)
+                {
+                    rect.Width = rect.Width - (rulerBegin - rect.X);
+                    rect.X = rulerBegin;
+                }
+                InvalidateVerticalContainerRectangle(rect);
             }
         }
     }

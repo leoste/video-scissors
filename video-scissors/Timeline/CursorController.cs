@@ -24,7 +24,7 @@ namespace Scissors.Timeline
         public event EventHandler SizeChanged;
         public event EventHandler TimelineLengthChanged;
         public event EventHandler TimelineZoomChanged;
-        public event EventHandler LocationChanged;
+        public event EventHandler<LocationChangeEventArgs> LocationChanged;
 
         public CursorController(TimelineController timeline)
         {

@@ -82,9 +82,9 @@ namespace Scissors.Timeline
         public event EventHandler TimelineLengthChanged;
         public event EventHandler TimelineZoomChanged;
         
-        public event EventHandler LocationChanged;
-        private void InvokeLocationChanged()
-        { if (LocationChanged != null) LocationChanged.Invoke(this, EventArgs.Empty); }
+        public event EventHandler<LocationChangeEventArgs> LocationChanged;
+        private void InvokeLocationChanged(LocationChangeEventArgs e)
+        { if (LocationChanged != null) LocationChanged.Invoke(this, e); }
 
         internal RulerController(TimelineController timeline)
         {
@@ -138,13 +138,13 @@ namespace Scissors.Timeline
             UpdateUI();
         }
 
-        private void TimelineContent_LocationChanged(object sender, EventArgs e)
+        private void TimelineContent_LocationChanged(object sender, LocationChangeEventArgs e)
         {
             if (timelineContent.HorizontalScroll != oldScroll)
             {
                 oldScroll = timelineContent.HorizontalScroll;
                 UpdateCache();
-                InvokeLocationChanged();
+                InvokeLocationChanged(e);
                 timelineContent.Invalidate(timelineContent.RulerContainerRectangle);
             }
         }

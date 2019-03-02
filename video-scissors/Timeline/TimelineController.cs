@@ -78,9 +78,9 @@ namespace Scissors.Timeline
         private void InvokeSizeChanged()
         { if (SizeChanged != null) SizeChanged.Invoke(this, EventArgs.Empty); }
 
-        public event EventHandler LocationChanged;
-        private void InvokeLocationChanged()
-        { if (LocationChanged != null) LocationChanged.Invoke(this, EventArgs.Empty); }
+        public event EventHandler<LocationChangeEventArgs> LocationChanged;
+        private void InvokeLocationChanged(bool leftChanged, bool topChanged)
+        { if (LocationChanged != null) LocationChanged.Invoke(this, new LocationChangeEventArgs(leftChanged, topChanged)); }
 
         public Rectangle SlicesRectangle
         {
@@ -107,7 +107,11 @@ namespace Scissors.Timeline
 
         public Rectangle ParentRectangle
         { get { return TimelineRectangleProvider.HorizontalContainerRectangle; } }
-        
+
+        public Rectangle ControlRectangle => throw new NotImplementedException();
+
+        public Rectangle ControlParentRectangle => throw new NotImplementedException();
+
         private void Initialize(Timeline timeline, RectangleProvider rectangleProvider, int length, float zoom, int framerate, int frameWidth, int frameHeight)
         {
             this.length = length;
@@ -140,13 +144,13 @@ namespace Scissors.Timeline
         private void Content_HorizontalScrolled(object sender, ScrollEventArgs e)
         {
             UpdateCache();
-            InvokeLocationChanged();
+            InvokeLocationChanged(true, false);
         }
 
         private void Content_VerticalScrolled(object sender, ScrollEventArgs e)
         {
             UpdateCache();
-            InvokeLocationChanged();
+            InvokeLocationChanged(false, true);
         }
 
         private void UpdateCache()

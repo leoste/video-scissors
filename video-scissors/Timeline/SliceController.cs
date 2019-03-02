@@ -24,6 +24,7 @@ namespace Scissors.Timeline
         private List<LayerController> layers;
         
         private Rectangle sliceRectangle;
+        private Rectangle controlRectangle;
         private Color backColor;
 
         internal int LayerCount { get { return layers.Count; } }
@@ -59,13 +60,19 @@ namespace Scissors.Timeline
         public Rectangle ParentRectangle
         { get { return timelineContent.ContentContainerRectangle; } }
 
+        public Rectangle ControlRectangle
+        { get { return controlRectangle; } }
+
+        public Rectangle ControlParentRectangle
+        { get { return timelineContent.ControlContainerRectangle; } }
+
         public event EventHandler SizeChanged;
         private void InvokeSizeChanged()
         { if (SizeChanged != null) SizeChanged.Invoke(this, EventArgs.Empty); }
 
-        public event EventHandler LocationChanged;
-        private void InvokeLocationChanged()
-        { if (LocationChanged != null) LocationChanged.Invoke(this, EventArgs.Empty); }
+        public event EventHandler<LocationChangeEventArgs> LocationChanged;
+        private void InvokeLocationChanged(LocationChangeEventArgs e)
+        { if (LocationChanged != null) LocationChanged.Invoke(this, e); }
 
         public event EventHandler TimelineLengthChanged;
         public event EventHandler TimelineZoomChanged;
@@ -111,25 +118,27 @@ namespace Scissors.Timeline
             UpdateUI();
         }
 
-        private void Timeline_LocationChanged(object sender, EventArgs e)
+        private void Timeline_LocationChanged(object sender, LocationChangeEventArgs e)
         {
             UpdateCache();
-            InvokeLocationChanged();
-            UpdateUI();
+            InvokeLocationChanged(e);
+
+            UpdateContentUI();
+            if (e.TopChanged) UpdateControlUI();
         }
 
         private void Timeline_TimelineZoomChanged(object sender, EventArgs e)
         {
             UpdateCache();
             if (TimelineZoomChanged != null) TimelineZoomChanged.Invoke(this, EventArgs.Empty);
-            UpdateUI();
+            UpdateContentUI();
         }
 
         private void Timeline_TimelineLengthChanged(object sender, EventArgs e)
         {
             UpdateCache();
             if (TimelineLengthChanged != null) TimelineLengthChanged.Invoke(this, EventArgs.Empty);
-            UpdateUI();
+            UpdateContentUI();
         }
 
         private void TimelineContent_Resize(object sender, EventArgs e)
@@ -142,10 +151,16 @@ namespace Scissors.Timeline
         {
             layersHeight = layers.Count * LayerController.height + Math.Max(layers.Count - 1, 0) * layerMargin;
             int height = padding * 2 + layersHeight;
+            int offset = id * height - timelineContent.VerticalScroll;
             sliceRectangle.X = timeline.Rectangle.X;
-            sliceRectangle.Y = ParentRectangle.Y + id * height - timelineContent.VerticalScroll;
+            sliceRectangle.Y = ParentRectangle.Y + offset;
             sliceRectangle.Width = timeline.Rectangle.Width;
             sliceRectangle.Height = height;
+
+            controlRectangle.X = ControlParentRectangle.X;
+            controlRectangle.Y = ControlParentRectangle.Y + offset;
+            controlRectangle.Width = ControlParentRectangle.Width;
+            controlRectangle.Height = height;
         }
 
         /*
@@ -266,16 +281,25 @@ namespace Scissors.Timeline
         }
         
         public void UpdateUI()
-        {
-            timelineContent.InvalidateSlicesContainerRectangle(sliceRectangle);
+        {            
+            UpdateControlUI();
+            UpdateContentUI();
         }
+
+        private void UpdateControlUI()
+        { timelineContent.InvalidateVerticalContainerRectangle(controlRectangle); }
+
+        private void UpdateContentUI()
+        { timelineContent.InvalidateContentContainerRectangle(sliceRectangle); }
 
         private void TimelineContent_Paint(object sender, PaintEventArgs e)
         {
-            if (e.ClipRectangle.IntersectsWith(sliceRectangle))
+            if (e.ClipRectangle.IntersectsWith(sliceRectangle) || e.ClipRectangle.IntersectsWith(controlRectangle))
             {
                 Region graphicsClip = e.Graphics.Clip;
-                e.Graphics.Clip = new Region(ParentRectangle);
+                Region clip = new Region(ParentRectangle);
+                clip.Union(ControlParentRectangle);
+                e.Graphics.Clip = clip;
 
                 Brush brush = new SolidBrush(backColor);
 

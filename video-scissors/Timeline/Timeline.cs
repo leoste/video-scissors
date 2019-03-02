@@ -27,7 +27,7 @@ namespace Scissors.Timeline
             controller = new TimelineController(this, rectangleProvider1, 540);
             controller.SizeChanged += Timeline_SizeChanged;                
             horizontalScrollBar.Minimum = 0;
-            UpdateHorizontalScrollbar();
+            UpdateHorizontalScrollbar();            
         }
 
         private int oldWidth;

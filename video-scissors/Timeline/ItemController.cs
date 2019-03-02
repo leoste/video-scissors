@@ -96,6 +96,11 @@ namespace Scissors.Timeline
 
         public Rectangle ParentRectangle => throw new NotImplementedException();
 
+        public event EventHandler SizeChanged;
+        public event EventHandler TimelineLengthChanged;
+        public event EventHandler TimelineZoomChanged;
+        public event EventHandler<LocationChangeEventArgs> LocationChanged;
+
         internal ItemController(LayerController layer, int startPosition, int length)
         {
             oldZoom = -1;
@@ -125,12 +130,7 @@ namespace Scissors.Timeline
         
         //drag clip up or down to change layer
         private int mouseOffsetY;
-
-        public event EventHandler SizeChanged;
-        public event EventHandler TimelineLengthChanged;
-        public event EventHandler TimelineZoomChanged;
-        public event EventHandler LocationChanged;
-
+        
         private void Content_MouseDown(object sender, MouseEventArgs e)
         {
             if (layer.IsLocked) return;

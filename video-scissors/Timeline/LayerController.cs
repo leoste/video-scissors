@@ -19,6 +19,7 @@ namespace Scissors.Timeline
         private RectangleProvider timelineContent;
 
         private Rectangle layerRectangle;
+        private Rectangle controlRectangle;
         private Color backColor;
 
         public RectangleProvider TimelineRectangleProvider { get { return timelineContent; } }
@@ -48,13 +49,18 @@ namespace Scissors.Timeline
         public Rectangle Rectangle { get { return layerRectangle; } }
         public Rectangle ParentRectangle { get { return slice.ParentRectangle; } }
 
+        public Rectangle ControlRectangle => throw new NotImplementedException();
+
+        public Rectangle ControlParentRectangle
+        { get { return slice.ControlParentRectangle; } }
+
         public event EventHandler SizeChanged;
         private void InvokeSizeChanged()
         { if (SizeChanged != null) SizeChanged.Invoke(this, EventArgs.Empty); }
 
-        public event EventHandler LocationChanged;
-        private void InvokeLocationChanged()
-        { if (LocationChanged != null) LocationChanged.Invoke(this, EventArgs.Empty); }
+        public event EventHandler<LocationChangeEventArgs> LocationChanged;
+        private void InvokeLocationChanged(LocationChangeEventArgs e)
+        { if (LocationChanged != null) LocationChanged.Invoke(this, e); }
 
         public event EventHandler TimelineLengthChanged;
         public event EventHandler TimelineZoomChanged;
@@ -100,11 +106,13 @@ namespace Scissors.Timeline
             UpdateUI();
         }
 
-        private void Slice_LocationChanged(object sender, EventArgs e)
+        private void Slice_LocationChanged(object sender, LocationChangeEventArgs e)
         {
             UpdateCache();
-            InvokeLocationChanged();
-            UpdateUI();
+            InvokeLocationChanged(e);
+
+            UpdateContentUI();
+            if (e.TopChanged) UpdateControlUI();
         }
 
         private void TimelineContent_Resize(object sender, EventArgs e)
@@ -129,10 +137,16 @@ namespace Scissors.Timeline
 
         private void UpdateCache()
         {
+            int offset = id * (height + SliceController.layerMargin);
             layerRectangle.X = slice.LayersRectangle.X;
-            layerRectangle.Y = slice.LayersRectangle.Y + id * (height + SliceController.layerMargin);
+            layerRectangle.Y = slice.LayersRectangle.Y + offset;
             layerRectangle.Width = slice.LayersRectangle.Width;
             layerRectangle.Height = height;
+
+            controlRectangle.X = slice.ControlRectangle.X;
+            controlRectangle.Y = slice.ControlRectangle.Y + offset;
+            controlRectangle.Width = slice.ControlRectangle.Width;
+            controlRectangle.Height = height;
         }
 
         private void Control_ToggleVisibilityClicked(object sender, ToggleEventArgs e)
@@ -196,15 +210,24 @@ namespace Scissors.Timeline
 
         public void UpdateUI()
         {
-            timelineContent.InvalidateSlicesContainerRectangle(layerRectangle);
+            UpdateControlUI();
+            UpdateContentUI();
         }
+
+        public void UpdateControlUI()
+        { timelineContent.InvalidateVerticalContainerRectangle(controlRectangle); }
+
+        public void UpdateContentUI()
+        { timelineContent.InvalidateContentContainerRectangle(layerRectangle); }
         
         private void TimelineContent_Paint(object sender, PaintEventArgs e)
         {
             if (e.ClipRectangle.IntersectsWith(layerRectangle))
             {
                 Region graphicsClip = e.Graphics.Clip;
-                e.Graphics.Clip = new Region(ParentRectangle);
+                Region clip = new Region(ParentRectangle);
+                clip.Union(ControlParentRectangle);
+                e.Graphics.Clip = clip;
 
                 Brush brush = new SolidBrush(backColor);
 

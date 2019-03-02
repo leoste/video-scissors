@@ -42,7 +42,7 @@ namespace Scissors.Timeline
         Rectangle ParentRectangle { get; }
 
         event EventHandler SizeChanged;
-        event EventHandler LocationChanged;
+        event EventHandler<LocationChangeEventArgs> LocationChanged;
         event EventHandler TimelineLengthChanged;
         event EventHandler TimelineZoomChanged;
         
