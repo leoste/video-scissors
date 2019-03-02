@@ -85,13 +85,13 @@
     </Compile>
     <Compile Include="Timeline\RulerController.cs" />
     <Compile Include="Timeline\ScrollDirection.cs" />
-    <Compile Include="Timeline\TimelineContent.cs">
+    <Compile Include="Timeline\RectangleProvider.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Timeline\TimelineContent.Designer.cs">
-      <DependentUpon>TimelineContent.cs</DependentUpon>
+    <Compile Include="Timeline\RectangleProvider.Designer.cs">
+      <DependentUpon>RectangleProvider.cs</DependentUpon>
     </Compile>
-    <Compile Include="Timeline\TimelineContentDesigner.cs">
+    <Compile Include="Timeline\TimelineRectanglerDesigner.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Timeline\TimelineControl.cs">
@@ -169,8 +169,8 @@
     <EmbeddedResource Include="Timeline\Timeline.resx">
       <DependentUpon>Timeline.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Timeline\TimelineContent.resx">
-      <DependentUpon>TimelineContent.cs</DependentUpon>
+    <EmbeddedResource Include="Timeline\RectangleProvider.resx">
+      <DependentUpon>RectangleProvider.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

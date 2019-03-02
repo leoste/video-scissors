@@ -35,7 +35,7 @@ namespace Scissors.Timeline
         /// </summary>
         int ProjectFrameHeight { get; }
 
-        TimelineContent TimelineContent { get; }
+        RectangleProvider TimelineRectangleProvider { get; }
         Color BackColor { get; set; }
         Color ForeColor { get; set; }
         Rectangle Rectangle { get; }

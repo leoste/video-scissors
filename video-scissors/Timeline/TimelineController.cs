@@ -20,8 +20,7 @@ namespace Scissors.Timeline
         private int framerate;
         private int frameWidth;
         private int frameHeight;
-        private TimelineControl control;
-        private TimelineContent content;
+        private RectangleProvider rectangleProvider;
         private Rectangle timelineRectangle;
 
         internal int SliceCount { get { return slices.Count; } }
@@ -68,8 +67,7 @@ namespace Scissors.Timeline
         public int ProjectFrameHeight { get { return frameHeight; } }
         public bool IsLocked { get; }
         public bool IsVisible { get; }
-        public TimelineContent TimelineContent { get { return content; } }
-        public TimelineControl TimelineControl { get { return control; } }
+        public RectangleProvider TimelineRectangleProvider { get { return rectangleProvider; } }
         public Color BackColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public Color ForeColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
@@ -108,20 +106,19 @@ namespace Scissors.Timeline
         { get { return timelineRectangle; } }
 
         public Rectangle ParentRectangle
-        { get { return TimelineContent.ContainerRectangle; } }
+        { get { return TimelineRectangleProvider.HorizontalContainerRectangle; } }
         
-        private void Initialize(Timeline timeline, TimelineControl control, TimelineContent content, int length, float zoom, int framerate, int frameWidth, int frameHeight)
+        private void Initialize(Timeline timeline, RectangleProvider rectangleProvider, int length, float zoom, int framerate, int frameWidth, int frameHeight)
         {
             this.length = length;
             this.zoom = zoom;
             this.framerate = framerate;
             this.frameWidth = frameWidth;
             this.frameHeight = frameHeight;
-            this.control = control;
                         
-            this.content = content;
-            content.VerticalScrolled += Content_VerticalScrolled;
-            content.HorizontalScrolled += Content_HorizontalScrolled;
+            this.rectangleProvider = rectangleProvider;
+            rectangleProvider.VerticalScrolled += Content_VerticalScrolled;
+            rectangleProvider.HorizontalScrolled += Content_HorizontalScrolled;
 
             timelineRectangle = new Rectangle();
             UpdateCache();
@@ -154,15 +151,15 @@ namespace Scissors.Timeline
 
         private void UpdateCache()
         {
-            timelineRectangle.X = ParentRectangle.X - content.HorizontalScroll;
+            timelineRectangle.X = ParentRectangle.X - rectangleProvider.HorizontalScroll;
             timelineRectangle.Y = ParentRectangle.Y;
             timelineRectangle.Width = (int)(TimelineLength * TimelineZoom);
             timelineRectangle.Height = ParentRectangle.Height;
         }
 
-        internal TimelineController(Timeline timeline, TimelineControl control, TimelineContent content)
+        internal TimelineController(Timeline timeline, RectangleProvider rectangleProvider)
         {
-            Initialize(timeline, control, content,
+            Initialize(timeline, rectangleProvider,
                 GlobalConfig.DefaultTimelineLength,
                 GlobalConfig.DefaultTimelineZoom, 
                 GlobalConfig.DefaultProjectFramerate, 
@@ -170,9 +167,9 @@ namespace Scissors.Timeline
                 GlobalConfig.DefaultProjectFrameHeight);
         }
 
-        internal TimelineController(Timeline timeline, TimelineControl control, TimelineContent content, int framerate, int frameWidth, int frameHeight)
+        internal TimelineController(Timeline timeline, RectangleProvider rectangleProvider, int framerate, int frameWidth, int frameHeight)
         {
-            Initialize(timeline, control, content,
+            Initialize(timeline, rectangleProvider,
                 GlobalConfig.DefaultTimelineLength,
                 GlobalConfig.DefaultTimelineZoom,
                 framerate,
@@ -180,18 +177,18 @@ namespace Scissors.Timeline
                 frameHeight);
         }
 
-        internal TimelineController(Timeline timeline, TimelineControl control, TimelineContent content, int length)
+        internal TimelineController(Timeline timeline, RectangleProvider rectangleProvider, int length)
         {
-            Initialize(timeline, control, content, length,
+            Initialize(timeline, rectangleProvider, length,
                 GlobalConfig.DefaultTimelineZoom,
                 GlobalConfig.DefaultProjectFramerate,
                 GlobalConfig.DefaultProjectFrameWidth,
                 GlobalConfig.DefaultProjectFrameHeight);
         }
 
-        internal TimelineController(Timeline timeline, TimelineControl control, TimelineContent content, int length, int framerate, int frameWidth, int frameHeight)
+        internal TimelineController(Timeline timeline, RectangleProvider rectangleProvider, int length, int framerate, int frameWidth, int frameHeight)
         {
-            Initialize(timeline, control, content, length, GlobalConfig.DefaultTimelineZoom, framerate, frameWidth, frameHeight);
+            Initialize(timeline, rectangleProvider, length, GlobalConfig.DefaultTimelineZoom, framerate, frameWidth, frameHeight);
         }
 
         internal int GetSliceId(SliceController slice)
@@ -219,7 +216,7 @@ namespace Scissors.Timeline
         {
             UpdateCache();
             InvokeSizeChanged();
-            TimelineContent.Update();
+            TimelineRectangleProvider.Update();
         }
 
         internal void RemoveSlice(int id)

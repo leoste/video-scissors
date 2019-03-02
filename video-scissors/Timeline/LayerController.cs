@@ -16,14 +16,12 @@ namespace Scissors.Timeline
         private bool toggleVisibility;
         private int id;
         private SliceController slice;
-        private TimelineContent timelineContent;
-        private TimelineControl timelineControl;
+        private RectangleProvider timelineContent;
 
         private Rectangle layerRectangle;
         private Color backColor;
 
-        public TimelineContent TimelineContent { get { return timelineContent; } }
-        public TimelineControl TimelineControl { get { return timelineControl; } }
+        public RectangleProvider TimelineRectangleProvider { get { return timelineContent; } }
 
         private List<ItemController> items;
         
@@ -64,9 +62,8 @@ namespace Scissors.Timeline
         private void Initialize(SliceController slice)
         {
             this.slice = slice;
-            timelineControl = slice.TimelineControl;
 
-            timelineContent = slice.TimelineContent;
+            timelineContent = slice.TimelineRectangleProvider;
             timelineContent.Paint += TimelineContent_Paint;
             timelineContent.Resize += TimelineContent_Resize;
 

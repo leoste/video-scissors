@@ -24,7 +24,7 @@ namespace Scissors.Timeline
         public Timeline()
         {
             InitializeComponent();
-            controller = new TimelineController(this, timelineControl1, timelineContent1, 540);
+            controller = new TimelineController(this, timelineContent1, 540);
             controller.SizeChanged += Timeline_SizeChanged;                
             horizontalScrollBar.Minimum = 0;
             UpdateHorizontalScrollbar();
@@ -54,8 +54,8 @@ namespace Scissors.Timeline
 
         private void UpdateHorizontalScrollbar()
         {
-            horizontalScrollBar.Maximum = controller.Rectangle.Width;
-            horizontalScrollBar.ScrollWidth = timelineContent1.Width;
+            horizontalScrollBar.Maximum = controller.RulerRectangle.Width;
+            horizontalScrollBar.ScrollWidth = timelineContent1.HorizontalContainerRectangle.Width;
         }
 
         private void Timeline_SizeChanged(object sender, EventArgs e)
@@ -72,7 +72,7 @@ namespace Scissors.Timeline
         private void UpdateVerticalScrollbar()
         {
             verticalScrollbar.Maximum = controller.SlicesRectangle.Height;
-            verticalScrollbar.ScrollWidth = timelineContent1.SlicesContainerRectangle.Height;
+            verticalScrollbar.ScrollWidth = timelineContent1.VerticalContainerRectangle.Height;
         }
     }
 }

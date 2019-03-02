@@ -200,7 +200,7 @@ namespace Scissors.Timeline
 
         public int ProjectFrameHeight { get { return timeline.ProjectFrameHeight; } }
 
-        public TimelineContent TimelineContent => throw new NotImplementedException();
+        public RectangleProvider TimelineRectangleProvider => throw new NotImplementedException();
 
         public Color BackColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public Color ForeColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }

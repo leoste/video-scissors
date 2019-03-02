@@ -1,6 +1,6 @@
 ﻿namespace Scissors.Timeline
 {
-    partial class TimelineContent
+    partial class RectangleProvider
     {
         /// <summary> 
         /// Required designer variable.

@@ -19,8 +19,7 @@ namespace Scissors.Timeline
         private bool toggleVisibility = false;
         private int id;
         private TimelineController timeline;
-        private TimelineContent timelineContent;
-        private TimelineControl timelineControl;
+        private RectangleProvider timelineContent;
                 
         private List<LayerController> layers;
         
@@ -39,8 +38,7 @@ namespace Scissors.Timeline
         public int ProjectFrameHeight { get { return timeline.ProjectFrameHeight; } }
         public bool IsLocked { get { return timeline.IsLocked || toggleLock; } }
         public bool IsVisible { get { return timeline.IsLocked || toggleVisibility; } }        
-        public TimelineContent TimelineContent { get { return timelineContent; } }
-        public TimelineControl TimelineControl { get { return timelineControl; } }
+        public RectangleProvider TimelineRectangleProvider { get { return timelineContent; } }
         public Color BackColor
         {
             get { return backColor; }
@@ -59,7 +57,7 @@ namespace Scissors.Timeline
         { get { return sliceRectangle; } }
 
         public Rectangle ParentRectangle
-        { get { return timelineContent.SlicesContainerRectangle; } }
+        { get { return timelineContent.ContentContainerRectangle; } }
 
         public event EventHandler SizeChanged;
         private void InvokeSizeChanged()
@@ -77,9 +75,8 @@ namespace Scissors.Timeline
             layers = new List<LayerController>();
 
             this.timeline = timeline;
-            timelineControl = timeline.TimelineControl;
 
-            timelineContent = timeline.TimelineContent;
+            timelineContent = timeline.TimelineRectangleProvider;
             timelineContent.Paint += TimelineContent_Paint;
             timelineContent.Resize += TimelineContent_Resize;
 
@@ -109,8 +106,7 @@ namespace Scissors.Timeline
 
             CreateLayer();
             CreateLayer();
-            CreateLayer();
-
+            CreateLayer();            
             UpdateCache();
             UpdateUI();
         }

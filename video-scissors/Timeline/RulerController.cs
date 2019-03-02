@@ -15,7 +15,7 @@ namespace Scissors.Timeline
         private Color backColor = Color.AntiqueWhite;        
 
         private TimelineController timeline;
-        private TimelineContent timelineContent;
+        private RectangleProvider timelineContent;
         
         private int[] markPattern;
         private Rectangle oldRect;
@@ -77,7 +77,7 @@ namespace Scissors.Timeline
             }
         }
 
-        public TimelineContent TimelineContent { get { return timelineContent; } }
+        public RectangleProvider TimelineRectangleProvider { get { return timelineContent; } }
 
         public event EventHandler TimelineLengthChanged;
         public event EventHandler TimelineZoomChanged;
@@ -90,7 +90,7 @@ namespace Scissors.Timeline
         {
             this.timeline = timeline;
 
-            timelineContent = timeline.TimelineContent;
+            timelineContent = timeline.TimelineRectangleProvider;
             oldRect = timelineContent.RulerContainerRectangle;
             oldScreenRect = GetScreenRectangle();
             oldScroll = timelineContent.HorizontalScroll;
@@ -197,15 +197,23 @@ namespace Scissors.Timeline
         {
             if (e.ClipRectangle.IntersectsWith(ParentRectangle))
             {
+                Rectangle clip = e.ClipRectangle;
+                if (clip.X < ParentRectangle.X)
+                {
+                    int diff = ParentRectangle.X - e.ClipRectangle.X;
+                    clip.X = ParentRectangle.X;
+                    clip.Width = clip.Width - diff;
+                }
+
                 Rectangle rect = ParentRectangle;
                 Brush markBrush = new SolidBrush(markColor);
                 Brush brush = new SolidBrush(backColor);
 
                 e.Graphics.FillRectangle(brush, new Rectangle(
-                    e.ClipRectangle.X, ParentRectangle.Y,
-                    e.ClipRectangle.Width, ParentRectangle.Height));
+                    clip.X, ParentRectangle.Y,
+                    clip.Width, ParentRectangle.Height));
 
-                int startX = e.ClipRectangle.X - rulerRectangle.X;
+                int startX = clip.X - rulerRectangle.X;
                 int i = (int)(startX / TimelineZoom);
                 int m = Math.Min(rect.Width + startX, rulerRectangle.Width);
                 int x;
