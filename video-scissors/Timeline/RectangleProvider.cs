@@ -14,7 +14,7 @@ using System.Collections;
 
 namespace Scissors.Timeline
 {
-    [Designer(typeof(TimelineRectangleProviderDesigner))]
+    [Designer(typeof(RectangleProviderDesigner))]
     public partial class RectangleProvider : UserControl
     {
         private int rulerHeight = 40;

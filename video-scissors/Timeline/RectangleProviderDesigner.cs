@@ -15,7 +15,7 @@ namespace Scissors.Timeline
 {
     public partial class RectangleProvider : UserControl
     {
-        private class TimelineRectangleProviderDesigner : ControlDesigner
+        private class RectangleProviderDesigner : ControlDesigner
         {
             protected override void OnPaintAdornments(PaintEventArgs pe)
             {                
