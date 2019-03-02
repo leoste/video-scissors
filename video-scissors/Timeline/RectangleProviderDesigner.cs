@@ -56,6 +56,8 @@ namespace Scissors.Timeline
                     
                     snapLines.Add(new SnapLine(SnapLineType.Bottom, control.rulerHeight, priority));
                     snapLines.Add(new SnapLine(SnapLineType.Top, control.contentBegin, priority));
+                    snapLines.Add(new SnapLine(SnapLineType.Right, control.controlWidth, priority));
+                    snapLines.Add(new SnapLine(SnapLineType.Left, control.rulerBegin, priority));
 
                     return snapLines;
                 }

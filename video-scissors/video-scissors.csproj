@@ -91,7 +91,7 @@
     <Compile Include="Timeline\RectangleProvider.Designer.cs">
       <DependentUpon>RectangleProvider.cs</DependentUpon>
     </Compile>
-    <Compile Include="Timeline\TimelineRectanglerDesigner.cs">
+    <Compile Include="Timeline\RectangleProviderDesigner.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Timeline\TimelineControl.cs">
