@@ -11,6 +11,7 @@ namespace Scissors.Timeline
     class LayerController : IFrameController, IControlController, IChildController
     {
         public static readonly int height = 40;
+        public static readonly int controlsWidth = 72;
 
         private bool toggleLock;
         private bool toggleVisibility;
@@ -143,9 +144,9 @@ namespace Scissors.Timeline
             layerRectangle.Width = slice.LayersRectangle.Width;
             layerRectangle.Height = height;
 
-            controlRectangle.X = slice.ControlRectangle.X;
+            controlRectangle.X = slice.ControlRectangle.X + SliceController.controlsWidth;
             controlRectangle.Y = slice.ControlRectangle.Y + offset;
-            controlRectangle.Width = slice.ControlRectangle.Width;
+            controlRectangle.Width = controlsWidth;
             controlRectangle.Height = height;
         }
 
@@ -222,21 +223,39 @@ namespace Scissors.Timeline
         
         private void TimelineContent_Paint(object sender, PaintEventArgs e)
         {
-            if (e.ClipRectangle.IntersectsWith(layerRectangle))
+            bool redrawContent = e.ClipRectangle.IntersectsWith(layerRectangle);
+            bool redrawControl = e.ClipRectangle.IntersectsWith(controlRectangle);
+
+            if (redrawContent || redrawControl)
             {
                 Region graphicsClip = e.Graphics.Clip;
-                Region clip = new Region(ParentRectangle);
-                clip.Union(ControlParentRectangle);
-                e.Graphics.Clip = clip;
-
                 Brush brush = new SolidBrush(backColor);
 
-                e.Graphics.FillRectangle(brush, new Rectangle(
-                    e.ClipRectangle.X, layerRectangle.Y,
-                    e.ClipRectangle.Width, height));
+                if (redrawContent)
+                {
+                    Region region = new Region(ParentRectangle);
+                    if (redrawControl)
+                    {
+                        Rectangle rectangle = ControlParentRectangle;
+                        rectangle.X += SliceController.controlsWidth;
+                        rectangle.Width -= SliceController.controlsWidth;
+                        region.Union(rectangle);
+                    }
+                    e.Graphics.Clip = region;
 
-                //writes scroll position for debug
-                //e.Graphics.DrawString(Rectangle.X.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.Black), ParentRectangle.X + 3, Rectangle.Y + 3);
+                    e.Graphics.FillRectangle(brush, new Rectangle(
+                        e.ClipRectangle.X, layerRectangle.Y,
+                        e.ClipRectangle.Width, height));
+
+                    //writes scroll position for debug
+                    e.Graphics.DrawString(Rectangle.X.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.Black), ParentRectangle.X + 3, Rectangle.Y + 3);
+
+                }
+
+                if (redrawControl)
+                {
+                    e.Graphics.Clip = new Region(ControlParentRectangle);
+                }
 
                 e.Graphics.Clip = graphicsClip;
             }

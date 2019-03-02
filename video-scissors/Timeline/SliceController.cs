@@ -12,6 +12,7 @@ namespace Scissors.Timeline
     {
         public static readonly int padding = 3;
         public static readonly int layerMargin = 2;
+        public static readonly int controlsWidth = 72;
         
         private int layersHeight = 40;
 
@@ -294,29 +295,51 @@ namespace Scissors.Timeline
 
         private void TimelineContent_Paint(object sender, PaintEventArgs e)
         {
-            if (e.ClipRectangle.IntersectsWith(sliceRectangle) || e.ClipRectangle.IntersectsWith(controlRectangle))
+            bool redrawContent = e.ClipRectangle.IntersectsWith(sliceRectangle);
+            bool redrawControl = e.ClipRectangle.IntersectsWith(controlRectangle);
+
+            if (redrawContent || redrawControl)
             {
                 Region graphicsClip = e.Graphics.Clip;
-                Region clip = new Region(ParentRectangle);
-                clip.Union(ControlParentRectangle);
-                e.Graphics.Clip = clip;
-
                 Brush brush = new SolidBrush(backColor);
 
-                Rectangle pad1 = new Rectangle(e.ClipRectangle.X, sliceRectangle.Y, e.ClipRectangle.Width, padding);
-                e.Graphics.FillRectangle(brush, pad1);
-
-                for (int i = 1; i < layers.Count; i += 1)
+                if (redrawContent)
                 {
-                    int y = sliceRectangle.Y + padding + LayerController.height * i + (i - 1) * layerMargin;
+                    Region region = new Region(ParentRectangle);
+
+                    if (redrawControl)
+                    {
+                        Rectangle rectangle = ControlParentRectangle;
+                        rectangle.X += controlsWidth;
+                        rectangle.Width -= controlsWidth;
+                        region.Union(rectangle);
+                    }
+
+                    e.Graphics.Clip = region;
+
+                    for (int i = 1; i < layers.Count; i += 1)
+                    {
+                        int y = sliceRectangle.Y + padding + LayerController.height * i + (i - 1) * layerMargin;
+                        e.Graphics.FillRectangle(brush, new Rectangle(
+                            e.ClipRectangle.X, y, e.ClipRectangle.Width, layerMargin));
+                    }
+                    
                     e.Graphics.FillRectangle(brush, new Rectangle(
-                        e.ClipRectangle.X, y,
-                        e.ClipRectangle.Width, layerMargin));
+                        e.ClipRectangle.X, sliceRectangle.Y, e.ClipRectangle.Width, padding));
+                    
+                    e.Graphics.FillRectangle(brush, new Rectangle(
+                        e.ClipRectangle.X, sliceRectangle.Bottom - padding, e.ClipRectangle.Width, padding));
+
+                    e.Graphics.Clip = graphicsClip;
                 }
 
-                Rectangle pad2 = new Rectangle(
-                    e.ClipRectangle.X, sliceRectangle.Bottom - padding, e.ClipRectangle.Width, padding);
-                e.Graphics.FillRectangle(brush, pad2);
+                if (redrawControl)
+                {
+                    e.Graphics.Clip = new Region(ControlParentRectangle);
+
+                    e.Graphics.FillRectangle(brush, new Rectangle(
+                      controlRectangle.X, controlRectangle.Y, controlsWidth, controlRectangle.Height));
+                }
 
                 e.Graphics.Clip = graphicsClip;
             }
