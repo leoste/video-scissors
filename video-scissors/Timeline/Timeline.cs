@@ -24,7 +24,7 @@ namespace Scissors.Timeline
         public Timeline()
         {
             InitializeComponent();
-            controller = new TimelineController(this, timelineContent1, 540);
+            controller = new TimelineController(this, rectangleProvider1, 540);
             controller.SizeChanged += Timeline_SizeChanged;                
             horizontalScrollBar.Minimum = 0;
             UpdateHorizontalScrollbar();
@@ -35,27 +35,27 @@ namespace Scissors.Timeline
 
         private void timelineContent1_Resize(object sender, EventArgs e)
         {
-            if (timelineContent1.Width != oldWidth)
+            if (rectangleProvider1.Width != oldWidth)
             {
                 UpdateHorizontalScrollbar();
-                oldWidth = timelineContent1.Width;
+                oldWidth = rectangleProvider1.Width;
             }
-            if (timelineContent1.Height != oldHeight)
+            if (rectangleProvider1.Height != oldHeight)
             {
                 UpdateVerticalScrollbar();
-                oldHeight = timelineContent1.Height;
+                oldHeight = rectangleProvider1.Height;
             }
         }
 
         private void horizontalScrollBar_Scroll(object sender, ScrollEventArgs e)
         {
-           timelineContent1.HorizontalScroll = horizontalScrollBar.Value;
+           rectangleProvider1.HorizontalScroll = horizontalScrollBar.Value;
         }
 
         private void UpdateHorizontalScrollbar()
         {
             horizontalScrollBar.Maximum = controller.RulerRectangle.Width;
-            horizontalScrollBar.ScrollWidth = timelineContent1.HorizontalContainerRectangle.Width;
+            horizontalScrollBar.ScrollWidth = rectangleProvider1.HorizontalContainerRectangle.Width;
         }
 
         private void Timeline_SizeChanged(object sender, EventArgs e)
@@ -66,13 +66,13 @@ namespace Scissors.Timeline
 
         private void verticalScrollbar_Scroll(object sender, ScrollEventArgs e)
         {
-            timelineContent1.VerticalScroll = verticalScrollbar.Value;
+            rectangleProvider1.VerticalScroll = verticalScrollbar.Value;
         }
 
         private void UpdateVerticalScrollbar()
         {
             verticalScrollbar.Maximum = controller.SlicesRectangle.Height;
-            verticalScrollbar.ScrollWidth = timelineContent1.VerticalContainerRectangle.Height;
+            verticalScrollbar.ScrollWidth = rectangleProvider1.VerticalContainerRectangle.Height;
         }
     }
 }
