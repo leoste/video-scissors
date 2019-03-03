@@ -50,7 +50,7 @@ namespace Scissors.Timeline
         public Rectangle Rectangle { get { return layerRectangle; } }
         public Rectangle ParentRectangle { get { return slice.ParentRectangle; } }
 
-        public Rectangle ControlRectangle => throw new NotImplementedException();
+        public Rectangle ControlRectangle { get { return controlRectangle; } }
 
         public Rectangle ControlParentRectangle
         { get { return slice.ControlParentRectangle; } }

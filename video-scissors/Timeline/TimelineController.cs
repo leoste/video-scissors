@@ -130,7 +130,7 @@ namespace Scissors.Timeline
             CreateSlice();
             CreateSlice();
             CreateSlice();
-            
+
             cursor = new CursorController(this);
             ruler = new RulerController(this);
 

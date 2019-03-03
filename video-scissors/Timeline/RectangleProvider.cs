@@ -29,6 +29,18 @@ namespace Scissors.Timeline
         private int rulerBegin;
         private int rulerWidth;
 
+        private TimelineController timelineController;
+
+        internal TimelineController TimelineController
+        {
+            get { return timelineController; }
+            set
+            {
+                timelineController = value;
+                Refresh();
+            }
+        }
+
         public int RulerHeight
         {
             get { return rulerHeight; }
@@ -166,7 +178,7 @@ namespace Scissors.Timeline
         { get { return new Rectangle(rulerBegin, 0, rulerWidth, Height); } }
 
         public Rectangle VerticalContainerRectangle
-        { get { return new Rectangle(0, contentBegin, Width, contentHeight); } }
+        { get { return new Rectangle(0, contentBegin, Width, contentHeight); } }        
 
         public event EventHandler InternalSizesChanged;
         private void InvokeInternalSizesChanged(EventArgs e)
@@ -182,16 +194,33 @@ namespace Scissors.Timeline
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
-            //do not call base.OnPaintBackground(), it will cause flickering with controls drawing onto here
+            Region graphicsClip = e.Graphics.Clip;
+            Region region = graphicsClip;
 
-            Rectangle horizontal = new Rectangle(e.ClipRectangle.X, rulerHeight, e.ClipRectangle.Width, separatorHeight);
-            Rectangle vertical = new Rectangle(ControlWidth, e.ClipRectangle.Y, SeparatorWidth, e.ClipRectangle.Height);
+            if (timelineController != null)
+            {
+                foreach (IController controller in timelineController.GetChildren())
+                {
+                    Rectangle rectangle = controller.Rectangle;
+                    rectangle.Intersect(controller.ParentRectangle);
+                    region.Exclude(rectangle);
 
+                    if (controller is IControlController)
+                    {
+                        IControlController controlController = controller as IControlController;
+                        Rectangle controlRectangle = controlController.ControlRectangle;
+                        controlRectangle.Intersect(controlController.ControlParentRectangle);
+                        region.Exclude(controlRectangle);
+                    }
+                }
+            }
+
+            e.Graphics.Clip = region;
+            
             Brush brush = new SolidBrush(BackColor);
+            e.Graphics.FillRectangle(brush, e.ClipRectangle);
 
-            if (horizontal.IntersectsWith(e.ClipRectangle)) e.Graphics.FillRectangle(brush, horizontal);
-
-            if (vertical.IntersectsWith(e.ClipRectangle)) e.Graphics.FillRectangle(brush, vertical);
+            e.Graphics.Clip = graphicsClip;
         }
 
         protected override void OnResize(EventArgs e)
