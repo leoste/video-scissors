@@ -89,12 +89,15 @@ namespace Scissors.Timeline
             {
                 Rectangle rectangle = new Rectangle();
 
-                SliceController firstSlice = slices.First();
-                rectangle.X = firstSlice.Rectangle.X;
-                rectangle.Y = firstSlice.Rectangle.Y;
-                rectangle.Width = firstSlice.Rectangle.Width;
-                SliceController lastSlice = slices.Last();
-                rectangle.Height = lastSlice.Rectangle.Bottom - firstSlice.Rectangle.Y;
+                if (slices.Count > 0)
+                {
+                    SliceController firstSlice = slices.First();
+                    rectangle.X = firstSlice.Rectangle.X;
+                    rectangle.Y = firstSlice.Rectangle.Y;
+                    rectangle.Width = firstSlice.Rectangle.Width;
+                    SliceController lastSlice = slices.Last();
+                    rectangle.Height = lastSlice.Rectangle.Bottom - firstSlice.Rectangle.Y;
+                }
 
                 return rectangle;
             }
