@@ -102,9 +102,15 @@ namespace Scissors.Timeline
 
             items = new List<ItemController>();
 
-            items.Add(new ItemController(this, 2, 50));
-            items.Add(new ItemController(this, 55, 70));
-            items.Add(new ItemController(this, 143, 28));
+            Random rnd = new Random();
+            int r, o;
+
+            items.Add(new ItemController(this, r = rnd.Next(0, 10), o = rnd.Next(5, 50)));
+            System.Threading.Thread.Sleep(5);
+            items.Add(new ItemController(this, r = rnd.Next(r + o + 10, r + o + 50), o = rnd.Next(10, 70)));
+            System.Threading.Thread.Sleep(5);
+            items.Add(new ItemController(this, r = rnd.Next(r + 0 + 5, r + o + 100), o = rnd.Next(5, 60)));
+            System.Threading.Thread.Sleep(5);
 
             UpdateUI();
         }
