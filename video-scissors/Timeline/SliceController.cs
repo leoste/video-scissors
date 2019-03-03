@@ -20,7 +20,7 @@ namespace Scissors.Timeline
         private bool toggleVisibility = false;
         private int id;
         private TimelineController timeline;
-        private RectangleProvider timelineContent;
+        private RectangleProvider rectangleProvider;
                 
         private List<LayerController> layers;
         
@@ -40,7 +40,7 @@ namespace Scissors.Timeline
         public int ProjectFrameHeight { get { return timeline.ProjectFrameHeight; } }
         public bool IsLocked { get { return timeline.IsLocked || toggleLock; } }
         public bool IsVisible { get { return timeline.IsLocked || toggleVisibility; } }        
-        public RectangleProvider RectangleProvider { get { return timelineContent; } }
+        public RectangleProvider RectangleProvider { get { return rectangleProvider; } }
         public Color BackColor
         {
             get { return backColor; }
@@ -59,13 +59,13 @@ namespace Scissors.Timeline
         { get { return sliceRectangle; } }
 
         public Rectangle ParentRectangle
-        { get { return timelineContent.ContentContainerRectangle; } }
+        { get { return rectangleProvider.ContentContainerRectangle; } }
 
         public Rectangle ControlRectangle
         { get { return controlRectangle; } }
 
         public Rectangle ControlParentRectangle
-        { get { return timelineContent.ControlContainerRectangle; } }
+        { get { return rectangleProvider.ControlContainerRectangle; } }
 
         public event EventHandler SizeChanged;
         private void InvokeSizeChanged()
@@ -84,9 +84,9 @@ namespace Scissors.Timeline
 
             this.timeline = timeline;
 
-            timelineContent = timeline.RectangleProvider;
-            timelineContent.Paint += TimelineContent_Paint;
-            timelineContent.Resize += TimelineContent_Resize;
+            rectangleProvider = timeline.RectangleProvider;
+            rectangleProvider.Paint += TimelineContent_Paint;
+            rectangleProvider.Resize += TimelineContent_Resize;
 
             timeline.TimelineZoomChanged += Timeline_TimelineZoomChanged;
             timeline.TimelineLengthChanged += Timeline_TimelineLengthChanged;
@@ -152,7 +152,7 @@ namespace Scissors.Timeline
         {
             layersHeight = layers.Count * LayerController.height + Math.Max(layers.Count - 1, 0) * layerMargin;
             int height = padding * 2 + layersHeight;
-            int offset = id * height - timelineContent.VerticalScroll;
+            int offset = id * height - rectangleProvider.VerticalScroll;
             sliceRectangle.X = timeline.Rectangle.X;
             sliceRectangle.Y = ParentRectangle.Y + offset;
             sliceRectangle.Width = timeline.Rectangle.Width;
@@ -288,10 +288,10 @@ namespace Scissors.Timeline
         }
 
         private void UpdateControlUI()
-        { timelineContent.InvalidateVerticalContainerRectangle(controlRectangle); }
+        { rectangleProvider.InvalidateVerticalContainerRectangle(controlRectangle); }
 
         private void UpdateContentUI()
-        { timelineContent.InvalidateContentContainerRectangle(sliceRectangle); }
+        { rectangleProvider.InvalidateContentContainerRectangle(sliceRectangle); }
 
         private void TimelineContent_Paint(object sender, PaintEventArgs e)
         {

@@ -33,7 +33,7 @@ namespace Scissors.Timeline
         private int oldWidth;
         private int oldHeight;
 
-        private void timelineContent1_Resize(object sender, EventArgs e)
+        private void rectangleProvider1_Resize(object sender, EventArgs e)
         {
             if (rectangleProvider1.Width != oldWidth)
             {

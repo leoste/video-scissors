@@ -12,7 +12,7 @@ namespace Scissors.Timeline
     internal class ItemController : IFrameController
     {
         private LayerController layer;
-        private RectangleProvider timelineContent;
+        private RectangleProvider rectangleProvider;
 
         private Rectangle itemRectangle;
         private Rectangle oldRectangle;
@@ -100,7 +100,7 @@ namespace Scissors.Timeline
         { get { return itemRectangle; } }
 
         public Rectangle ParentRectangle
-        { get { return timelineContent.ContentContainerRectangle; } }
+        { get { return rectangleProvider.ContentContainerRectangle; } }
 
         public event EventHandler SizeChanged;
         private void InvokeSizeChanged()
@@ -120,12 +120,12 @@ namespace Scissors.Timeline
             ui_change = 0;
 
             this.layer = layer;
-            timelineContent = layer.RectangleProvider;
+            rectangleProvider = layer.RectangleProvider;
             UpdateCache();
             oldRectangle = itemRectangle;
 
-            timelineContent.Paint += TimelineContent_Paint;
-            timelineContent.Resize += TimelineContent_Resize;
+            rectangleProvider.Paint += TimelineContent_Paint;
+            rectangleProvider.Resize += TimelineContent_Resize;
 
             layer.TimelineZoomChanged += Layer_TimelineZoomChanged;
             layer.TimelineLengthChanged += Layer_TimelineLengthChanged;
@@ -271,8 +271,8 @@ namespace Scissors.Timeline
 
         public void UpdateUI()
         {
-            timelineContent.InvalidateContentContainerRectangle(oldRectangle);
-            timelineContent.InvalidateContentContainerRectangle(itemRectangle);
+            rectangleProvider.InvalidateContentContainerRectangle(oldRectangle);
+            rectangleProvider.InvalidateContentContainerRectangle(itemRectangle);
             oldRectangle = itemRectangle;
         }
 

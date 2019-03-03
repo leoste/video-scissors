@@ -50,7 +50,7 @@
             this.rectangleProvider1.Size = new System.Drawing.Size(877, 524);
             this.rectangleProvider1.TabIndex = 17;
             this.rectangleProvider1.VerticalScroll = 0;
-            this.rectangleProvider1.Resize += new System.EventHandler(this.timelineContent1_Resize);
+            this.rectangleProvider1.Resize += new System.EventHandler(this.rectangleProvider1_Resize);
             // 
             // verticalScrollbar
             // 

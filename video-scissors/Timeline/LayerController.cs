@@ -17,13 +17,13 @@ namespace Scissors.Timeline
         private bool toggleVisibility;
         private int id;
         private SliceController slice;
-        private RectangleProvider timelineContent;
+        private RectangleProvider rectangleProvider;
 
         private Rectangle layerRectangle;
         private Rectangle controlRectangle;
         private Color backColor;
 
-        public RectangleProvider RectangleProvider { get { return timelineContent; } }
+        public RectangleProvider RectangleProvider { get { return rectangleProvider; } }
 
         private List<ItemController> items;
         
@@ -70,9 +70,9 @@ namespace Scissors.Timeline
         {
             this.slice = slice;
 
-            timelineContent = slice.RectangleProvider;
-            timelineContent.Paint += TimelineContent_Paint;
-            timelineContent.Resize += TimelineContent_Resize;
+            rectangleProvider = slice.RectangleProvider;
+            rectangleProvider.Paint += TimelineContent_Paint;
+            rectangleProvider.Resize += TimelineContent_Resize;
 
             slice.TimelineZoomChanged += Timeline_TimelineZoomChanged;
             slice.TimelineLengthChanged += Timeline_TimelineLengthChanged;
@@ -216,10 +216,10 @@ namespace Scissors.Timeline
         }
 
         public void UpdateControlUI()
-        { timelineContent.InvalidateVerticalContainerRectangle(controlRectangle); }
+        { rectangleProvider.InvalidateVerticalContainerRectangle(controlRectangle); }
 
         public void UpdateContentUI()
-        { timelineContent.InvalidateContentContainerRectangle(layerRectangle); }
+        { rectangleProvider.InvalidateContentContainerRectangle(layerRectangle); }
         
         private void TimelineContent_Paint(object sender, PaintEventArgs e)
         {

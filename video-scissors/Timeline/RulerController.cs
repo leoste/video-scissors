@@ -15,7 +15,7 @@ namespace Scissors.Timeline
         private Color backColor = Color.AntiqueWhite;        
 
         private TimelineController timeline;
-        private RectangleProvider timelineContent;
+        private RectangleProvider rectangleProvider;
         
         private int[] markPattern;
         private Rectangle oldRect;
@@ -36,7 +36,7 @@ namespace Scissors.Timeline
         { get { return rulerRectangle; } }
 
         public Rectangle ParentRectangle
-        { get { return timelineContent.RulerContainerRectangle; } }
+        { get { return rectangleProvider.RulerContainerRectangle; } }
 
         public int MarkWidth
         {
@@ -77,7 +77,7 @@ namespace Scissors.Timeline
             }
         }
 
-        public RectangleProvider RectangleProvider { get { return timelineContent; } }
+        public RectangleProvider RectangleProvider { get { return rectangleProvider; } }
 
         public event EventHandler TimelineLengthChanged;
         public event EventHandler TimelineZoomChanged;
@@ -90,10 +90,10 @@ namespace Scissors.Timeline
         {
             this.timeline = timeline;
 
-            timelineContent = timeline.RectangleProvider;
-            oldRect = timelineContent.RulerContainerRectangle;
+            rectangleProvider = timeline.RectangleProvider;
+            oldRect = rectangleProvider.RulerContainerRectangle;
             oldScreenRect = GetScreenRectangle();
-            oldScroll = timelineContent.HorizontalScroll;
+            oldScroll = rectangleProvider.HorizontalScroll;
 
             rulerRectangle = new Rectangle();
             UpdateCache();
@@ -115,8 +115,8 @@ namespace Scissors.Timeline
                 markPattern = new int[] { 25 };
             }
 
-            timelineContent.Paint += TimelineContent_Paint;
-            timelineContent.Resize += TimelineContent_Resize;
+            rectangleProvider.Paint += TimelineContent_Paint;
+            rectangleProvider.Resize += TimelineContent_Resize;
             timeline.TimelineZoomChanged += Timeline_TimelineZoomChanged;
             timeline.TimelineLengthChanged += Timeline_TimelineLengthChanged;
             timeline.LocationChanged += TimelineContent_LocationChanged;
@@ -140,18 +140,18 @@ namespace Scissors.Timeline
 
         private void TimelineContent_LocationChanged(object sender, LocationChangeEventArgs e)
         {
-            if (timelineContent.HorizontalScroll != oldScroll)
+            if (rectangleProvider.HorizontalScroll != oldScroll)
             {
-                oldScroll = timelineContent.HorizontalScroll;
+                oldScroll = rectangleProvider.HorizontalScroll;
                 UpdateCache();
                 InvokeLocationChanged(e);
-                timelineContent.Invalidate(timelineContent.RulerContainerRectangle);
+                rectangleProvider.Invalidate(rectangleProvider.RulerContainerRectangle);
             }
         }
 
         private void TimelineContent_Resize(object sender, EventArgs e)
         {
-            if (!oldRect.Equals(timelineContent.RulerContainerRectangle))
+            if (!oldRect.Equals(rectangleProvider.RulerContainerRectangle))
             {
                 UpdateCache();
                 UpdateUI();
@@ -163,7 +163,7 @@ namespace Scissors.Timeline
             rulerRectangle.X = timeline.Rectangle.X;
             rulerRectangle.Y = timeline.Rectangle.Y;
             rulerRectangle.Width = timeline.Rectangle.Width;
-            rulerRectangle.Height = timelineContent.RulerContainerRectangle.Height;
+            rulerRectangle.Height = rectangleProvider.RulerContainerRectangle.Height;
         }
 
         public void UpdateUI()
@@ -173,15 +173,15 @@ namespace Scissors.Timeline
             //if location or height has changed the entirety of old and new areas need redrawing
             if (screenRect.Location != oldScreenRect.Location || screenRect.Height != oldScreenRect.Height)
             {
-                timelineContent.Invalidate(oldRect);
-                timelineContent.Invalidate(ParentRectangle);
+                rectangleProvider.Invalidate(oldRect);
+                rectangleProvider.Invalidate(ParentRectangle);
             }
             //if width has increased then only the new area needs redrawing
             else if (screenRect.Width != oldScreenRect.Width)
             {
                 if (screenRect.Width > oldScreenRect.Width)
                 {
-                    timelineContent.Invalidate(new Rectangle(
+                    rectangleProvider.Invalidate(new Rectangle(
                         oldScreenRect.Width, oldScreenRect.Y, 
                         screenRect.X - oldScreenRect.X, oldScreenRect.Height));
                 }
@@ -230,7 +230,7 @@ namespace Scissors.Timeline
 
         private Rectangle GetScreenRectangle()
         {
-            return timelineContent.RectangleToScreen(timelineContent.ClientRectangle);
+            return rectangleProvider.RectangleToScreen(rectangleProvider.ClientRectangle);
         }
 
         public void Dispose()
