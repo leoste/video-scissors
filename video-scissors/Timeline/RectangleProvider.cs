@@ -198,20 +198,12 @@ namespace Scissors.Timeline
             Region region = graphicsClip;
 
             if (timelineController != null)
-            {
+            {                
                 foreach (IController controller in timelineController.GetChildren())
                 {
-                    Rectangle rectangle = controller.Rectangle;
-                    rectangle.Intersect(controller.ParentRectangle);
-                    region.Exclude(rectangle);
-
-                    if (controller is IControlController)
-                    {
-                        IControlController controlController = controller as IControlController;
-                        Rectangle controlRectangle = controlController.ControlRectangle;
-                        controlRectangle.Intersect(controlController.ControlParentRectangle);
-                        region.Exclude(controlRectangle);
-                    }
+                    Region controllerRegion = controller.FullOccupiedRegion;
+                    controllerRegion.Intersect(controller.FullParentRegion);
+                    region.Exclude(controllerRegion);
                 }
             }
 

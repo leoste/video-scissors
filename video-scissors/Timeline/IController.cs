@@ -40,6 +40,8 @@ namespace Scissors.Timeline
         Color ForeColor { get; set; }
         Rectangle Rectangle { get; }
         Rectangle ParentRectangle { get; }
+        Region FullOccupiedRegion { get; }
+        Region FullParentRegion { get; }
 
         event EventHandler SizeChanged;
         event EventHandler<LocationChangeEventArgs> LocationChanged;

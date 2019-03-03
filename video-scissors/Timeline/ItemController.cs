@@ -104,6 +104,12 @@ namespace Scissors.Timeline
 
         public TimelineController Timeline { get { return layer.Timeline; } }
 
+        public Region FullOccupiedRegion
+        { get { return new Region(itemRectangle); } }
+
+        public Region FullParentRegion
+        { get { return new Region(ParentRectangle); } }
+
         public event EventHandler SizeChanged;
         private void InvokeSizeChanged()
         { if (SizeChanged != null) SizeChanged.Invoke(this, EventArgs.Empty); }

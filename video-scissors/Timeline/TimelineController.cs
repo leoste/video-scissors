@@ -99,6 +99,23 @@ namespace Scissors.Timeline
                 return rectangle;
             }
         }
+
+        public Rectangle SlicesControlRectangle
+        {
+            get
+            {
+                Rectangle rectangle = new Rectangle();
+
+                SliceController firstSlice = slices.First();
+                rectangle.X = firstSlice.ControlRectangle.X;
+                rectangle.Y = firstSlice.ControlRectangle.Y;
+                rectangle.Width = firstSlice.ControlRectangle.Width;
+                SliceController lastSlice = slices.Last();
+                rectangle.Height = lastSlice.ControlRectangle.Bottom - firstSlice.ControlRectangle.Y;
+
+                return rectangle;
+            }
+        }
         
         public RulerController Ruler { get { return ruler; } }
         public CursorController Cursor { get { return cursor; } }
@@ -108,6 +125,31 @@ namespace Scissors.Timeline
 
         public Rectangle ParentRectangle
         { get { return RectangleProvider.HorizontalContainerRectangle; } }
+
+        public Region FullOccupiedRegion
+        {
+            get
+            {
+                Region region = new Region();                
+                region.Union(SlicesRectangle);
+                region.Union(Ruler.FullOccupiedRegion);
+                region.Union(SlicesControlRectangle);
+                region.Union(cursor.FullOccupiedRegion);
+                return region;
+            }
+        }
+
+        public Region FullParentRegion
+        {
+            get
+            {
+                Region region = new Region();
+                region.Union(rectangleProvider.RulerContainerRectangle);
+                region.Union(rectangleProvider.ContentContainerRectangle);
+                region.Union(rectangleProvider.ControlContainerRectangle);
+                return region;
+            }
+        }
 
         private void Initialize(Timeline timeline, RectangleProvider rectangleProvider, int length, float zoom, int framerate, int frameWidth, int frameHeight)
         {

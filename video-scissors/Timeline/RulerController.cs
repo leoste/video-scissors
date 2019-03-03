@@ -80,6 +80,12 @@ namespace Scissors.Timeline
         public RectangleProvider RectangleProvider { get { return rectangleProvider; } }
 
         public TimelineController Timeline { get { return timeline; } }
+
+        public Region FullOccupiedRegion
+        { get { return new Region(rulerRectangle); } }
+
+        public Region FullParentRegion
+        { get { return new Region(ParentRectangle); } }
         
         public event EventHandler TimelineLengthChanged;
         public event EventHandler TimelineZoomChanged;

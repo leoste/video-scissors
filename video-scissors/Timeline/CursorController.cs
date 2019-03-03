@@ -35,11 +35,19 @@ namespace Scissors.Timeline
         public Color BackColor { get; set; }
         public Color ForeColor { get; set; }
 
+        //will return a rectangle containing all cursors in the future
         public Rectangle Rectangle
         { get { return mainCursorRectangle; } }
 
         public Rectangle ParentRectangle
         { get { return rectangleProvider.HorizontalContainerRectangle; } }
+
+        //will return a region containing all cursors in the future
+        public Region FullOccupiedRegion
+        { get { return new Region(mainCursorRectangle); } }
+
+        public Region FullParentRegion
+        { get { return new Region(ParentRectangle); } }
 
         public TimelineController Timeline { get { return timeline; } }
 

@@ -57,6 +57,20 @@ namespace Scissors.Timeline
 
         public TimelineController Timeline { get { return slice.Timeline; } }
 
+        public Region FullOccupiedRegion
+        {
+            get
+            {
+                Region region = new Region();
+                region.Union(layerRectangle);
+                region.Union(controlRectangle);
+                return region;
+            }
+        }
+
+        public Region FullParentRegion
+        { get { return slice.FullParentRegion; } }
+
         public event EventHandler SizeChanged;
         private void InvokeSizeChanged()
         { if (SizeChanged != null) SizeChanged.Invoke(this, EventArgs.Empty); }
