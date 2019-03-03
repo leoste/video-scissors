@@ -91,7 +91,7 @@ namespace Scissors.Timeline
         public int ProjectFrameWidth { get { return layer.ProjectFrameWidth; } }
         public int ProjectFrameHeight { get { return layer.ProjectFrameHeight; } }
 
-        public RectangleProvider TimelineRectangleProvider => throw new NotImplementedException();
+        public RectangleProvider RectangleProvider => throw new NotImplementedException();
 
         public Color BackColor { get { return backColor; } set { backColor = value; } }
         public Color ForeColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -120,7 +120,7 @@ namespace Scissors.Timeline
             ui_change = 0;
 
             this.layer = layer;
-            timelineContent = layer.TimelineRectangleProvider;
+            timelineContent = layer.RectangleProvider;
             UpdateCache();
             oldRectangle = itemRectangle;
 

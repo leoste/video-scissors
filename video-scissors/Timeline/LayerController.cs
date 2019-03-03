@@ -23,7 +23,7 @@ namespace Scissors.Timeline
         private Rectangle controlRectangle;
         private Color backColor;
 
-        public RectangleProvider TimelineRectangleProvider { get { return timelineContent; } }
+        public RectangleProvider RectangleProvider { get { return timelineContent; } }
 
         private List<ItemController> items;
         
@@ -70,7 +70,7 @@ namespace Scissors.Timeline
         {
             this.slice = slice;
 
-            timelineContent = slice.TimelineRectangleProvider;
+            timelineContent = slice.RectangleProvider;
             timelineContent.Paint += TimelineContent_Paint;
             timelineContent.Resize += TimelineContent_Resize;
 

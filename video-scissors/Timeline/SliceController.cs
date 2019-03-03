@@ -40,7 +40,7 @@ namespace Scissors.Timeline
         public int ProjectFrameHeight { get { return timeline.ProjectFrameHeight; } }
         public bool IsLocked { get { return timeline.IsLocked || toggleLock; } }
         public bool IsVisible { get { return timeline.IsLocked || toggleVisibility; } }        
-        public RectangleProvider TimelineRectangleProvider { get { return timelineContent; } }
+        public RectangleProvider RectangleProvider { get { return timelineContent; } }
         public Color BackColor
         {
             get { return backColor; }
@@ -84,7 +84,7 @@ namespace Scissors.Timeline
 
             this.timeline = timeline;
 
-            timelineContent = timeline.TimelineRectangleProvider;
+            timelineContent = timeline.RectangleProvider;
             timelineContent.Paint += TimelineContent_Paint;
             timelineContent.Resize += TimelineContent_Resize;
 

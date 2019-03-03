@@ -77,7 +77,7 @@ namespace Scissors.Timeline
             }
         }
 
-        public RectangleProvider TimelineRectangleProvider { get { return timelineContent; } }
+        public RectangleProvider RectangleProvider { get { return timelineContent; } }
 
         public event EventHandler TimelineLengthChanged;
         public event EventHandler TimelineZoomChanged;
@@ -90,7 +90,7 @@ namespace Scissors.Timeline
         {
             this.timeline = timeline;
 
-            timelineContent = timeline.TimelineRectangleProvider;
+            timelineContent = timeline.RectangleProvider;
             oldRect = timelineContent.RulerContainerRectangle;
             oldScreenRect = GetScreenRectangle();
             oldScroll = timelineContent.HorizontalScroll;

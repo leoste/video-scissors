@@ -67,7 +67,7 @@ namespace Scissors.Timeline
         public int ProjectFrameHeight { get { return frameHeight; } }
         public bool IsLocked { get; }
         public bool IsVisible { get; }
-        public RectangleProvider TimelineRectangleProvider { get { return rectangleProvider; } }
+        public RectangleProvider RectangleProvider { get { return rectangleProvider; } }
         public Color BackColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public Color ForeColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
@@ -106,7 +106,7 @@ namespace Scissors.Timeline
         { get { return timelineRectangle; } }
 
         public Rectangle ParentRectangle
-        { get { return TimelineRectangleProvider.HorizontalContainerRectangle; } }
+        { get { return RectangleProvider.HorizontalContainerRectangle; } }
 
         public Rectangle ControlRectangle => throw new NotImplementedException();
 
@@ -220,7 +220,7 @@ namespace Scissors.Timeline
         {
             UpdateCache();
             InvokeSizeChanged();
-            TimelineRectangleProvider.Update();
+            RectangleProvider.Update();
         }
 
         internal void RemoveSlice(int id)
