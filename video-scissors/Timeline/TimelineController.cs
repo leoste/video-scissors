@@ -136,7 +136,7 @@ namespace Scissors.Timeline
 
             ruler = new RulerController(this);
 
-            //cursor = new CursorController(this);
+            cursor = new CursorController(this);
 
             UpdateUI();
         }
