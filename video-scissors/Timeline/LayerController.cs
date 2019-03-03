@@ -100,9 +100,9 @@ namespace Scissors.Timeline
 
             items = new List<ItemController>();
 
-            items.Add(new ItemController(this, 2, 10));
-            items.Add(new ItemController(this, 15, 10));
-            items.Add(new ItemController(this, 40, 5));
+            items.Add(new ItemController(this, 2, 50));
+            items.Add(new ItemController(this, 55, 70));
+            items.Add(new ItemController(this, 143, 28));
 
             UpdateUI();
         }
@@ -234,6 +234,12 @@ namespace Scissors.Timeline
                 if (redrawContent)
                 {
                     Region region = new Region(ParentRectangle);
+
+                    foreach (ItemController item in items)
+                    {
+                        region.Exclude(item.Rectangle);
+                    }
+
                     if (redrawControl)
                     {
                         Rectangle rectangle = ControlParentRectangle;

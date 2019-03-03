@@ -78,12 +78,6 @@
     <Compile Include="Timeline\IController.cs" />
     <Compile Include="Timeline\IFrameController.cs" />
     <Compile Include="Timeline\LocationChangeEventArgs.cs" />
-    <Compile Include="Timeline\RulerContent.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Timeline\RulerContent.Designer.cs">
-      <DependentUpon>RulerContent.cs</DependentUpon>
-    </Compile>
     <Compile Include="Timeline\RulerController.cs" />
     <Compile Include="Timeline\ScrollDirection.cs" />
     <Compile Include="Timeline\RectangleProvider.cs">
@@ -160,9 +154,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Timeline\LayerContent.resx">
       <DependentUpon>LayerContent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Timeline\RulerContent.resx">
-      <DependentUpon>RulerContent.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Timeline\SliceControl.resx">
       <DependentUpon>SliceControl.cs</DependentUpon>
