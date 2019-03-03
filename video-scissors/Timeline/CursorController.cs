@@ -42,7 +42,7 @@ namespace Scissors.Timeline
         
         private void AddEventsDeep(Control control)
         {
-            int level;
+            /*int level;
             if (generations.TryGetValue(control.Parent, out ControlInfo info)) level = info.Level;
             else level = -1;
             
@@ -63,7 +63,7 @@ namespace Scissors.Timeline
             foreach (Control child in control.Controls)
             {
                 AddEventsDeep(child);
-            }
+            }*/
         }
 
         private void Item_MouseDown(object sender, MouseEventArgs e)
@@ -149,7 +149,7 @@ namespace Scissors.Timeline
 
         private void RemoveEventsDeep(Control control)
         {
-            generations.Remove(control);
+            /*generations.Remove(control);
             control.ControlAdded -= Control_ControlAdded;
             control.ControlRemoved -= Control_ControlRemoved;
             control.MouseMove -= Control_MouseMove;
@@ -165,7 +165,7 @@ namespace Scissors.Timeline
             foreach (Control child in control.Controls)
             {
                 RemoveEventsDeep(child);
-            }
+            }*/
         }
 
         private void Control_ControlRemoved(object sender, ControlEventArgs e)

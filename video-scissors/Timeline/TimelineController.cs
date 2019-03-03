@@ -220,7 +220,7 @@ namespace Scissors.Timeline
         {
             UpdateCache();
             InvokeSizeChanged();
-            RectangleProvider.Update();
+            //RectangleProvider.Update();
         }
 
         internal void RemoveSlice(int id)

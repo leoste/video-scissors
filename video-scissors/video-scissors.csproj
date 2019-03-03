@@ -72,8 +72,6 @@
     </Compile>
     <Compile Include="Timeline\Frame.cs" />
     <Compile Include="Timeline\IChildrenController.cs" />
-    <Compile Include="Timeline\IContent.cs" />
-    <Compile Include="Timeline\IControl.cs" />
     <Compile Include="Timeline\IControlController.cs" />
     <Compile Include="Timeline\IController.cs" />
     <Compile Include="Timeline\IFrameController.cs" />
@@ -89,39 +87,9 @@
     <Compile Include="Timeline\RectangleProviderDesigner.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Timeline\TimelineControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Timeline\TimelineControl.Designer.cs">
-      <DependentUpon>TimelineControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Timeline\TimelineController.cs" />
-    <Compile Include="Timeline\ItemContent.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Timeline\ItemContent.Designer.cs">
-      <DependentUpon>ItemContent.cs</DependentUpon>
-    </Compile>
     <Compile Include="Timeline\ItemController.cs" />
-    <Compile Include="Timeline\LayerControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Timeline\LayerControl.Designer.cs">
-      <DependentUpon>LayerControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Timeline\LayerController.cs" />
-    <Compile Include="Timeline\LayerContent.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Timeline\LayerContent.Designer.cs">
-      <DependentUpon>LayerContent.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Timeline\SliceControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Timeline\SliceControl.Designer.cs">
-      <DependentUpon>SliceControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Timeline\SliceController.cs" />
     <Compile Include="Timeline\Timeline.cs">
       <SubType>UserControl</SubType>
@@ -145,18 +113,6 @@
     </Compile>
     <EmbeddedResource Include="Timeline\FancyScrollbar.resx">
       <DependentUpon>FancyScrollbar.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Timeline\ItemContent.resx">
-      <DependentUpon>ItemContent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Timeline\LayerControl.resx">
-      <DependentUpon>LayerControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Timeline\LayerContent.resx">
-      <DependentUpon>LayerContent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Timeline\SliceControl.resx">
-      <DependentUpon>SliceControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Timeline\Timeline.resx">
       <DependentUpon>Timeline.cs</DependentUpon>
