@@ -79,6 +79,8 @@ namespace Scissors.Timeline
 
         public RectangleProvider RectangleProvider { get { return rectangleProvider; } }
 
+        public TimelineController Timeline { get { return timeline; } }
+        
         public event EventHandler TimelineLengthChanged;
         public event EventHandler TimelineZoomChanged;
         
@@ -197,13 +199,18 @@ namespace Scissors.Timeline
         {
             if (e.ClipRectangle.IntersectsWith(ParentRectangle))
             {
+                Region graphicsClip = e.Graphics.Clip;
+                Region region = graphicsClip;
+                region.Exclude(Timeline.Cursor.Rectangle);
+                e.Graphics.Clip = region;
+
                 Rectangle clip = e.ClipRectangle;
                 if (clip.X < ParentRectangle.X)
                 {
                     int diff = ParentRectangle.X - e.ClipRectangle.X;
                     clip.X = ParentRectangle.X;
                     clip.Width = clip.Width - diff;
-                }
+                }                
 
                 Rectangle rect = ParentRectangle;
                 Brush markBrush = new SolidBrush(markColor);
@@ -224,7 +231,7 @@ namespace Scissors.Timeline
                     e.Graphics.FillRectangle(markBrush, markRect);
                 }
 
-                e.Dispose();
+                e.Graphics.Clip = graphicsClip;
             }
         }
 

@@ -55,6 +55,8 @@ namespace Scissors.Timeline
         public Rectangle ControlParentRectangle
         { get { return slice.ControlParentRectangle; } }
 
+        public TimelineController Timeline { get { return slice.Timeline; } }
+
         public event EventHandler SizeChanged;
         private void InvokeSizeChanged()
         { if (SizeChanged != null) SizeChanged.Invoke(this, EventArgs.Empty); }
@@ -234,6 +236,7 @@ namespace Scissors.Timeline
                 if (redrawContent)
                 {
                     Region region = new Region(ParentRectangle);
+                    region.Exclude(Timeline.Cursor.Rectangle);
 
                     foreach (ItemController item in items)
                     {

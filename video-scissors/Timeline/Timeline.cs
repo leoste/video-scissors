@@ -54,7 +54,7 @@ namespace Scissors.Timeline
 
         private void UpdateHorizontalScrollbar()
         {
-            horizontalScrollBar.Maximum = controller.RulerRectangle.Width;
+            horizontalScrollBar.Maximum = controller.Ruler.Rectangle.Width;
             horizontalScrollBar.ScrollWidth = rectangleProvider1.HorizontalContainerRectangle.Width;
         }
 

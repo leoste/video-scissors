@@ -45,6 +45,8 @@ namespace Scissors.Timeline
         event EventHandler<LocationChangeEventArgs> LocationChanged;
         event EventHandler TimelineLengthChanged;
         event EventHandler TimelineZoomChanged;
+
+        TimelineController Timeline { get; }
         
         void UpdateUI();        
     }

@@ -67,6 +67,8 @@ namespace Scissors.Timeline
         public Rectangle ControlParentRectangle
         { get { return rectangleProvider.ControlContainerRectangle; } }
 
+        public TimelineController Timeline { get { return timeline; } }
+
         public event EventHandler SizeChanged;
         private void InvokeSizeChanged()
         { if (SizeChanged != null) SizeChanged.Invoke(this, EventArgs.Empty); }
@@ -306,6 +308,7 @@ namespace Scissors.Timeline
                 if (redrawContent)
                 {
                     Region region = new Region(ParentRectangle);
+                    region.Exclude(timeline.Cursor.Rectangle);
 
                     if (redrawControl)
                     {

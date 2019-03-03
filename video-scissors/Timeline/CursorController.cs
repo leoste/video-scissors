@@ -21,7 +21,8 @@ namespace Scissors.Timeline
         private TimelineController timeline;
         private RectangleProvider rectangleProvider;
 
-        private Rectangle cursorRectangle;        
+        private Rectangle mainCursorRectangle;
+        private Rectangle oldRectangle;
                         
         public int TimelineLength { get { return timeline.TimelineLength; } }
         public float TimelineZoom { get { return timeline.TimelineZoom; } }
@@ -35,10 +36,12 @@ namespace Scissors.Timeline
         public Color ForeColor { get; set; }
 
         public Rectangle Rectangle
-        { get { return cursorRectangle; } }
+        { get { return mainCursorRectangle; } }
 
         public Rectangle ParentRectangle
         { get { return rectangleProvider.HorizontalContainerRectangle; } }
+
+        public TimelineController Timeline { get { return timeline; } }
 
         public event EventHandler SizeChanged;
         private void InvokeSizeChanged()
@@ -60,6 +63,11 @@ namespace Scissors.Timeline
 
             this.timeline = timeline;
             rectangleProvider = timeline.RectangleProvider;
+
+            mainCursorRectangle = new Rectangle();
+            mainCursorRectangle.X = rectangleProvider.HorizontalContainerRectangle.X;
+            UpdateCache();
+            oldRectangle = mainCursorRectangle;
             
             timeline.TimelineZoomChanged += Timeline_TimelineZoomChanged;
             timeline.TimelineLengthChanged += Timeline_TimelineLengthChanged;
@@ -68,6 +76,8 @@ namespace Scissors.Timeline
             rectangleProvider.MouseDown += RectangleProvider_MouseDown;
             rectangleProvider.MouseMove += RectangleProvider_MouseMove;
             rectangleProvider.MouseUp += RectangleProvider_MouseUp;
+
+            rectangleProvider.Paint += RectangleProvider_Paint;
         }
 
         private void RectangleProvider_MouseDown(object sender, MouseEventArgs e)
@@ -80,7 +90,11 @@ namespace Scissors.Timeline
 
         private void RectangleProvider_MouseMove(object sender, MouseEventArgs e)
         {
-            
+            if (rectangleProvider.HorizontalContainerRectangle.Contains(e.Location))
+            {
+                UpdateCache(e.X);
+                UpdateUI();
+            }
         }
 
         private void RectangleProvider_MouseUp(object sender, MouseEventArgs e)
@@ -220,14 +234,32 @@ namespace Scissors.Timeline
             }*/
         }
 
+        private void UpdateCache(int x)
+        {
+            mainCursorRectangle.X = x;
+            mainCursorRectangle.Y = rectangleProvider.ContainerRectangle.Y;
+            mainCursorRectangle.Width = cursorWidth;
+            mainCursorRectangle.Height = rectangleProvider.ContainerRectangle.Height;            
+        }
+
         private void UpdateCache()
         {
-
+            UpdateCache(mainCursorRectangle.X);
         }
 
         public void UpdateUI()
         {
-            
+            rectangleProvider.Invalidate(oldRectangle);
+            rectangleProvider.Invalidate(mainCursorRectangle);
+            oldRectangle = mainCursorRectangle;
+        }
+
+        private void RectangleProvider_Paint(object sender, PaintEventArgs e)
+        {
+            if (e.ClipRectangle.IntersectsWith(mainCursorRectangle))
+            {
+                e.Graphics.FillRectangle(GlobalConfig.CursorRegularBrush, mainCursorRectangle);
+            }
         }
 
         class ControlInfo : IDisposable
@@ -249,23 +281,17 @@ namespace Scissors.Timeline
 
         private void Timeline_LocationChanged(object sender, LocationChangeEventArgs e)
         {
-            UpdateCache();
             InvokeLocationChanged(e);
-            UpdateUI();
         }
 
         private void Timeline_TimelineZoomChanged(object sender, EventArgs e)
         {
-            UpdateCache();
             if (TimelineZoomChanged != null) TimelineZoomChanged.Invoke(this, EventArgs.Empty);
-            UpdateUI();
         }
 
         private void Timeline_TimelineLengthChanged(object sender, EventArgs e)
         {
-            UpdateCache();
             if (TimelineLengthChanged != null) TimelineLengthChanged.Invoke(this, EventArgs.Empty);
-            UpdateUI();
         }
 
         private IController GetTargettedController(Point mouseLocation)

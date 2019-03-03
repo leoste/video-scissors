@@ -102,6 +102,8 @@ namespace Scissors.Timeline
         public Rectangle ParentRectangle
         { get { return rectangleProvider.ContentContainerRectangle; } }
 
+        public TimelineController Timeline { get { return layer.Timeline; } }
+
         public event EventHandler SizeChanged;
         private void InvokeSizeChanged()
         { if (SizeChanged != null) SizeChanged.Invoke(this, EventArgs.Empty); }
@@ -287,7 +289,9 @@ namespace Scissors.Timeline
             if (e.ClipRectangle.IntersectsWith(itemRectangle))
             {
                 Region graphicsClip = e.Graphics.Clip;
-                e.Graphics.Clip = new Region(ParentRectangle);
+                Region region = new Region(ParentRectangle);
+                region.Exclude(Timeline.Cursor.Rectangle);
+                e.Graphics.Clip = region;
 
                 Brush brush = new SolidBrush(backColor);
                 e.Graphics.FillRectangle(brush, itemRectangle);

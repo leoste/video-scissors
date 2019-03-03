@@ -9,7 +9,7 @@ using Scissors.Config;
 
 namespace Scissors.Timeline
 {
-    class TimelineController : IControlController, IChildController
+    class TimelineController : IController, IChildController
     {
         private Timeline timeline;
         private List<SliceController> slices;
@@ -28,7 +28,7 @@ namespace Scissors.Timeline
         internal FlowLayoutPanel ContentsPanel { get { return timeline.ContentsPanel; } }
         internal FlowLayoutPanel RulerPanel { get { return timeline.RulerPanel; } }
         internal Panel CursorPanel { get { return timeline.CursorPanel; } }
-        
+
         public int TimelineLength
         {
             get { return length; }
@@ -70,6 +70,7 @@ namespace Scissors.Timeline
         public RectangleProvider RectangleProvider { get { return rectangleProvider; } }
         public Color BackColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public Color ForeColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public TimelineController Timeline { get { return this; } }
 
         public event EventHandler TimelineLengthChanged;
         public event EventHandler TimelineZoomChanged;
@@ -98,19 +99,15 @@ namespace Scissors.Timeline
                 return rectangle;
             }
         }
-
-        public Rectangle RulerRectangle
-        { get { return ruler.Rectangle; } }
+        
+        public RulerController Ruler { get { return ruler; } }
+        public CursorController Cursor { get { return cursor; } }
 
         public Rectangle Rectangle
         { get { return timelineRectangle; } }
 
         public Rectangle ParentRectangle
         { get { return RectangleProvider.HorizontalContainerRectangle; } }
-
-        public Rectangle ControlRectangle => throw new NotImplementedException();
-
-        public Rectangle ControlParentRectangle => throw new NotImplementedException();
 
         private void Initialize(Timeline timeline, RectangleProvider rectangleProvider, int length, float zoom, int framerate, int frameWidth, int frameHeight)
         {
@@ -133,10 +130,9 @@ namespace Scissors.Timeline
             CreateSlice();
             CreateSlice();
             CreateSlice();
-
-            ruler = new RulerController(this);
-
+            
             cursor = new CursorController(this);
+            ruler = new RulerController(this);
 
             UpdateUI();
         }
