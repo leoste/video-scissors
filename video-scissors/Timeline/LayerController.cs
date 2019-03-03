@@ -61,8 +61,7 @@ namespace Scissors.Timeline
         {
             get
             {
-                Region region = new Region();
-                region.Union(layerRectangle);
+                Region region = new Region(layerRectangle);
                 region.Union(controlRectangle);
                 return region;
             }

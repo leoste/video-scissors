@@ -73,8 +73,7 @@ namespace Scissors.Timeline
         {
             get
             {
-                Region region = new Region();
-                region.Union(sliceRectangle);
+                Region region = new Region(sliceRectangle);
                 region.Union(controlRectangle);
                 return region;
             }
@@ -84,9 +83,8 @@ namespace Scissors.Timeline
         {
             get
             {
-                Region region = new Region();
+                Region region = new Region(ParentRectangle);
                 region.Union(ControlParentRectangle);
-                region.Union(ParentRectangle);
                 return region;
             }
         }

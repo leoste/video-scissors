@@ -161,7 +161,7 @@ namespace Scissors.Timeline
         {
             if (!oldRect.Equals(rectangleProvider.RulerContainerRectangle))
             {
-                UpdateCache();
+                UpdateCache();                
                 UpdateUI();
             }
         }

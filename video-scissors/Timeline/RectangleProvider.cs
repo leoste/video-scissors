@@ -202,7 +202,7 @@ namespace Scissors.Timeline
                 foreach (IController controller in timelineController.GetChildren())
                 {
                     Region controllerRegion = controller.FullOccupiedRegion;
-                    controllerRegion.Intersect(controller.FullParentRegion);
+                    controllerRegion.Intersect(controller.FullParentRegion);                    
                     region.Exclude(controllerRegion);
                 }
             }
