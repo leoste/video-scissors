@@ -153,7 +153,7 @@ namespace Scissors.Timeline
                 if (lockToControl)
                 {
                     int x1 = targettedItem.Rectangle.X;
-                    int x2 = targettedItem.Rectangle.Right - cursorWidth;
+                    int x2 = targettedItem.Rectangle.Right;
                     UpdateCache(new int[] { x1, x2 }, Enumerable.Repeat(CursorType.ItemEdge, 2).ToArray());
                 }
                 else
