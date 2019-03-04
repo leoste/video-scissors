@@ -12,18 +12,21 @@ namespace Scissors.Timeline
     class CursorController : IController
     {
         private static readonly int cursorWidth = 2;
-        
+
         private int oldLeft;
         private int oldWidth;
+        private int offset;
         private bool oldLockToControl;
         private bool lockToControl;
+        private ItemController targettedItem;
 
         private TimelineController timeline;
         private RectangleProvider rectangleProvider;
 
-        private Rectangle mainCursorRectangle;
-        private Rectangle oldRectangle;
-                        
+        private Rectangle protoCursor;
+        private List<Cursor> cursors;
+        private List<Cursor> oldCursors;
+
         public int TimelineLength { get { return timeline.TimelineLength; } }
         public float TimelineZoom { get { return timeline.TimelineZoom; } }
         public int ProjectFramerate { get { return timeline.ProjectFramerate; } }
@@ -37,14 +40,38 @@ namespace Scissors.Timeline
 
         //will return a rectangle containing all cursors in the future
         public Rectangle Rectangle
-        { get { return mainCursorRectangle; } }
+        {
+            get
+            {
+                Rectangle rectangle = new Rectangle();
+
+                rectangle.X = cursors[0].Rectangle.X;
+                rectangle.Y = cursors[0].Rectangle.Y;
+                rectangle.Height = cursors[0].Rectangle.Height;
+                rectangle.Width = cursors.Last().Rectangle.Right - rectangle.X;
+
+                return rectangle;
+            }
+        }
 
         public Rectangle ParentRectangle
         { get { return rectangleProvider.HorizontalContainerRectangle; } }
 
         //will return a region containing all cursors in the future
         public Region FullOccupiedRegion
-        { get { return new Region(mainCursorRectangle); } }
+        {
+            get
+            {
+                Region region = new Region(cursors[0].Rectangle);
+                
+                for (int i = 1; i < cursors.Count; i += 1)
+                {
+                    region.Union(cursors[i].Rectangle);
+                }
+
+                return region;
+            }
+        }
 
         public Region FullParentRegion
         { get { return new Region(ParentRectangle); } }
@@ -72,11 +99,13 @@ namespace Scissors.Timeline
             this.timeline = timeline;
             rectangleProvider = timeline.RectangleProvider;
 
-            mainCursorRectangle = new Rectangle();
-            mainCursorRectangle.X = rectangleProvider.HorizontalContainerRectangle.X;
+            protoCursor = new Rectangle();
+            cursors = new List<Cursor>();
+            oldCursors = new List<Cursor>();
             UpdateCache();
-            oldRectangle = mainCursorRectangle;
-            
+            oldCursors.AddRange(cursors);
+
+
             timeline.TimelineZoomChanged += Timeline_TimelineZoomChanged;
             timeline.TimelineLengthChanged += Timeline_TimelineLengthChanged;
             timeline.LocationChanged += Timeline_LocationChanged;
@@ -92,6 +121,14 @@ namespace Scissors.Timeline
         {
             IController controller = GetTargettedController(e.Location);
 
+            if (controller is ItemController)
+            {
+                lockToControl = true;
+                targettedItem = controller as ItemController;
+                oldLeft = targettedItem.StartPosition;
+                offset = e.X - controller.Rectangle.X;
+            }
+
             //add logic to behave differently depending on if control is item or layer etc
             //to allow for repositioning by dragging stuff
         }
@@ -100,14 +137,23 @@ namespace Scissors.Timeline
         {
             if (rectangleProvider.HorizontalContainerRectangle.Contains(e.Location))
             {
-                UpdateCache(e.X);
+                if (lockToControl)
+                {                    
+                    int x1 = targettedItem.Rectangle.X;
+                    int x2 = targettedItem.Rectangle.Right - cursorWidth;
+                    UpdateCache(new int[] { x1, x2 }, Enumerable.Repeat(CursorType.ItemEdge, 2).ToArray());
+                }
+                else
+                {
+                    UpdateCache(e.X);
+                }
                 UpdateUI();
             }
         }
 
         private void RectangleProvider_MouseUp(object sender, MouseEventArgs e)
         {
-            
+            lockToControl = false;
         }
 
         private void Item_MouseDown(object sender, MouseEventArgs e)
@@ -242,32 +288,63 @@ namespace Scissors.Timeline
             }*/
         }
 
+        private void UpdateCache(int[] xs, CursorType[] types)
+        {
+            protoCursor.X = 0;
+            protoCursor.Y = rectangleProvider.ContainerRectangle.Y;
+            protoCursor.Width = cursorWidth;
+            protoCursor.Height = rectangleProvider.ContainerRectangle.Height;
+
+            cursors.Clear();
+
+            for (int i = 0; i < xs.Length; i += 1)
+            {
+                Rectangle rect = protoCursor;
+                rect.X = xs[i];
+                cursors.Add(new Cursor(rect, types[i]));
+            }
+        }
+
         private void UpdateCache(int x)
         {
-            mainCursorRectangle.X = x;
-            mainCursorRectangle.Y = rectangleProvider.ContainerRectangle.Y;
-            mainCursorRectangle.Width = cursorWidth;
-            mainCursorRectangle.Height = rectangleProvider.ContainerRectangle.Height;            
+            UpdateCache(new int[] { x }, new CursorType[] { CursorType.Main });
         }
 
         private void UpdateCache()
         {
-            UpdateCache(mainCursorRectangle.X);
+            UpdateCache(new int[] { ParentRectangle.X }, new CursorType[] { CursorType.Main });
         }
 
         public void UpdateUI()
         {
-            rectangleProvider.Invalidate(oldRectangle);
-            rectangleProvider.Invalidate(mainCursorRectangle);
-            oldRectangle = mainCursorRectangle;
+            foreach (Cursor cursor in oldCursors)
+            {
+                rectangleProvider.Invalidate(cursor.Rectangle);
+            }
+
+            foreach (Cursor cursor in cursors)
+            {
+                rectangleProvider.Invalidate(cursor.Rectangle);
+            }
+
+            oldCursors.Clear();
+            oldCursors.AddRange(cursors);
         }
 
         private void RectangleProvider_Paint(object sender, PaintEventArgs e)
         {
-            if (e.ClipRectangle.IntersectsWith(mainCursorRectangle))
+            foreach (Cursor cursor in cursors)
             {
-                e.Graphics.FillRectangle(GlobalConfig.CursorRegularBrush, mainCursorRectangle);
-            }
+                if (e.ClipRectangle.IntersectsWith(cursor.Rectangle))
+                {
+                    Brush brush;
+                    if (cursor.Type == CursorType.Main) brush = GlobalConfig.CursorRegularBrush;
+                    else if (cursor.Type == CursorType.ItemEdge) brush = GlobalConfig.CursorMoveItemBrush;
+                    else brush = Brushes.Black;
+
+                    e.Graphics.FillRectangle(brush, cursor.Rectangle);
+                }
+            }            
         }
 
         class ControlInfo : IDisposable
@@ -305,7 +382,7 @@ namespace Scissors.Timeline
         private IController GetTargettedController(Point mouseLocation)
         {
             if (!ParentRectangle.Contains(mouseLocation)) return null;
-            
+
             List<IController> timelineChildren = timeline.GetChildren();
             foreach (IController timelineChild in timelineChildren)
             {
@@ -341,6 +418,31 @@ namespace Scissors.Timeline
                 }
             }
             return timeline;
+        }
+
+        private Cursor CreateCursor(int x, CursorType type)
+        {
+            Rectangle rectangle = protoCursor;
+            rectangle.X = x;
+            return new Cursor(rectangle, type);
+        }
+
+        private class Cursor
+        {
+            public Cursor(Rectangle rectangle, CursorType type)
+            {
+                Rectangle = rectangle;
+                Type = type;
+            }
+
+            public Rectangle Rectangle { get; set; }
+            public CursorType Type { get; set; }
+        }
+
+        private enum CursorType
+        {
+            Main,
+            ItemEdge
         }
     }
 }
