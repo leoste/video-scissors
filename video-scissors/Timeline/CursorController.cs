@@ -128,6 +128,9 @@ namespace Scissors.Timeline
                 oldLeft = targettedItem.StartPosition;
                 offset = e.X - controller.Rectangle.X;
             }
+            else return;
+            
+            UpdateMouse(e);
 
             //add logic to behave differently depending on if control is item or layer etc
             //to allow for repositioning by dragging stuff
@@ -135,10 +138,20 @@ namespace Scissors.Timeline
 
         private void RectangleProvider_MouseMove(object sender, MouseEventArgs e)
         {
+            UpdateMouse(e);
+        }
+
+        private void RectangleProvider_MouseUp(object sender, MouseEventArgs e)
+        {
+            lockToControl = false;
+        }
+        
+        private void UpdateMouse(MouseEventArgs e)
+        {
             if (rectangleProvider.HorizontalContainerRectangle.Contains(e.Location))
             {
                 if (lockToControl)
-                {                    
+                {
                     int x1 = targettedItem.Rectangle.X;
                     int x2 = targettedItem.Rectangle.Right - cursorWidth;
                     UpdateCache(new int[] { x1, x2 }, Enumerable.Repeat(CursorType.ItemEdge, 2).ToArray());
@@ -149,11 +162,6 @@ namespace Scissors.Timeline
                 }
                 UpdateUI();
             }
-        }
-
-        private void RectangleProvider_MouseUp(object sender, MouseEventArgs e)
-        {
-            lockToControl = false;
         }
 
         private void Item_MouseDown(object sender, MouseEventArgs e)
@@ -295,6 +303,7 @@ namespace Scissors.Timeline
             protoCursor.Width = cursorWidth;
             protoCursor.Height = rectangleProvider.ContainerRectangle.Height;
 
+            oldCursors.AddRange(cursors);
             cursors.Clear();
 
             for (int i = 0; i < xs.Length; i += 1)
@@ -321,14 +330,12 @@ namespace Scissors.Timeline
             {
                 rectangleProvider.Invalidate(cursor.Rectangle);
             }
+            oldCursors.Clear();
 
             foreach (Cursor cursor in cursors)
             {
                 rectangleProvider.Invalidate(cursor.Rectangle);
             }
-
-            oldCursors.Clear();
-            oldCursors.AddRange(cursors);
         }
 
         private void RectangleProvider_Paint(object sender, PaintEventArgs e)
@@ -366,6 +373,8 @@ namespace Scissors.Timeline
 
         private void Timeline_LocationChanged(object sender, LocationChangeEventArgs e)
         {
+            UpdateCache(cursors.First().Rectangle.X);
+            UpdateUI();
             InvokeLocationChanged(e);
         }
 
