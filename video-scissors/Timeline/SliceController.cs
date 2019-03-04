@@ -328,7 +328,7 @@ namespace Scissors.Timeline
                 if (redrawContent)
                 {
                     Region region = new Region(ParentRectangle);
-                    region.Exclude(timeline.Cursor.Rectangle);
+                    region.Exclude(timeline.Cursor.FullOccupiedRegion);
 
                     if (redrawControl)
                     {

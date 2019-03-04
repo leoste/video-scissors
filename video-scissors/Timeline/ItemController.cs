@@ -296,7 +296,7 @@ namespace Scissors.Timeline
             {
                 Region graphicsClip = e.Graphics.Clip;
                 Region region = new Region(ParentRectangle);
-                region.Exclude(Timeline.Cursor.Rectangle);
+                region.Exclude(Timeline.Cursor.FullOccupiedRegion);
                 e.Graphics.Clip = region;
 
                 Brush brush = new SolidBrush(backColor);

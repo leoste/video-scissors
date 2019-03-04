@@ -255,7 +255,7 @@ namespace Scissors.Timeline
                 if (redrawContent)
                 {
                     Region region = new Region(ParentRectangle);
-                    region.Exclude(Timeline.Cursor.Rectangle);
+                    region.Exclude(Timeline.Cursor.FullOccupiedRegion);
 
                     foreach (ItemController item in items)
                     {
