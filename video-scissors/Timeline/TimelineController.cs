@@ -268,7 +268,6 @@ namespace Scissors.Timeline
         {
             SliceController slice = slices[id];
             slices.Remove(slice);
-            slice.Dispose();
             for (int i = id; i < SliceCount; i += 1)
             {
                 slices[i].SetId(i);
@@ -305,17 +304,6 @@ namespace Scissors.Timeline
         public void UpdateUI()
         {
             
-        }
-
-        public void Dispose()
-        {
-            foreach (SliceController slice in slices)
-            {
-                slice.Dispose();
-            }
-            ruler.Dispose();
-            cursor.Dispose();
-            timeline.Dispose();
         }
 
         public List<IController> GetChildren()

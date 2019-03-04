@@ -275,7 +275,6 @@ namespace Scissors.Timeline
         {
             LayerController layer = layers[id];
             layers.Remove(layer);
-            layer.Dispose();
             for (int i = id; i < LayerCount; i += 1)
             {
                 layers[i].SetId(i);
@@ -379,19 +378,6 @@ namespace Scissors.Timeline
 
             frame.CombineWith(sliceFrame);
             sliceFrame.Dispose();
-        }
-
-        public void Dispose()
-        {
-            /*foreach (LayerController layer in layers)
-            {
-                layer.Dispose();
-            }
-
-            controlsPanel.Controls.Remove(control);
-            contentsPanel.Controls.Remove(content);
-            control.Dispose();
-            content.Dispose();*/
         }
 
         public List<IController> GetChildren()

@@ -245,10 +245,5 @@ namespace Scissors.Timeline
         {
             return rectangleProvider.RectangleToScreen(rectangleProvider.ClientRectangle);
         }
-
-        public void Dispose()
-        {
-            
-        }
     }
 }

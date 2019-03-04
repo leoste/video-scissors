@@ -302,19 +302,6 @@ namespace Scissors.Timeline
             }
         }
 
-        public void Dispose()
-        {
-            /*foreach (ItemController item in items)
-            {
-                item.Dispose();
-            }
-
-            controlsPanel.Controls.Remove(control);
-            contentsPanel.Controls.Remove(content);
-            control.Dispose();
-            content.Dispose();*/
-        }
-
         public bool IsPositionOkay(ItemController item)
         {
             bool okay = true;

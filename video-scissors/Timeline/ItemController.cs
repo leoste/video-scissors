@@ -284,12 +284,6 @@ namespace Scissors.Timeline
             oldRectangle = itemRectangle;
         }
 
-        public void Dispose()
-        {
-            /*contentsPanel.Controls.Remove(content);
-            content.Dispose();*/
-        }
-
         private void TimelineContent_Paint(object sender, PaintEventArgs e)
         {
             if (e.ClipRectangle.IntersectsWith(itemRectangle))
