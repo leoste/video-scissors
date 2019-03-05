@@ -134,14 +134,6 @@ namespace Scissors.Timeline
             layer.TimelineLengthChanged += Layer_TimelineLengthChanged;
             layer.LocationChanged += Layer_LocationChanged;
 
-            /*contentsPanel = layer.ItemContentsPanel;
-            content = new ItemContent();
-            contentsPanel.Controls.Add(content);
-            content.MouseDown += Content_MouseDown;
-            content.MouseMove += Content_MouseMove;
-            content.MouseUp += Content_MouseUp;
-            content.MouseLeave += Content_MouseLeave;*/
-
             this.startPosition = startPosition;
             ItemLength = length;
 
@@ -181,95 +173,6 @@ namespace Scissors.Timeline
             itemRectangle.Y = layer.Rectangle.Y;
             itemRectangle.Width = (int)(itemLength * TimelineZoom);
             itemRectangle.Height = layer.Rectangle.Height;
-        }
-
-        private byte ui_change;
-        private int mouseOffsetX;
-        private int originalStart;
-        private int originalLength;
-        
-        //drag clip up or down to change layer
-        private int mouseOffsetY;
-        
-        private void Content_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (layer.IsLocked) return;
-
-            Control control = sender as Control;
-
-            if (e.X > control.Width - GlobalConfig.ItemResizeHandleWidth * 2)
-            {
-                ui_change = 2;
-            }
-            else if (e.X < GlobalConfig.ItemResizeHandleWidth)
-            {
-                ui_change = 3;
-            }
-            else
-            {
-                ui_change = 1;
-            }
-
-            mouseOffsetX = e.X;
-            mouseOffsetY = e.Y;
-            originalStart = startPosition;
-            originalLength = itemLength;
-        }
-
-        private void Content_MouseUp(object sender, MouseEventArgs e)
-        {
-            ui_change = 0;
-
-            if (!layer.IsPositionOkay(this))
-            {
-                StartPosition = originalStart;
-                ItemLength = originalLength;
-            }
-        }
-
-        private void Content_MouseMove(object sender, MouseEventArgs e)
-        {
-            Control control = sender as Control;
-
-            if (e.X > control.Width - GlobalConfig.ItemResizeHandleWidth * 2)
-                control.Cursor = Cursors.SizeWE;
-            else if (e.X < GlobalConfig.ItemResizeHandleWidth)
-                control.Cursor = Cursors.SizeWE;
-            else
-                control.Cursor = Cursors.SizeAll;
-
-            if (ui_change == 0) return;
-
-            int x = (int)((e.X - mouseOffsetX) / TimelineZoom);
-
-            if (ui_change == 1)
-            {
-                try { StartPosition = x + startPosition; } catch { }
-            }
-            else if (ui_change == 2)
-            {
-                try { ItemLength = x + originalLength; } catch { }
-            }
-            else if (ui_change == 3)
-            {
-                int oldLength = itemLength;
-                int oldStart = startPosition;
-                try
-                {
-                    ItemLength = -x + itemLength;
-                    StartPosition = x + startPosition;
-                }
-                catch
-                {
-                    ItemLength = oldLength;
-                    StartPosition = oldStart;
-                }
-            }
-        }
-
-        private void Content_MouseLeave(object sender, EventArgs e)
-        {
-            if (ui_change == 0) return;
         }
 
         public void UpdateUI()

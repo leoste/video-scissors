@@ -28,10 +28,7 @@ namespace Scissors.Timeline
         private Rectangle controlRectangle;
         private Color backColor;
 
-        internal int LayerCount { get { return layers.Count; } }
-                
-        internal FlowLayoutPanel LayerControlsPanel { get { return new FlowLayoutPanel(); } }
-        internal FlowLayoutPanel LayerContentsPanel { get { return new FlowLayoutPanel(); } }
+        public int LayerCount { get { return layers.Count; } } 
         
         public int TimelineLength { get { return timeline.TimelineLength; } }
         public float TimelineZoom { get { return timeline.TimelineZoom; } }
@@ -115,22 +112,6 @@ namespace Scissors.Timeline
             timeline.LocationChanged += Timeline_LocationChanged;
 
             BackColor = ColorProvider.GetRandomSliceColor();
-            
-            /*control = new SliceControl();
-            control.BackColor = color;
-            controlsPanel.Controls.Add(control);
-            control.AddClicked += Control_AddClicked;
-            control.RemoveClicked += Control_RemoveClicked;
-            control.MoveUpClicked += Control_MoveUpClicked;
-            control.MoveDownClicked += Control_MoveDownClicked;
-            control.ToggleLockClicked += Control_ToggleLockClicked;
-            control.ToggleVisibilityClicked += Control_ToggleVisibilityClicked;
-            toggleLock = control.IsLockToggled;
-            toggleVisibility = control.IsVisibilityToggled;
-
-            content = new SliceContent();
-            content.BackColor = color;
-            contentsPanel.Controls.Add(content);*/
 
             SetId();
 
@@ -185,38 +166,7 @@ namespace Scissors.Timeline
             controlRectangle.Width = ControlParentRectangle.Width;
             controlRectangle.Height = height;
         }
-
-        /*
-        private void Control_ToggleVisibilityClicked(object sender, ToggleEventArgs e)
-        {
-            toggleVisibility = e.ToggleValue;
-        }
-
-        private void Control_ToggleLockClicked(object sender, ToggleEventArgs e)
-        {
-            toggleLock = e.ToggleValue;
-        }
-
-        private void Control_AddClicked(object sender, EventArgs e)
-        {
-            timeline.CreateSlice(id + 1);
-        }
-
-        private void Control_RemoveClicked(object sender, EventArgs e)
-        {
-            timeline.RemoveSlice(id);
-        }
-
-        private void Control_MoveUpClicked(object sender, EventArgs e)
-        {
-            if (id > 0) timeline.SwapSlices(id, id - 1);
-        }
-
-        private void Control_MoveDownClicked(object sender, EventArgs e)
-        {
-            if (id < timeline.SliceCount - 1) timeline.SwapSlices(id, id + 1);
-        }*/
-
+        
         internal SliceController(TimelineController timeline)
         {
             id = timeline.SliceCount;
@@ -231,8 +181,6 @@ namespace Scissors.Timeline
 
         private void SetId()
         {
-            /*controlsPanel.Controls.SetChildIndex(control, id);
-            contentsPanel.Controls.SetChildIndex(content, id);*/
             UpdateCache();
             UpdateUI();
         }

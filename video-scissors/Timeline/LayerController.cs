@@ -96,22 +96,6 @@ namespace Scissors.Timeline
 
             backColor = ColorProvider.GetRandomLayerColor();
 
-            /*control = new LayerControl();
-            control.BackColor = color;
-            controlsPanel.Controls.Add(control);
-            control.AddClicked += Control_AddClicked;
-            control.RemoveClicked += Control_RemoveClicked;
-            control.MoveUpClicked += Control_MoveUpClicked;
-            control.MoveDownClicked += Control_MoveDownClicked;
-            control.ToggleLockClicked += Control_ToggleLockClicked;
-            control.ToggleVisibilityClicked += Control_ToggleVisibilityClicked;
-            toggleLock = control.IsLockToggled;
-            toggleVisibility = control.IsVisibilityToggled;
-
-            content = new LayerContent();
-            content.BackColor = color;
-            contentsPanel.Controls.Add(content);*/
-
             SetId();
 
             items = new List<ItemController>();
@@ -216,8 +200,8 @@ namespace Scissors.Timeline
 
         private void SetId()
         {
-            /*controlsPanel.Controls.SetChildIndex(control, id);
-            contentsPanel.Controls.SetChildIndex(content, id);*/
+            UpdateCache();
+            UpdateUI();
         }
 
         internal int GetId()

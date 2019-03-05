@@ -92,7 +92,6 @@ namespace Scissors.Timeline
         {
             oldStart = 0;
             oldLength = 0;
-            //oldLockToControl = false;
             state = CursorState.Hover;
 
             this.timeline = timeline;
@@ -103,7 +102,6 @@ namespace Scissors.Timeline
             oldCursors = new List<Cursor>();
             UpdateCache();
             oldCursors.AddRange(cursors);
-
 
             timeline.TimelineZoomChanged += Timeline_TimelineZoomChanged;
             timeline.TimelineLengthChanged += Timeline_TimelineLengthChanged;

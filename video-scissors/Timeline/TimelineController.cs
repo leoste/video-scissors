@@ -23,11 +23,7 @@ namespace Scissors.Timeline
         private RectangleProvider rectangleProvider;
         private Rectangle timelineRectangle;
 
-        internal int SliceCount { get { return slices.Count; } }
-        internal FlowLayoutPanel ControlsPanel { get { return timeline.ControlsPanel; } }
-        internal FlowLayoutPanel ContentsPanel { get { return timeline.ContentsPanel; } }
-        internal FlowLayoutPanel RulerPanel { get { return timeline.RulerPanel; } }
-        internal Panel CursorPanel { get { return timeline.CursorPanel; } }
+        public int SliceCount { get { return slices.Count; } }
 
         public int TimelineLength
         {
@@ -261,7 +257,6 @@ namespace Scissors.Timeline
         {
             UpdateCache();
             InvokeSizeChanged();
-            //RectangleProvider.Update();
         }
 
         internal void RemoveSlice(int id)
