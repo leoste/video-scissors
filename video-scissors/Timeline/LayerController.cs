@@ -211,8 +211,12 @@ namespace Scissors.Timeline
 
         internal void SetId(int id)
         {
-            this.id = id;
-            SetId();
+            if (this.id != id)
+            {
+                this.id = id;
+                SetId();
+                InvokeLocationChanged(new LocationChangeEventArgs(false, true));
+            }
         }
 
         internal void AddItem(ItemController item)
@@ -225,6 +229,23 @@ namespace Scissors.Timeline
         {
             items.Remove(item);
             RectangleProvider.InvalidateContentContainerRectangle(item.Rectangle);
+        }
+
+        public void SetSlice(SliceController slice, int layerId = 0)
+        {
+            UpdateUI();
+            this.slice.TimelineZoomChanged -= Timeline_TimelineZoomChanged;
+            this.slice.TimelineLengthChanged -= Timeline_TimelineLengthChanged;
+            this.slice.LocationChanged -= Slice_LocationChanged;
+            this.slice.RemoveLayer(this);            
+            this.slice = slice;
+            this.slice.AddLayer(this);
+            this.slice.TimelineZoomChanged += Timeline_TimelineZoomChanged;
+            this.slice.TimelineLengthChanged += Timeline_TimelineLengthChanged;
+            this.slice.LocationChanged += Slice_LocationChanged;
+            SetId(layerId);
+            UpdateCache();
+            UpdateUI();
         }
 
         public void UpdateUI()

@@ -209,6 +209,17 @@ namespace Scissors.Timeline
         internal void CreateLayer(int id)
         {
             LayerController layer = new LayerController(this, id);
+            AddLayer(layer, id);
+        }
+
+        internal void RemoveLayer(int id)
+        {
+            LayerController layer = layers[id];
+            RemoveLayer(layer);
+        }
+
+        internal void AddLayer(LayerController layer, int id = 0)
+        {
             layers.Insert(id, layer);
             for (int i = LayerCount - 1; i > id; i -= 1)
             {
@@ -219,9 +230,9 @@ namespace Scissors.Timeline
             UpdateUI();
         }
 
-        internal void RemoveLayer(int id)
+        internal void RemoveLayer(LayerController layer)
         {
-            LayerController layer = layers[id];
+            int id = layer.GetId();
             layers.Remove(layer);
             for (int i = id; i < LayerCount; i += 1)
             {
@@ -235,6 +246,12 @@ namespace Scissors.Timeline
 
             UpdateCache();
             InvokeSizeChanged();
+            foreach (SliceController slice in timeline.GetSlices(this.id))
+            {
+                slice.UpdateCache();
+                slice.InvokeLocationChanged(new LocationChangeEventArgs(false, true));
+                slice.UpdateUI();
+            }
             UpdateUI();
         }
 
@@ -248,6 +265,11 @@ namespace Scissors.Timeline
             layers[id2] = layer1;
 
             UpdateUI();
+        }
+
+        internal void SwapLayers(LayerController layer1, LayerController layer2)
+        {
+            SwapLayers(layer1.GetId(), layer2.GetId());
         }
         
         public void UpdateUI()

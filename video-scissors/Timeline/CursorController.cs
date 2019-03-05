@@ -19,6 +19,7 @@ namespace Scissors.Timeline
         private CursorState state;
         private ItemController targettedItem;
         private LayerController targettedLayer;
+        private SliceController targettedSlice;
 
         private TimelineController timeline;
         private RectangleProvider rectangleProvider;
@@ -128,6 +129,16 @@ namespace Scissors.Timeline
                 oldLength = targettedItem.ItemLength;
                 offset = targettedItem.StartPosition - e.X / timeline.TimelineZoom;
             }
+            else if (controller is LayerController)
+            {
+                targettedLayer = controller as LayerController;
+                targettedSlice = targettedLayer.ParentSlice;
+                state = CursorState.MoveLayer;
+            }
+            else if (controller is SliceController)
+            {
+
+            }
             else return;
             
             UpdateMouse(e);
@@ -154,15 +165,18 @@ namespace Scissors.Timeline
 
         private void RectangleProvider_MouseUp(object sender, MouseEventArgs e)
         {
-            if (state != CursorState.Hover)
+            if (state == CursorState.Hover) return;
+
+            if (state == CursorState.MoveItem || state == CursorState.ResizeItemLeft || state == CursorState.ResizeItemRight)
             {                
                 if (!targettedItem.ParentLayer.IsPositionOkay(targettedItem))
                 {
                     targettedItem.StartPosition = oldStart;
                     targettedItem.ItemLength = oldLength;
                 }
-                state = CursorState.Hover;
             }
+
+            state = CursorState.Hover;
         }
         
         private void UpdateMouse(MouseEventArgs e)
@@ -172,6 +186,30 @@ namespace Scissors.Timeline
                 if (state == CursorState.Hover)
                 {
                     UpdateCache(e.X);
+                }
+                else if (state == CursorState.MoveLayer)
+                {
+                    IController controller = GetTargettedController(e.Location);
+                    LayerController layer;
+
+                    if (controller is LayerController) layer = controller as LayerController;
+                    else if (controller is ItemController) layer = (controller as ItemController).ParentLayer;
+                    else layer = targettedLayer;
+
+                    if (layer == targettedLayer) return;
+
+                    if (layer.ParentSlice == targettedLayer.ParentSlice)
+                    {
+                        layer.ParentSlice.SwapLayers(layer, targettedLayer);
+                    }
+                    else
+                    {
+                        targettedLayer.SetSlice(layer.ParentSlice, layer.GetId());
+                    }
+                }
+                else if (state == CursorState.MoveSlice)
+                {
+
                 }
                 else
                 {
@@ -382,7 +420,9 @@ namespace Scissors.Timeline
             Hover,
             MoveItem,
             ResizeItemLeft,
-            ResizeItemRight
+            ResizeItemRight,
+            MoveLayer,
+            MoveSlice
         }
     }
 }

@@ -325,5 +325,11 @@ namespace Scissors.Timeline
 
             return children;
         }
+
+        public List<SliceController> GetSlices(int from = 0)
+        {
+            List<SliceController> slices = this.slices.GetRange(from, this.slices.Count - from);
+            return slices;
+        }
     }
 }
