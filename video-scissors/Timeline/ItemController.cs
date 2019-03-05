@@ -119,8 +119,6 @@ namespace Scissors.Timeline
         internal ItemController(LayerController layer, int startPosition, int length)
         {
             backColor = Color.DarkGray;
-            
-            ui_change = 0;
 
             this.layer = layer;
             rectangleProvider = layer.RectangleProvider;
