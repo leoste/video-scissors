@@ -96,7 +96,8 @@ namespace Scissors.Timeline
         public Rectangle ParentRectangle
         { get { return rectangleProvider.ContentContainerRectangle; } }
 
-        public TimelineController Timeline { get { return layer.Timeline; } }
+        public TimelineController ParentTimeline { get { return layer.ParentTimeline; } }
+        public LayerController ParentLayer { get { return layer; } }
 
         public Region FullOccupiedRegion
         { get { return new Region(itemRectangle); } }
@@ -284,7 +285,7 @@ namespace Scissors.Timeline
             {
                 Region graphicsClip = e.Graphics.Clip;
                 Region region = new Region(ParentRectangle);
-                region.Exclude(Timeline.Cursor.FullOccupiedRegion);
+                region.Exclude(ParentTimeline.Cursor.FullOccupiedRegion);
                 e.Graphics.Clip = region;
 
                 Brush brush = new SolidBrush(backColor);

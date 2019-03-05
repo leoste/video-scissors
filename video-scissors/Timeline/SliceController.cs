@@ -67,7 +67,7 @@ namespace Scissors.Timeline
         public Rectangle ControlParentRectangle
         { get { return rectangleProvider.ControlContainerRectangle; } }
 
-        public TimelineController Timeline { get { return timeline; } }
+        public TimelineController ParentTimeline { get { return timeline; } }        
 
         public Region FullOccupiedRegion
         {

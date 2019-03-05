@@ -70,7 +70,7 @@ namespace Scissors.Timeline
         public RectangleProvider RectangleProvider { get { return rectangleProvider; } }
         public Color BackColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public Color ForeColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public TimelineController Timeline { get { return this; } }
+        public TimelineController ParentTimeline { get { return this; } }
 
         public event EventHandler TimelineLengthChanged;
         public event EventHandler TimelineZoomChanged;

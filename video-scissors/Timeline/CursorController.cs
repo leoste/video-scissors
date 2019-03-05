@@ -13,9 +13,9 @@ namespace Scissors.Timeline
     {
         private static readonly int cursorWidth = 2;
 
-        private int oldLeft;
-        private int oldWidth;
-        private int offset;
+        private int oldStart;
+        private int oldLength;
+        private float offset;
         private CursorState state;
         private ItemController targettedItem;
 
@@ -75,7 +75,7 @@ namespace Scissors.Timeline
         public Region FullParentRegion
         { get { return new Region(ParentRectangle); } }
 
-        public TimelineController Timeline { get { return timeline; } }
+        public TimelineController ParentTimeline { get { return timeline; } }
 
         public event EventHandler SizeChanged;
         private void InvokeSizeChanged()
@@ -90,8 +90,8 @@ namespace Scissors.Timeline
 
         public CursorController(TimelineController timeline)
         {
-            oldLeft = 0;
-            oldWidth = 0;
+            oldStart = 0;
+            oldLength = 0;
             //oldLockToControl = false;
             state = CursorState.Hover;
 
@@ -124,8 +124,9 @@ namespace Scissors.Timeline
             {
                 targettedItem = controller as ItemController;
                 state = CalculateCursorState(targettedItem, e.X);                
-                oldLeft = targettedItem.StartPosition;
-                offset = e.X - controller.Rectangle.X;
+                oldStart = targettedItem.StartPosition;
+                oldLength = targettedItem.ItemLength;
+                offset = targettedItem.StartPosition - e.X / timeline.TimelineZoom;
             }
             else return;
             
@@ -153,7 +154,15 @@ namespace Scissors.Timeline
 
         private void RectangleProvider_MouseUp(object sender, MouseEventArgs e)
         {
-            state = CursorState.Hover;
+            if (state != CursorState.Hover)
+            {                
+                if (!targettedItem.ParentLayer.IsPositionOkay(targettedItem))
+                {
+                    targettedItem.StartPosition = oldStart;
+                    targettedItem.ItemLength = oldLength;
+                }
+                state = CursorState.Hover;
+            }
         }
         
         private void UpdateMouse(MouseEventArgs e)
@@ -166,14 +175,43 @@ namespace Scissors.Timeline
                 }
                 else
                 {
-                    int x1 = targettedItem.Rectangle.X;
-                    int x2 = targettedItem.Rectangle.Right;
+                    int start = (int)Math.Round(e.X / timeline.TimelineZoom + offset);
+
                     CursorType[] types = new CursorType[2];
                     types[0] = types[1] = CursorType.ItemEdge;
 
-                    if (state == CursorState.ResizeItemLeft) types[0] = CursorType.ItemResize;
-                    else if (state == CursorState.ResizeItemRight) types[1] = CursorType.ItemResize;
+                    if (state == CursorState.MoveItem)
+                    {
+                        types[0] = types[1] = CursorType.ItemEdge;
 
+                        targettedItem.StartPosition = start;
+                    }
+                    else
+                    {
+                        int diff = start - oldStart;
+                        if (state == CursorState.ResizeItemLeft)
+                        {
+                            types[0] = CursorType.ItemResize;
+                            types[1] = CursorType.ItemResizeAnchor;
+
+                            int length = targettedItem.ItemLength;
+                            targettedItem.ItemLength = oldLength - diff;
+                            if (targettedItem.ItemLength != length)
+                            {
+                                targettedItem.StartPosition = start;
+                            }
+                        }
+                        else if (state == CursorState.ResizeItemRight)
+                        {
+                            types[0] = CursorType.ItemResizeAnchor;
+                            types[1] = CursorType.ItemResize;
+
+                            targettedItem.ItemLength = oldLength + diff;
+                        }
+                    }
+                    
+                    int x1 = targettedItem.Rectangle.X;
+                    int x2 = targettedItem.Rectangle.Right;
                     UpdateCache(new int[] { x1, x2 }, types);
                 }
                 UpdateUI();
@@ -329,7 +367,8 @@ namespace Scissors.Timeline
         {
             Main,
             ItemEdge,
-            ItemResize
+            ItemResize,
+            ItemResizeAnchor
         }
 
         private enum CursorState

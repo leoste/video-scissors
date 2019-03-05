@@ -55,7 +55,8 @@ namespace Scissors.Timeline
         public Rectangle ControlParentRectangle
         { get { return slice.ControlParentRectangle; } }
 
-        public TimelineController Timeline { get { return slice.Timeline; } }
+        public TimelineController ParentTimeline { get { return slice.ParentTimeline; } }
+        public SliceController ParentSlice { get { return slice; } }
 
         public Region FullOccupiedRegion
         {
@@ -255,7 +256,7 @@ namespace Scissors.Timeline
                 if (redrawContent)
                 {
                     Region region = new Region(ParentRectangle);
-                    region.Exclude(Timeline.Cursor.FullOccupiedRegion);
+                    region.Exclude(ParentTimeline.Cursor.FullOccupiedRegion);
 
                     foreach (ItemController item in items)
                     {

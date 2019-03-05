@@ -79,7 +79,7 @@ namespace Scissors.Timeline
 
         public RectangleProvider RectangleProvider { get { return rectangleProvider; } }
 
-        public TimelineController Timeline { get { return timeline; } }
+        public TimelineController ParentTimeline { get { return timeline; } }
 
         public Region FullOccupiedRegion
         { get { return new Region(rulerRectangle); } }
@@ -207,7 +207,7 @@ namespace Scissors.Timeline
             {
                 Region graphicsClip = e.Graphics.Clip;
                 Region region = graphicsClip;
-                region.Exclude(Timeline.Cursor.FullOccupiedRegion);
+                region.Exclude(ParentTimeline.Cursor.FullOccupiedRegion);
                 e.Graphics.Clip = region;
 
                 Rectangle clip = e.ClipRectangle;
