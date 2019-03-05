@@ -210,5 +210,21 @@ namespace Scissors.Timeline
         {
             return timelinePosition >= startPosition && timelinePosition < endPosition;
         }
+
+        public void SetLayer(LayerController layer)
+        {
+            UpdateUI();
+            this.layer.TimelineZoomChanged -= Layer_TimelineZoomChanged;
+            this.layer.TimelineLengthChanged -= Layer_TimelineLengthChanged;
+            this.layer.LocationChanged -= Layer_LocationChanged;
+            this.layer.RemoveItem(this);
+            this.layer = layer;
+            this.layer.AddItem(this);
+            this.layer.TimelineZoomChanged += Layer_TimelineZoomChanged;
+            this.layer.TimelineLengthChanged += Layer_TimelineLengthChanged;
+            this.layer.LocationChanged += Layer_LocationChanged;
+            UpdateCache();
+            UpdateUI();
+        }
     }
 }

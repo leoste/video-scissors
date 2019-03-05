@@ -18,6 +18,7 @@ namespace Scissors.Timeline
         private float offset;
         private CursorState state;
         private ItemController targettedItem;
+        private LayerController targettedLayer;
 
         private TimelineController timeline;
         private RectangleProvider rectangleProvider;
@@ -121,6 +122,7 @@ namespace Scissors.Timeline
             if (controller is ItemController)
             {
                 targettedItem = controller as ItemController;
+                targettedLayer = targettedItem.ParentLayer;
                 state = CalculateCursorState(targettedItem, e.X);                
                 oldStart = targettedItem.StartPosition;
                 oldLength = targettedItem.ItemLength;
@@ -183,6 +185,12 @@ namespace Scissors.Timeline
                         types[0] = types[1] = CursorType.ItemEdge;
 
                         targettedItem.StartPosition = start;
+
+                        IController controller = GetTargettedController(e.Location);
+                        if (controller != targettedItem && controller is LayerController)
+                        {
+                            targettedItem.SetLayer(controller as LayerController);
+                        }
                     }
                     else
                     {

@@ -103,11 +103,11 @@ namespace Scissors.Timeline
             Random rnd = new Random();
             int r, o;
 
-            items.Add(new ItemController(this, r = rnd.Next(0, 10), o = rnd.Next(5, 50)));
+            items.Add(new ItemController(this, rnd.Next(0, 20), rnd.Next(3, 13)));
             System.Threading.Thread.Sleep(5);
-            items.Add(new ItemController(this, r = rnd.Next(r + o + 10, r + o + 50), o = rnd.Next(10, 70)));
+            items.Add(new ItemController(this, rnd.Next(45, 50), rnd.Next(6, 30)));
             System.Threading.Thread.Sleep(5);
-            items.Add(new ItemController(this, r = rnd.Next(r + 0 + 5, r + o + 100), o = rnd.Next(5, 60)));
+            items.Add(new ItemController(this, rnd.Next(70, 90), rnd.Next(10, 15)));
             System.Threading.Thread.Sleep(5);
 
             UpdateUI();
@@ -213,6 +213,18 @@ namespace Scissors.Timeline
         {
             this.id = id;
             SetId();
+        }
+
+        internal void AddItem(ItemController item)
+        {
+            items.Add(item);
+            RectangleProvider.InvalidateContentContainerRectangle(item.Rectangle);
+        }
+
+        internal void RemoveItem(ItemController item)
+        {
+            items.Remove(item);
+            RectangleProvider.InvalidateContentContainerRectangle(item.Rectangle);
         }
 
         public void UpdateUI()
