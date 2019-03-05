@@ -37,9 +37,7 @@ namespace Scissors.Timeline
                         InvokeLocationChanged(new LocationChangeEventArgs(true, false));
                         UpdateUI();
                     }
-                    else throw Exceptions.EndTooBigException;
                 }
-                else throw Exceptions.StartTooSmallException;
             }
         }
 
@@ -58,9 +56,7 @@ namespace Scissors.Timeline
                         InvokeSizeChanged();
                         UpdateUI();
                     }
-                    else throw Exceptions.EndTooSmallException;
                 }
-                else throw Exceptions.EndTooBigException;
             }
         }
 
@@ -79,9 +75,7 @@ namespace Scissors.Timeline
                         InvokeSizeChanged();
                         UpdateUI();
                     }
-                    else throw Exceptions.EndTooBigException;
                 }
-                else throw Exceptions.LengthTooSmallException;
             }
         }
 
