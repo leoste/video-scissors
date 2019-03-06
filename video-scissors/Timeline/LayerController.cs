@@ -81,7 +81,7 @@ namespace Scissors.Timeline
 
         public event EventHandler TimelineLengthChanged;
         public event EventHandler TimelineZoomChanged;
-        public event EventHandler<ParentEventArgs> Disowning;
+        public event EventHandler<DisownEventArgs> Disowning;
 
         private void Initialize(SliceController slice)
         {
@@ -234,6 +234,19 @@ namespace Scissors.Timeline
             }
         }
 
+        internal void TransferItem(ItemController item, LayerController layer)
+        {
+            if (!items.Exists(x => x == item)) throw new ArgumentException("This layer doesn't contain given item.");
+
+            RectangleProvider.InvalidateContentContainerRectangle(item.Rectangle);
+
+            items.Remove(item);
+            layer.items.Add(item);
+            if (Disowning != null) Disowning.Invoke(this, new DisownEventArgs(item, layer));
+
+            RectangleProvider.InvalidateContentContainerRectangle(item.Rectangle);
+        }
+
         internal void AddItem(ItemController item)
         {
             items.Add(item);
@@ -246,7 +259,7 @@ namespace Scissors.Timeline
             RectangleProvider.InvalidateContentContainerRectangle(item.Rectangle);
         }
 
-        private void Slice_Disowning(object sender, ParentEventArgs e)
+        private void Slice_Disowning(object sender, DisownEventArgs e)
         {
             if (e.DisownedChild == this)
             {

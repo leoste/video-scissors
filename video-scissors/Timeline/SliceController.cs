@@ -96,7 +96,7 @@ namespace Scissors.Timeline
 
         public event EventHandler TimelineLengthChanged;
         public event EventHandler TimelineZoomChanged;
-        public event EventHandler<ParentEventArgs> Disowning;
+        public event EventHandler<DisownEventArgs> Disowning;
 
         private void Initialize(TimelineController timeline)
         {
@@ -248,7 +248,7 @@ namespace Scissors.Timeline
 
             RemoveLayer(layer);
             slice.AddLayer(layer, id);
-            if (Disowning != null) Disowning.Invoke(this, new ParentEventArgs(layer, slice));
+            if (Disowning != null) Disowning.Invoke(this, new DisownEventArgs(layer, slice));
 
             List<SliceController> slices = timeline.GetSlices(this.id < slice.id ? this.id : slice.id);
             slices.Reverse();

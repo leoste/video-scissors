@@ -128,14 +128,28 @@ namespace Scissors.Timeline
             rectangleProvider.Paint += TimelineContent_Paint;
             rectangleProvider.Resize += TimelineContent_Resize;
 
-            layer.TimelineZoomChanged += Layer_TimelineZoomChanged;
-            layer.TimelineLengthChanged += Layer_TimelineLengthChanged;
-            layer.LocationChanged += Layer_LocationChanged;
+            AddLayerEvents();
 
             this.startPosition = startPosition;
             ItemLength = length;
 
             UpdateUI();
+        }
+
+        private void AddLayerEvents()
+        {
+            layer.TimelineZoomChanged += Layer_TimelineZoomChanged;
+            layer.TimelineLengthChanged += Layer_TimelineLengthChanged;
+            layer.LocationChanged += Layer_LocationChanged;
+            layer.Disowning += Layer_Disowning;
+        }
+
+        private void RemoveLayerEvents()
+        {
+            layer.TimelineZoomChanged -= Layer_TimelineZoomChanged;
+            layer.TimelineLengthChanged -= Layer_TimelineLengthChanged;
+            layer.LocationChanged -= Layer_LocationChanged;
+            layer.Disowning -= Layer_Disowning;
         }
 
         private void Layer_LocationChanged(object sender, LocationChangeEventArgs e)
@@ -211,19 +225,15 @@ namespace Scissors.Timeline
             return timelinePosition >= startPosition && timelinePosition < endPosition;
         }
 
-        public void SetLayer(LayerController layer)
+        private void Layer_Disowning(object sender, DisownEventArgs e)
         {
-            this.layer.TimelineZoomChanged -= Layer_TimelineZoomChanged;
-            this.layer.TimelineLengthChanged -= Layer_TimelineLengthChanged;
-            this.layer.LocationChanged -= Layer_LocationChanged;
-            this.layer.RemoveItem(this);
-            this.layer = layer;
-            this.layer.AddItem(this);
-            this.layer.TimelineZoomChanged += Layer_TimelineZoomChanged;
-            this.layer.TimelineLengthChanged += Layer_TimelineLengthChanged;
-            this.layer.LocationChanged += Layer_LocationChanged;
-            UpdateCache();
-            UpdateUI();
+            if (e.DisownedChild == this)
+            {
+                RemoveLayerEvents();
+                layer = e.NewParent as LayerController;
+                AddLayerEvents();
+                UpdateCache();
+            }
         }
     }
 }

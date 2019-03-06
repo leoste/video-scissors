@@ -75,7 +75,7 @@
     <Compile Include="Timeline\IController.cs" />
     <Compile Include="Timeline\IFrameController.cs" />
     <Compile Include="Timeline\LocationChangeEventArgs.cs" />
-    <Compile Include="Timeline\ParentEventArgs.cs" />
+    <Compile Include="Timeline\DisownEventArgs.cs" />
     <Compile Include="Timeline\RulerController.cs" />
     <Compile Include="Timeline\ScrollDirection.cs" />
     <Compile Include="Timeline\RectangleProvider.cs">

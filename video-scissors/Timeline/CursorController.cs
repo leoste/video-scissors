@@ -228,7 +228,8 @@ namespace Scissors.Timeline
                         IController controller = GetTargettedController(e.Location);
                         if (controller != targettedItem && controller is LayerController)
                         {
-                            targettedItem.SetLayer(controller as LayerController);
+                            targettedLayer.TransferItem(targettedItem, controller as LayerController);
+                            targettedLayer = targettedItem.ParentLayer;
                         }
                     }
                     else
