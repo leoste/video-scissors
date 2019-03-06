@@ -15,6 +15,7 @@ namespace Scissors.Timeline
 
         private int oldStart;
         private int oldLength;
+        private LayerController oldLayer;
         private float offset;
         private CursorState state;
         private ItemController targettedItem;
@@ -124,6 +125,7 @@ namespace Scissors.Timeline
             {
                 targettedItem = controller as ItemController;
                 targettedLayer = targettedItem.ParentLayer;
+                oldLayer = targettedLayer;
                 state = CalculateCursorState(targettedItem, e.X);                
                 oldStart = targettedItem.StartPosition;
                 oldLength = targettedItem.ItemLength;
@@ -171,6 +173,11 @@ namespace Scissors.Timeline
             {                
                 if (!targettedItem.ParentLayer.IsPositionOkay(targettedItem))
                 {
+                    if (targettedLayer !=  oldLayer)
+                    {
+                        targettedLayer.TransferItem(targettedItem, oldLayer);
+                    }
+
                     targettedItem.StartPosition = oldStart;
                     targettedItem.ItemLength = oldLength;
                 }
@@ -183,21 +190,21 @@ namespace Scissors.Timeline
         {
             if (rectangleProvider.HorizontalContainerRectangle.Contains(e.Location))
             {
+                IController controller = GetTargettedController(e.Location);
+
                 if (state == CursorState.Hover)
                 {
                     UpdateCache(e.X);
                 }
                 else if (state == CursorState.MoveLayer)
                 {
-                    IController controller = GetTargettedController(e.Location);
-                    LayerController layer;
+                    if (controller == targettedLayer) return;
 
+                    LayerController layer;
                     if (controller is LayerController) layer = controller as LayerController;
                     else if (controller is ItemController) layer = (controller as ItemController).ParentLayer;
                     else return;
-
-                    if (layer == targettedLayer) return;
-
+                    
                     if (layer.ParentSlice == targettedLayer.ParentSlice)
                     {
                         layer.ParentSlice.SwapLayers(layer, targettedLayer);
@@ -225,11 +232,17 @@ namespace Scissors.Timeline
 
                         targettedItem.StartPosition = start;
 
-                        IController controller = GetTargettedController(e.Location);
-                        if (controller != targettedItem && controller is LayerController)
+                        if (controller != targettedItem)
                         {
-                            targettedLayer.TransferItem(targettedItem, controller as LayerController);
-                            targettedLayer = targettedItem.ParentLayer;
+                            LayerController layer = null;
+                            if (controller is LayerController) layer = controller as LayerController;
+                            else if (controller is ItemController) layer = (controller as ItemController).ParentLayer;
+                            
+                            if (layer != null)
+                            {
+                                targettedLayer.TransferItem(targettedItem, layer);
+                                targettedLayer = targettedItem.ParentLayer;
+                            }
                         }
                     }
                     else

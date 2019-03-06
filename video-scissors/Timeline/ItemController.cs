@@ -233,6 +233,7 @@ namespace Scissors.Timeline
                 layer = e.NewParent as LayerController;
                 AddLayerEvents();
                 UpdateCache();
+                UpdateUI();
             }
         }
     }
