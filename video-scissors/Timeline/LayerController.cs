@@ -81,6 +81,7 @@ namespace Scissors.Timeline
 
         public event EventHandler TimelineLengthChanged;
         public event EventHandler TimelineZoomChanged;
+        public event EventHandler<ParentEventArgs> Disowning;
 
         private void Initialize(SliceController slice)
         {
@@ -90,9 +91,7 @@ namespace Scissors.Timeline
             rectangleProvider.Paint += TimelineContent_Paint;
             rectangleProvider.Resize += TimelineContent_Resize;
 
-            slice.TimelineZoomChanged += Timeline_TimelineZoomChanged;
-            slice.TimelineLengthChanged += Timeline_TimelineLengthChanged;
-            slice.LocationChanged += Slice_LocationChanged;
+            AddSliceEvents();
 
             backColor = ColorProvider.GetRandomLayerColor();
 
@@ -111,6 +110,22 @@ namespace Scissors.Timeline
             System.Threading.Thread.Sleep(5);
 
             UpdateUI();
+        }
+
+        private void AddSliceEvents()
+        {
+            slice.TimelineZoomChanged += Timeline_TimelineZoomChanged;
+            slice.TimelineLengthChanged += Timeline_TimelineLengthChanged;
+            slice.LocationChanged += Slice_LocationChanged;
+            slice.Disowning += Slice_Disowning;
+        }
+
+        private void RemoveSliceEvents()
+        {
+            slice.TimelineZoomChanged -= Timeline_TimelineZoomChanged;
+            slice.TimelineLengthChanged -= Timeline_TimelineLengthChanged;
+            slice.LocationChanged -= Slice_LocationChanged;
+            slice.Disowning -= Slice_Disowning;
         }
 
         private void Slice_LocationChanged(object sender, LocationChangeEventArgs e)
@@ -173,7 +188,7 @@ namespace Scissors.Timeline
 
         private void Control_RemoveClicked(object sender, EventArgs e)
         {
-            slice.RemoveLayer(id);
+            slice.DeleteLayer(id);
         }
 
         private void Control_MoveUpClicked(object sender, EventArgs e)
@@ -231,21 +246,16 @@ namespace Scissors.Timeline
             RectangleProvider.InvalidateContentContainerRectangle(item.Rectangle);
         }
 
-        public void SetSlice(SliceController slice, int layerId = 0)
+        private void Slice_Disowning(object sender, ParentEventArgs e)
         {
-            UpdateUI();
-            this.slice.TimelineZoomChanged -= Timeline_TimelineZoomChanged;
-            this.slice.TimelineLengthChanged -= Timeline_TimelineLengthChanged;
-            this.slice.LocationChanged -= Slice_LocationChanged;
-            this.slice.RemoveLayer(this);            
-            this.slice = slice;
-            this.slice.AddLayer(this);
-            this.slice.TimelineZoomChanged += Timeline_TimelineZoomChanged;
-            this.slice.TimelineLengthChanged += Timeline_TimelineLengthChanged;
-            this.slice.LocationChanged += Slice_LocationChanged;
-            SetId(layerId);
-            UpdateCache();
-            UpdateUI();
+            if (e.DisownedChild == this)
+            {
+                RemoveSliceEvents();
+                slice = e.NewParent as SliceController;
+                AddSliceEvents();
+                SetId(slice.GetLayerId(this));
+                UpdateCache();
+            }
         }
 
         public void UpdateUI()

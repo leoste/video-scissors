@@ -213,7 +213,6 @@ namespace Scissors.Timeline
 
         public void SetLayer(LayerController layer)
         {
-            UpdateUI();
             this.layer.TimelineZoomChanged -= Layer_TimelineZoomChanged;
             this.layer.TimelineLengthChanged -= Layer_TimelineLengthChanged;
             this.layer.LocationChanged -= Layer_LocationChanged;

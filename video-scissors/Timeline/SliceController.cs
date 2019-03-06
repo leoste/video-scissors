@@ -96,6 +96,7 @@ namespace Scissors.Timeline
 
         public event EventHandler TimelineLengthChanged;
         public event EventHandler TimelineZoomChanged;
+        public event EventHandler<ParentEventArgs> Disowning;
 
         private void Initialize(TimelineController timeline)
         {
@@ -153,7 +154,8 @@ namespace Scissors.Timeline
 
         private void UpdateCache()
         {
-            layersHeight = layers.Count * LayerController.height + Math.Max(layers.Count - 1, 0) * layerMargin;
+            //4 is actually layers.Count
+            layersHeight = 4 * LayerController.height + Math.Max(4 - 1, 0) * layerMargin;
             int height = padding * 2 + layersHeight;
             int offset = id * height - rectangleProvider.VerticalScroll;
             sliceRectangle.X = timeline.Rectangle.X;
@@ -212,47 +214,54 @@ namespace Scissors.Timeline
             AddLayer(layer, id);
         }
 
-        internal void RemoveLayer(int id)
+        internal void DeleteLayer(int id)
         {
-            LayerController layer = layers[id];
-            RemoveLayer(layer);
+            throw new NotImplementedException();
         }
 
-        internal void AddLayer(LayerController layer, int id = 0)
+        private void AddLayer(LayerController layer, int id = 0)
         {
             layers.Insert(id, layer);
-            for (int i = LayerCount - 1; i > id; i -= 1)
+            UpdateCache();
+
+            for (int i = LayerCount - 1; i >= id; i -= 1)
             {
                 layers[i].SetId(i);
             }
-            UpdateCache();
-            InvokeSizeChanged();
-            UpdateUI();
         }
 
-        internal void RemoveLayer(LayerController layer)
+        private void RemoveLayer(LayerController layer)
         {
-            int id = layer.GetId();
-            layers.Remove(layer);
-            for (int i = id; i < LayerCount; i += 1)
+            int layerId = layer.GetId();
+            layers.RemoveAt(layerId);
+            UpdateCache();
+
+            for (int i = layerId; i < LayerCount; i += 1)
             {
                 layers[i].SetId(i);
             }
+        }
 
-            if (LayerCount == 0)
+        internal void TransferLayer(LayerController layer, SliceController slice, int id = 0)
+        {
+            if (!layers.Exists(x => x == layer)) throw new ArgumentException("This slice doesn't contain given layer.");
+
+            RemoveLayer(layer);
+            slice.AddLayer(layer, id);
+            if (Disowning != null) Disowning.Invoke(this, new ParentEventArgs(layer, slice));
+
+            List<SliceController> slices = timeline.GetSlices(this.id < slice.id ? this.id : slice.id);
+            slices.Reverse();
+            
+            foreach (SliceController timelineSlice in slices)
             {
-                layers.Add(new LayerController(this));
+                timelineSlice.UpdateCache();
+                timelineSlice.UpdateUI();
+                timelineSlice.InvokeLocationChanged(new LocationChangeEventArgs(false, true));
             }
 
-            UpdateCache();
             InvokeSizeChanged();
-            foreach (SliceController slice in timeline.GetSlices(this.id))
-            {
-                slice.UpdateCache();
-                slice.InvokeLocationChanged(new LocationChangeEventArgs(false, true));
-                slice.UpdateUI();
-            }
-            UpdateUI();
+            slice.InvokeSizeChanged();
         }
 
         internal void SwapLayers(int id1, int id2)

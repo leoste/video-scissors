@@ -70,6 +70,7 @@ namespace Scissors.Timeline
 
         public event EventHandler TimelineLengthChanged;
         public event EventHandler TimelineZoomChanged;
+        public event EventHandler<DisownEventArgs> Disowning;
 
         public event EventHandler SizeChanged;
         private void InvokeSizeChanged()

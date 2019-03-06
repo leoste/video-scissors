@@ -194,7 +194,7 @@ namespace Scissors.Timeline
 
                     if (controller is LayerController) layer = controller as LayerController;
                     else if (controller is ItemController) layer = (controller as ItemController).ParentLayer;
-                    else layer = targettedLayer;
+                    else return;
 
                     if (layer == targettedLayer) return;
 
@@ -204,7 +204,8 @@ namespace Scissors.Timeline
                     }
                     else
                     {
-                        targettedLayer.SetSlice(layer.ParentSlice, layer.GetId());
+                        targettedSlice.TransferLayer(targettedLayer, layer.ParentSlice, layer.GetId());
+                        targettedSlice = layer.ParentSlice;
                     }
                 }
                 else if (state == CursorState.MoveSlice)

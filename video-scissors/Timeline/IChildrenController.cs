@@ -17,5 +17,7 @@ namespace Scissors.Timeline
         /// Returns list of controller's children, grand-children, grand-grand-children etc.
         /// </summary>
         List<IController> GetChildrenDeep();
+
+        event EventHandler<DisownEventArgs> Disowning;
     }
 }
