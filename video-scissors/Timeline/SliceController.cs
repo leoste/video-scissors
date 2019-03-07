@@ -13,9 +13,9 @@ namespace Scissors.Timeline
         public static readonly int padding = 3;
         public static readonly int layerMargin = 2;
         public static readonly int controlsWidth = 72;
-        
+                
         private int layersHeight = 40;
-
+        private int top = 0;
         private bool toggleLock = false;
         private bool toggleVisibility = false;
         private int id;
@@ -154,10 +154,16 @@ namespace Scissors.Timeline
 
         private void UpdateCache()
         {
-            //4 is actually layers.Count
-            layersHeight = 4 * LayerController.height + Math.Max(4 - 1, 0) * layerMargin;
+            top = 0;
+            if (id > 0)
+            {
+                SliceController lastSlice = timeline.GetSlices(id - 1, 1).First();
+                top = lastSlice.top + lastSlice.sliceRectangle.Height;
+            }
+
+            layersHeight = layers.Count * LayerController.height + Math.Max(layers.Count - 1, 0) * layerMargin;
             int height = padding * 2 + layersHeight;
-            int offset = id * height - rectangleProvider.VerticalScroll;
+            int offset = top - rectangleProvider.VerticalScroll;
             sliceRectangle.X = timeline.Rectangle.X;
             sliceRectangle.Y = ParentRectangle.Y + offset;
             sliceRectangle.Width = timeline.Rectangle.Width;
@@ -222,7 +228,6 @@ namespace Scissors.Timeline
         private void AddLayer(LayerController layer, int id = 0)
         {
             layers.Insert(id, layer);
-            UpdateCache();
 
             for (int i = LayerCount - 1; i >= id; i -= 1)
             {
@@ -234,7 +239,6 @@ namespace Scissors.Timeline
         {
             int layerId = layer.GetId();
             layers.RemoveAt(layerId);
-            UpdateCache();
 
             for (int i = layerId; i < LayerCount; i += 1)
             {
@@ -244,18 +248,34 @@ namespace Scissors.Timeline
 
         internal void TransferLayer(LayerController layer, SliceController slice, int id = 0)
         {
+            if (slice == this) throw new ArgumentException("New slice can't be this slice.");
             if (!layers.Exists(x => x == layer)) throw new ArgumentException("This slice doesn't contain given layer.");
+
+            int slicesStart, slicesEnd;
+            if (this.id < slice.id)
+            {
+                slicesStart = this.id;
+                slicesEnd = slice.id;
+            }
+            else
+            {
+                slicesStart = slice.id;
+                slicesEnd = this.id;
+            }
+            List<SliceController> slices = timeline.GetSlices(slicesStart, slicesEnd - slicesStart + 1);
 
             RemoveLayer(layer);
             slice.AddLayer(layer, id);
-            if (Disowning != null) Disowning.Invoke(this, new DisownEventArgs(layer, slice));
 
-            List<SliceController> slices = timeline.GetSlices(this.id < slice.id ? this.id : slice.id);
-            slices.Reverse();
-            
             foreach (SliceController timelineSlice in slices)
             {
                 timelineSlice.UpdateCache();
+            }
+
+            if (Disowning != null) Disowning.Invoke(this, new DisownEventArgs(layer, slice));
+                        
+            foreach (SliceController timelineSlice in slices)
+            {
                 timelineSlice.UpdateUI();
                 timelineSlice.InvokeLocationChanged(new LocationChangeEventArgs(false, true));
             }

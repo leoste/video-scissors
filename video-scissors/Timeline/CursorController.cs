@@ -238,7 +238,7 @@ namespace Scissors.Timeline
                             if (controller is LayerController) layer = controller as LayerController;
                             else if (controller is ItemController) layer = (controller as ItemController).ParentLayer;
                             
-                            if (layer != null)
+                            if (layer != null && layer != targettedLayer)
                             {
                                 targettedLayer.TransferItem(targettedItem, layer);
                                 targettedLayer = targettedItem.ParentLayer;

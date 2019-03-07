@@ -236,7 +236,8 @@ namespace Scissors.Timeline
 
         internal void TransferItem(ItemController item, LayerController layer)
         {
-            if (!items.Exists(x => x == item)) throw new ArgumentException("This layer doesn't contain given item.");
+            if (layer == this) throw new ArgumentException("Layer can't be this layer.");
+            if (!items.Exists(x => x == item)) throw new ArgumentException("This layer doesn't contain given item.");            
 
             RectangleProvider.InvalidateContentContainerRectangle(item.Rectangle);
 
@@ -266,8 +267,10 @@ namespace Scissors.Timeline
                 RemoveSliceEvents();
                 slice = e.NewParent as SliceController;
                 AddSliceEvents();
-                SetId(slice.GetLayerId(this));
+                id = slice.GetLayerId(this);
                 UpdateCache();
+                UpdateUI();
+                InvokeLocationChanged(new LocationChangeEventArgs(false, true));
             }
         }
 
