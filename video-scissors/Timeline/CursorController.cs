@@ -251,7 +251,7 @@ namespace Scissors.Timeline
                         if (state == CursorState.ResizeItemLeft)
                         {
                             types[0] = CursorType.ItemResize;
-                            types[1] = CursorType.ItemResizeAnchor;
+                            types[1] = CursorType.ItemAnchor;
 
                             int length = targettedItem.ItemLength;
                             targettedItem.ItemLength = oldLength - diff;
@@ -262,7 +262,7 @@ namespace Scissors.Timeline
                         }
                         else if (state == CursorState.ResizeItemRight)
                         {
-                            types[0] = CursorType.ItemResizeAnchor;
+                            types[0] = CursorType.ItemAnchor;
                             types[1] = CursorType.ItemResize;
 
                             targettedItem.ItemLength = oldLength + diff;
@@ -336,8 +336,10 @@ namespace Scissors.Timeline
                 if (e.ClipRectangle.IntersectsWith(cursor.Rectangle))
                 {
                     Brush brush;
-                    if (cursor.Type == CursorType.Main) brush = GlobalConfig.CursorRegularBrush;
-                    else if (cursor.Type == CursorType.ItemEdge) brush = GlobalConfig.CursorMoveItemBrush;
+                    if (cursor.Type == CursorType.Main) brush = GlobalConfig.CursorMainBrush;
+                    else if (cursor.Type == CursorType.ItemEdge) brush = GlobalConfig.CursorItemEdgeBrush;
+                    else if (cursor.Type == CursorType.ItemResize) brush = GlobalConfig.CursorItemResizeBrush;
+                    else if (cursor.Type == CursorType.ItemAnchor) brush = GlobalConfig.CursorItemAnchorBrush;
                     else brush = Brushes.Black;
 
                     e.Graphics.FillRectangle(brush, cursor.Rectangle);
@@ -427,7 +429,7 @@ namespace Scissors.Timeline
             Main,
             ItemEdge,
             ItemResize,
-            ItemResizeAnchor
+            ItemAnchor
         }
 
         private enum CursorState

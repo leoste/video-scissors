@@ -160,7 +160,6 @@ namespace Scissors.Timeline
                 SliceController lastSlice = timeline.GetSlices(id - 1, 1).First();
                 top = lastSlice.top + lastSlice.sliceRectangle.Height;
             }
-
             layersHeight = layers.Count * LayerController.height + Math.Max(layers.Count - 1, 0) * layerMargin;
             int height = padding * 2 + layersHeight;
             int offset = top - rectangleProvider.VerticalScroll;
