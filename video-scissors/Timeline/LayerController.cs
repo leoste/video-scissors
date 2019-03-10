@@ -375,5 +375,13 @@ namespace Scissors.Timeline
         {
             return GetChildren();
         }
+
+        public void Delete()
+        {
+            foreach (ItemController item in items) item.Delete();
+            rectangleProvider.Paint -= TimelineContent_Paint;
+            rectangleProvider.Resize -= TimelineContent_Resize;
+            RemoveSliceEvents();
+        }
     }
 }

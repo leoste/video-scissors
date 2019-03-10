@@ -236,5 +236,12 @@ namespace Scissors.Timeline
                 UpdateUI();
             }
         }
+
+        public void Delete()
+        {
+            rectangleProvider.Paint -= TimelineContent_Paint;
+            rectangleProvider.Resize -= TimelineContent_Resize;
+            RemoveLayerEvents();
+        }
     }
 }

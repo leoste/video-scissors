@@ -49,7 +49,12 @@ namespace Scissors.Timeline
         event EventHandler TimelineZoomChanged;
 
         TimelineController ParentTimeline { get; }
-        
-        void UpdateUI();        
+
+        void UpdateUI();
+
+        /// <summary>
+        /// Disconnects all eventhandlers etc. Class shouldn't be used after this function has been called. NB! Does not get rid of references to itself, these should be removed before Deleting the class.
+        /// </summary>
+        void Delete();
     }
 }

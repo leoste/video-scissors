@@ -208,20 +208,67 @@ namespace Scissors.Timeline
             return layers.IndexOf(layer);
         }
 
-        internal void CreateLayer()
+        internal LayerController CreateLayer()
         {
-            CreateLayer(LayerCount);            
+            return CreateLayer(LayerCount);            
         }
 
-        internal void CreateLayer(int id)
+        private void UpdateSlicesCache(List<SliceController> slices)
+        {
+            foreach (SliceController slice in slices)
+            {
+                slice.UpdateCache();
+            }
+        }
+
+        private void UpdateSlicesUI(List<SliceController> slices)
+        {
+            foreach (SliceController slice in slices)
+            {
+                slice.UpdateUI();
+                slice.InvokeLocationChanged(new LocationChangeEventArgs(false, true));
+            }
+        }
+
+        internal LayerController CreateLayer(int id)
         {
             LayerController layer = new LayerController(this, id);
             AddLayer(layer, id);
+            
+            if (id < timeline.SliceCount)
+            {
+                List<SliceController> slices = timeline.GetSlices(id, timeline.SliceCount - id);
+                UpdateSlicesCache(slices);
+                UpdateSlicesUI(slices);
+            }
+
+            InvokeSizeChanged();
+
+            return layer;
         }
 
         internal void DeleteLayer(int id)
         {
-            throw new NotImplementedException();
+            DeleteLayer(layers[id]);
+        }
+
+        /// <summary>
+        /// Removes the layer from slice and deletes it. To move layer to another slice use TransferLayer() instead.
+        /// </summary>
+        internal void DeleteLayer(LayerController layer)
+        {
+            CheckLayerExist(layer);
+            RemoveLayer(layer);
+            layer.Delete();
+
+            if (id < timeline.SliceCount)
+            {
+                List<SliceController> slices = timeline.GetSlices(id, timeline.SliceCount - id);
+                UpdateSlicesCache(slices);
+                UpdateSlicesUI(slices);
+            }
+
+            InvokeSizeChanged();
         }
 
         private void AddLayer(LayerController layer, int id = 0)
@@ -248,7 +295,7 @@ namespace Scissors.Timeline
         internal void TransferLayer(LayerController layer, SliceController slice, int id = 0)
         {
             if (slice == this) throw new ArgumentException("New slice can't be this slice.");
-            if (!layers.Exists(x => x == layer)) throw new ArgumentException("This slice doesn't contain given layer.");
+            CheckLayerExist(layer);
 
             int slicesStart, slicesEnd;
             if (this.id < slice.id)
@@ -299,7 +346,12 @@ namespace Scissors.Timeline
         {
             SwapLayers(layer1.GetId(), layer2.GetId());
         }
-        
+
+        private void CheckLayerExist(LayerController layer)
+        {
+            if (!layers.Exists(x => x == layer)) throw new ArgumentException("This slice doesn't contain given layer.");
+        }       
+
         public void UpdateUI()
         {            
             UpdateControlUI();
@@ -396,6 +448,18 @@ namespace Scissors.Timeline
             }
 
             return children;
+        }
+
+        public void Delete()
+        {            
+            foreach (LayerController layer in layers) layer.Delete();
+
+            rectangleProvider.Paint -= TimelineContent_Paint;
+            rectangleProvider.Resize -= TimelineContent_Resize;
+
+            timeline.TimelineZoomChanged -= Timeline_TimelineZoomChanged;
+            timeline.TimelineLengthChanged -= Timeline_TimelineLengthChanged;
+            timeline.LocationChanged -= Timeline_LocationChanged;
         }
     }
 }

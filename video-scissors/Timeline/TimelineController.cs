@@ -337,5 +337,11 @@ namespace Scissors.Timeline
             List<SliceController> slices = this.slices.GetRange(from, count);
             return slices;
         }
+
+        public void Delete()
+        {
+            rectangleProvider.VerticalScrolled -= Content_VerticalScrolled;
+            rectangleProvider.HorizontalScrolled -= Content_HorizontalScrolled;
+        }
     }
 }

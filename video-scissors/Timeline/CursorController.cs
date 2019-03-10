@@ -16,6 +16,9 @@ namespace Scissors.Timeline
         private int oldStart;
         private int oldLength;
         private LayerController oldLayer;
+        private SliceController oldSlice;
+        private LayerController tempLayer;
+        private bool createdTempLayer;
         private float offset;
         private CursorState state;
         private ItemController targettedItem;
@@ -135,7 +138,9 @@ namespace Scissors.Timeline
             {
                 targettedLayer = controller as LayerController;
                 targettedSlice = targettedLayer.ParentSlice;
-                state = CursorState.MoveLayer;
+                oldSlice = targettedSlice;
+                createdTempLayer = false;
+                state = CursorState.MoveLayer;                
             }
             else if (controller is SliceController)
             {
@@ -211,8 +216,27 @@ namespace Scissors.Timeline
                     }
                     else
                     {
-                        targettedSlice.TransferLayer(targettedLayer, layer.ParentSlice, layer.GetId());
-                        targettedSlice = layer.ParentSlice;
+                        SliceController slice = layer.ParentSlice;
+                        targettedSlice.TransferLayer(targettedLayer, slice, layer.GetId());
+
+                        if (targettedSlice == oldSlice)
+                        {
+                            if (targettedSlice.LayerCount == 0)
+                            {
+                                tempLayer = targettedSlice.CreateLayer();
+                                createdTempLayer = true;
+                            }
+                        }
+                        else if (slice == oldSlice)
+                        {
+                            if (createdTempLayer)
+                            {
+                                slice.DeleteLayer(tempLayer);
+                                createdTempLayer = false;
+                            }
+                        }
+
+                        targettedSlice = slice;
                     }
                 }
                 else if (state == CursorState.MoveSlice)
@@ -410,6 +434,19 @@ namespace Scissors.Timeline
             Rectangle rectangle = protoCursor;
             rectangle.X = x;
             return new Cursor(rectangle, type);
+        }
+
+        public void Delete()
+        {
+            timeline.TimelineZoomChanged -= Timeline_TimelineZoomChanged;
+            timeline.TimelineLengthChanged -= Timeline_TimelineLengthChanged;
+            timeline.LocationChanged -= Timeline_LocationChanged;
+
+            rectangleProvider.MouseDown -= RectangleProvider_MouseDown;
+            rectangleProvider.MouseMove -= RectangleProvider_MouseMove;
+            rectangleProvider.MouseUp -= RectangleProvider_MouseUp;
+
+            rectangleProvider.Paint -= RectangleProvider_Paint;
         }
 
         private class Cursor

@@ -245,5 +245,14 @@ namespace Scissors.Timeline
         {
             return rectangleProvider.RectangleToScreen(rectangleProvider.ClientRectangle);
         }
+
+        public void Delete()
+        {
+            rectangleProvider.Paint -= TimelineContent_Paint;
+            rectangleProvider.Resize -= TimelineContent_Resize;
+            timeline.TimelineZoomChanged -= Timeline_TimelineZoomChanged;
+            timeline.TimelineLengthChanged -= Timeline_TimelineLengthChanged;
+            timeline.LocationChanged -= TimelineContent_LocationChanged;
+        }
     }
 }
