@@ -127,22 +127,25 @@ namespace Scissors.Timeline
                 targettedItem = controller as ItemController;
                 targettedLayer = targettedItem.ParentLayer;
                 oldLayer = targettedLayer;
-                state = CalculateCursorState(targettedItem, e.X);                
+                state = CalculateCursorState(targettedItem, e.X);
                 oldStart = targettedItem.StartPosition;
                 oldLength = targettedItem.ItemLength;
                 offset = targettedItem.StartPosition - e.X / timeline.TimelineZoom;
             }
-            else if (controller is LayerController)
+            else if (controller is IControlController cc && cc.ControlRectangle.Contains(e.Location))
             {
-                targettedLayer = controller as LayerController;
-                targettedSlice = targettedLayer.ParentSlice;
-                oldSlice = targettedSlice;
-                createdTempLayer = false;
-                state = CursorState.MoveLayer;                
-            }
-            else if (controller is SliceController)
-            {
+                if (controller is LayerController)
+                {
+                    targettedLayer = controller as LayerController;
+                    targettedSlice = targettedLayer.ParentSlice;
+                    oldSlice = targettedSlice;
+                    createdTempLayer = false;
+                    state = CursorState.MoveLayer;
+                }
+                else if (controller is SliceController)
+                {
 
+                }
             }
             else return;
             
@@ -191,13 +194,16 @@ namespace Scissors.Timeline
         
         private void UpdateMouse(MouseEventArgs e)
         {
-            if (rectangleProvider.HorizontalContainerRectangle.Contains(e.Location))
+            if (rectangleProvider.ContainerRectangle.Contains(e.Location))
             {
                 IController controller = GetTargettedController(e.Location);
 
                 if (state == CursorState.Hover)
                 {
-                    UpdateCache(e.X);
+                    if (ParentRectangle.Contains(e.Location))
+                    {
+                        UpdateCache(e.X);
+                    }
                 }
                 else if (state == CursorState.MoveLayer)
                 {
@@ -388,26 +394,26 @@ namespace Scissors.Timeline
 
         private IController GetTargettedController(Point mouseLocation)
         {
-            if (!ParentRectangle.Contains(mouseLocation)) return null;
+            if (!rectangleProvider.ContainerRectangle.Contains(mouseLocation)) return null;
 
             List<IController> timelineChildren = timeline.GetChildren();
             foreach (IController timelineChild in timelineChildren)
             {
-                if (timelineChild.Rectangle.Contains(mouseLocation))
+                if (timelineChild.FullOccupiedRegion.IsVisible(mouseLocation))
                 {
                     if (timelineChild is SliceController)
                     {
                         List<IController> sliceChildren = (timelineChild as SliceController).GetChildren();
                         foreach (IController sliceChild in sliceChildren)
                         {
-                            if (sliceChild.Rectangle.Contains(mouseLocation))
+                            if (sliceChild.FullOccupiedRegion.IsVisible(mouseLocation))
                             {
                                 if (sliceChild is LayerController)
                                 {
                                     List<IController> layerChildren = (sliceChild as LayerController).GetChildren();
                                     foreach (IController layerChild in layerChildren)
                                     {
-                                        if (layerChild.Rectangle.Contains(mouseLocation))
+                                        if (layerChild.FullOccupiedRegion.IsVisible(mouseLocation))
                                         {
                                             if (layerChild is ItemController) return layerChild;
                                         }
