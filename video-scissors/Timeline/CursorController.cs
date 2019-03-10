@@ -42,8 +42,7 @@ namespace Scissors.Timeline
 
         public Color BackColor { get; set; }
         public Color ForeColor { get; set; }
-
-        //will return a rectangle containing all cursors in the future
+        
         public Rectangle Rectangle
         {
             get
@@ -61,8 +60,7 @@ namespace Scissors.Timeline
 
         public Rectangle ParentRectangle
         { get { return rectangleProvider.HorizontalContainerRectangle; } }
-
-        //will return a region containing all cursors in the future
+        
         public Region FullOccupiedRegion
         {
             get

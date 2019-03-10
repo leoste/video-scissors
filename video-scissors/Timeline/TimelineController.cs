@@ -170,8 +170,6 @@ namespace Scissors.Timeline
             slices = new List<SliceController>();
             CreateSlice();
             CreateSlice();
-            CreateSlice();
-            CreateSlice();
 
             cursor = new CursorController(this);
             ruler = new RulerController(this);
