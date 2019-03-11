@@ -122,8 +122,7 @@ namespace Scissors.Timeline
                     }
                     else if (targettedController is SliceController)
                     {
-                        //actually should eventually return CursorState.MoveSlice
-                        return CursorState.Hover;                        
+                        return CursorState.MoveSlice;
                     }
                     else
                     {
@@ -155,7 +154,7 @@ namespace Scissors.Timeline
 
                     actionController = targetItem;
                 }
-                if (controller is LayerController layer)
+                else if (controller is LayerController layer)
                 {
                     targetLayer = layer;
                     originalSlice = targetLayer.ParentSlice;
@@ -164,9 +163,9 @@ namespace Scissors.Timeline
 
                     actionController = layer;
                 }
-                else if (controller is SliceController)
+                else if (controller is SliceController slice)
                 {
-
+                    targetSlice = slice;
                 }
             }
 
@@ -214,7 +213,20 @@ namespace Scissors.Timeline
                 }
                 else if (state == CursorState.MoveSlice)
                 {
+                    if (targettedController == targetSlice) return;
 
+                    SliceController slice;
+                    if (targettedController is SliceController) slice = targettedController as SliceController;
+                    else
+                    {
+                        LayerController layer;
+                        if (targettedController is LayerController) layer = targettedController as LayerController;
+                        else if (targettedController is ItemController) layer = (targettedController as ItemController).ParentLayer;
+                        else return;
+                        slice = layer.ParentSlice;
+                    }
+
+                    cursor.timeline.SwapSlices(targetSlice, slice);
                 }
                 else
                 {

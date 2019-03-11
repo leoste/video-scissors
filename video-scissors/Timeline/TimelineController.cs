@@ -281,6 +281,14 @@ namespace Scissors.Timeline
             SliceController slice1 = slices[id1];
             slices[id1] = slices[id2];
             slices[id2] = slice1;
+
+            //Bad solution but works for now
+            InvokeLocationChanged(false, true);
+        }
+                
+        internal void SwapSlices(SliceController slice1, SliceController slice2)
+        {
+            SwapSlices(slice1.GetId(), slice2.GetId());
         }
 
         internal Frame GetFrame(int position)
