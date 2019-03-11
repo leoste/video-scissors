@@ -76,5 +76,15 @@ namespace Scissors.Timeline
             verticalScrollbar.Maximum = controller.SlicesRectangle.Height;
             verticalScrollbar.ScrollWidth = rectangleProvider1.VerticalContainerRectangle.Height;
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            controller.TimelineZoom *= 0.8f;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            controller.TimelineZoom *= 1.25f;
+        }
     }
 }

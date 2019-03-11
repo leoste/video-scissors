@@ -136,7 +136,7 @@ namespace Scissors.Timeline
         {
             UpdateCache();
             if (TimelineZoomChanged != null) TimelineZoomChanged.Invoke(this, EventArgs.Empty);
-            UpdateUI();
+            rectangleProvider.Invalidate(ParentRectangle);
         }
 
         private void Timeline_TimelineLengthChanged(object sender, EventArgs e)
