@@ -246,7 +246,12 @@ namespace Scissors.Timeline
                             targetItem.ItemLength = oldLength - diff;
                             if (targetItem.ItemLength != length)
                             {
+                                int tempStart = targetItem.StartPosition;
                                 targetItem.StartPosition = start;
+                                if (targetItem.StartPosition == tempStart)
+                                {
+                                    targetItem.ItemLength = length;
+                                }
                             }
                         }
                         else if (state == CursorState.ResizeItemRight)
