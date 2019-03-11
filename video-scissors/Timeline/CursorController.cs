@@ -122,14 +122,17 @@ namespace Scissors.Timeline
         {
             IController controller = handler.GetTargettedController(e.Location);
 
-            if (controller is ItemController)
+            if (state == CursorState.Hover)
             {
-                CursorState protoState = handler.GetCursorState(e.Location, controller);
-                if (protoState == CursorState.ResizeItemLeft || protoState == CursorState.ResizeItemRight)
-                    rectangleProvider.Cursor = Cursors.SizeWE;
-                else rectangleProvider.Cursor = Cursors.SizeAll;
+                if (controller is ItemController)
+                {
+                    CursorState protoState = handler.GetCursorState(e.Location, controller);
+                    if (protoState == CursorState.ResizeItemLeft || protoState == CursorState.ResizeItemRight)
+                        rectangleProvider.Cursor = Cursors.SizeWE;
+                    else rectangleProvider.Cursor = Cursors.SizeAll;
+                }
+                else rectangleProvider.Cursor = Cursors.Default;
             }
-            else rectangleProvider.Cursor = Cursors.Default;
 
             UpdateMouse(e);
         }
