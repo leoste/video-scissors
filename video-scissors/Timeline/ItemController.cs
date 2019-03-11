@@ -9,8 +9,10 @@ using Scissors.Config;
 
 namespace Scissors.Timeline
 {
-    internal class ItemController : IFrameController
+    internal class ItemController : IFrameController, IDraggableController, IResizableController
     {
+        public static readonly int resizeHandleWidth = 3;
+
         private LayerController layer;
         private RectangleProvider rectangleProvider;
 
@@ -95,6 +97,42 @@ namespace Scissors.Timeline
 
         public Rectangle ParentRectangle
         { get { return rectangleProvider.ContentContainerRectangle; } }
+
+        public Rectangle MoveHandleRectangle
+        {
+            get
+            {
+                return new Rectangle(
+                    itemRectangle.X + resizeHandleWidth, 
+                    itemRectangle.Y,
+                    itemRectangle.Width - 2 * resizeHandleWidth,
+                    itemRectangle.Height);
+            }
+        }
+
+        public Rectangle LeftResizeHandleRectangle
+        {
+            get
+            {
+                return new Rectangle(
+                    itemRectangle.X, 
+                    itemRectangle.Y,
+                    resizeHandleWidth,
+                    itemRectangle.Height);
+            }
+        }
+
+        public Rectangle RightResizeHandleRectangle
+        {
+            get
+            {
+                return new Rectangle(
+                    itemRectangle.Right - resizeHandleWidth,
+                    itemRectangle.Y, 
+                    resizeHandleWidth,
+                    itemRectangle.Height);
+            }
+        }
 
         public TimelineController ParentTimeline { get { return layer.ParentTimeline; } }
         public LayerController ParentLayer { get { return layer; } }

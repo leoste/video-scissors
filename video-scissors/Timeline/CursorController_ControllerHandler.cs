@@ -50,16 +50,6 @@ namespace Scissors.Timeline
                 }
             }
 
-            private CursorState GetItemCursorState(ItemController item, int x)
-            {
-                if (x - item.Rectangle.X <= GlobalConfig.ItemResizeHandleWidth)
-                    return CursorState.ResizeItemLeft;
-                else if (x >= item.Rectangle.Right - GlobalConfig.ItemResizeHandleWidth)
-                    return CursorState.ResizeItemRight;
-                else
-                    return CursorState.MoveItem;
-            }
-
             /// <summary> Ignores CursorController. </summary>
             public IController GetTargettedController(Point mouseLocation)
             {
@@ -110,24 +100,22 @@ namespace Scissors.Timeline
 
             public CursorState GetCursorState(Point mouseLocation, IController targettedController)
             {
-                if (targettedController is ItemController item)
+                if (targettedController is IDraggableController dc && dc.MoveHandleRectangle.Contains(mouseLocation))
                 {
-                    return GetItemCursorState(item, mouseLocation.X);
+                    if (targettedController is ItemController) return CursorState.MoveItem;
+                    if (targettedController is LayerController) return CursorState.MoveLayer;
+                    else if (targettedController is SliceController) return CursorState.MoveSlice;
+                    else return CursorState.Hover;
                 }
-                else if (targettedController is IDraggableController dc && dc.MoveHandleRectangle.Contains(mouseLocation))
+                else if (targettedController is IResizableController rc1 && rc1.LeftResizeHandleRectangle.Contains(mouseLocation))
                 {
-                    if (targettedController is LayerController)
-                    {
-                        return CursorState.MoveLayer;
-                    }
-                    else if (targettedController is SliceController)
-                    {
-                        return CursorState.MoveSlice;
-                    }
-                    else
-                    {
-                        return CursorState.Hover;
-                    }
+                    if (targettedController is ItemController) return CursorState.ResizeItemLeft;
+                    else return CursorState.Hover;
+                }
+                else if (targettedController is IResizableController rc2 && rc2.RightResizeHandleRectangle.Contains(mouseLocation))
+                {
+                    if (targettedController is ItemController) return CursorState.ResizeItemRight;
+                    else return CursorState.Hover;
                 }
                 else return CursorState.Hover;
             }
