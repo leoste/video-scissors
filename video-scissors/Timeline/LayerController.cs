@@ -8,10 +8,11 @@ using System.Windows.Forms;
 
 namespace Scissors.Timeline
 {
-    class LayerController : IFrameController, IControlController, IChildController
+    class LayerController : IFrameController, IControlController, IChildController, IDraggableController
     {
         public static readonly int height = 40;
         public static readonly int controlsWidth = 72;
+        public static readonly int dragWidth = 16;
 
         private bool toggleLock;
         private bool toggleVisibility;
@@ -54,6 +55,9 @@ namespace Scissors.Timeline
 
         public Rectangle ControlParentRectangle
         { get { return slice.ControlParentRectangle; } }
+
+        public Rectangle MoveHandleRectangle
+        { get { return new Rectangle(controlRectangle.X, controlRectangle.Y, dragWidth, controlRectangle.Height); } }
 
         public TimelineController ParentTimeline { get { return slice.ParentTimeline; } }
         public SliceController ParentSlice { get { return slice; } }
@@ -166,7 +170,7 @@ namespace Scissors.Timeline
             layerRectangle.Height = height;
 
             controlRectangle.X = slice.ControlRectangle.X + SliceController.controlsWidth;
-            controlRectangle.Y = slice.ControlRectangle.Y + offset;
+            controlRectangle.Y = layerRectangle.Y;
             controlRectangle.Width = controlsWidth;
             controlRectangle.Height = height;
         }
@@ -308,10 +312,11 @@ namespace Scissors.Timeline
 
                     if (redrawControl)
                     {
+                        int offset = SliceController.controlsWidth + dragWidth;
                         Rectangle rectangle = ControlParentRectangle;
-                        rectangle.X += SliceController.controlsWidth;
-                        rectangle.Width -= SliceController.controlsWidth;
-                        region.Union(rectangle);
+                        rectangle.X += offset;
+                        rectangle.Width -= offset;
+                        region.Union(rectangle);                        
                     }
                     e.Graphics.Clip = region;
 
@@ -327,6 +332,7 @@ namespace Scissors.Timeline
                 if (redrawControl)
                 {
                     e.Graphics.Clip = new Region(ControlParentRectangle);
+                    e.Graphics.FillRectangle(Brushes.DimGray, MoveHandleRectangle);
                 }
 
                 e.Graphics.Clip = graphicsClip;

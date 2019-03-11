@@ -8,11 +8,12 @@ using System.Windows.Forms;
 
 namespace Scissors.Timeline
 {
-    class SliceController : IFrameController, IControlController, IChildController
+    class SliceController : IFrameController, IControlController, IChildController, IDraggableController
     {
         public static readonly int padding = 3;
         public static readonly int layerMargin = 2;
         public static readonly int controlsWidth = 72;
+        public static readonly int dragWidth = 16;
                 
         private int layersHeight = 40;
         private int top = 0;
@@ -63,6 +64,9 @@ namespace Scissors.Timeline
 
         public Rectangle ControlParentRectangle
         { get { return rectangleProvider.ControlContainerRectangle; } }
+
+        public Rectangle MoveHandleRectangle
+        { get { return new Rectangle(controlRectangle.X, controlRectangle.Y, dragWidth, controlRectangle.Height); } }
 
         public TimelineController ParentTimeline { get { return timeline; } }        
 
@@ -410,7 +414,10 @@ namespace Scissors.Timeline
                     e.Graphics.Clip = new Region(ControlParentRectangle);
 
                     e.Graphics.FillRectangle(brush, new Rectangle(
-                      controlRectangle.X, controlRectangle.Y, controlsWidth, controlRectangle.Height));
+                      controlRectangle.X + dragWidth, controlRectangle.Y, 
+                      controlsWidth - dragWidth, controlRectangle.Height));
+
+                    e.Graphics.FillRectangle(Brushes.DimGray, MoveHandleRectangle);
                 }
 
                 e.Graphics.Clip = graphicsClip;

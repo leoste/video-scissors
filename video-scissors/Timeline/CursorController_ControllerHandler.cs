@@ -114,7 +114,7 @@ namespace Scissors.Timeline
                 {
                     return GetItemCursorState(item, mouseLocation.X);
                 }
-                else if (targettedController is IControlController cc && cc.ControlRectangle.Contains(mouseLocation))
+                else if (targettedController is IDraggableController dc && dc.MoveHandleRectangle.Contains(mouseLocation))
                 {
                     if (targettedController is LayerController)
                     {
