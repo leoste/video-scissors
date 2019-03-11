@@ -63,6 +63,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Timeline\CursorController.cs" />
+    <Compile Include="Timeline\CursorController_ControllerHandler.cs" />
     <Compile Include="Timeline\FancyScrollbar.cs">
       <SubType>UserControl</SubType>
     </Compile>

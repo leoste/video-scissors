@@ -9,21 +9,12 @@ using Scissors.Config;
 
 namespace Scissors.Timeline
 {
-    class CursorController : IController
+    partial class CursorController : IController
     {
         private static readonly int cursorWidth = 2;
 
-        private int oldStart;
-        private int oldLength;
-        private LayerController oldLayer;
-        private SliceController oldSlice;
-        private LayerController tempLayer;
-        private bool createdTempLayer;
-        private float offset;
+        private ControllerHandler handler;
         private CursorState state;
-        private ItemController targettedItem;
-        private LayerController targettedLayer;
-        private SliceController targettedSlice;
 
         private TimelineController timeline;
         private RectangleProvider rectangleProvider;
@@ -93,13 +84,11 @@ namespace Scissors.Timeline
         public event EventHandler TimelineZoomChanged;
 
         public CursorController(TimelineController timeline)
-        {
-            oldStart = 0;
-            oldLength = 0;
+        {            
             state = CursorState.Hover;
-
             this.timeline = timeline;
             rectangleProvider = timeline.RectangleProvider;
+            handler = new ControllerHandler(this);
 
             protoCursor = new Rectangle();
             cursors = new List<Cursor>();
@@ -120,48 +109,22 @@ namespace Scissors.Timeline
 
         private void RectangleProvider_MouseDown(object sender, MouseEventArgs e)
         {
-            IController controller = GetTargettedController(e.Location);
+            IController controller = handler.GetTargettedController(e.Location);
+            state = handler.GetCursorState(e.Location, controller);
 
-            if (controller is ItemController)
-            {
-                targettedItem = controller as ItemController;
-                targettedLayer = targettedItem.ParentLayer;
-                oldLayer = targettedLayer;
-                state = CalculateCursorState(targettedItem, e.X);
-                oldStart = targettedItem.StartPosition;
-                oldLength = targettedItem.ItemLength;
-                offset = targettedItem.StartPosition - e.X / timeline.TimelineZoom;
-            }
-            else if (controller is IControlController cc && cc.ControlRectangle.Contains(e.Location))
-            {
-                if (controller is LayerController)
-                {
-                    targettedLayer = controller as LayerController;
-                    targettedSlice = targettedLayer.ParentSlice;
-                    oldSlice = targettedSlice;
-                    createdTempLayer = false;
-                    state = CursorState.MoveLayer;
-                }
-                else if (controller is SliceController)
-                {
-
-                }
-            }
-            else return;
+            if (state == CursorState.Hover) return;
+            else handler.BeginControllerAction(e.Location, controller, state);            
             
             UpdateMouse(e);
-
-            //add logic to behave differently depending on if control is item or layer etc
-            //to allow for repositioning by dragging stuff
         }
 
         private void RectangleProvider_MouseMove(object sender, MouseEventArgs e)
         {
-            IController controller = GetTargettedController(e.Location);
+            IController controller = handler.GetTargettedController(e.Location);
 
             if (controller is ItemController)
             {
-                CursorState protoState = CalculateCursorState(controller as ItemController, e.X);
+                CursorState protoState = handler.GetCursorState(e.Location, controller);
                 if (protoState == CursorState.ResizeItemLeft || protoState == CursorState.ResizeItemRight)
                     rectangleProvider.Cursor = Cursors.SizeWE;
                 else rectangleProvider.Cursor = Cursors.SizeAll;
@@ -173,146 +136,58 @@ namespace Scissors.Timeline
 
         private void RectangleProvider_MouseUp(object sender, MouseEventArgs e)
         {
-            if (state == CursorState.Hover) return;
-
-            if (state == CursorState.MoveItem || state == CursorState.ResizeItemLeft || state == CursorState.ResizeItemRight)
-            {                
-                if (!targettedItem.ParentLayer.IsPositionOkay(targettedItem))
-                {
-                    if (targettedLayer !=  oldLayer)
-                    {
-                        targettedLayer.TransferItem(targettedItem, oldLayer);
-                    }
-
-                    targettedItem.StartPosition = oldStart;
-                    targettedItem.ItemLength = oldLength;
-                }
+            if (state != CursorState.Hover)
+            {
+                handler.EndControllerAction();
+                state = CursorState.Hover;
             }
-
-            state = CursorState.Hover;
         }
         
         private void UpdateMouse(MouseEventArgs e)
         {
             if (rectangleProvider.ContainerRectangle.Contains(e.Location))
             {
-                IController controller = GetTargettedController(e.Location);
-
                 if (state == CursorState.Hover)
                 {
-                    if (ParentRectangle.Contains(e.Location))
-                    {
-                        UpdateCache(e.X);
-                    }
-                }
-                else if (state == CursorState.MoveLayer)
-                {
-                    if (controller == targettedLayer) return;
-
-                    LayerController layer;
-                    if (controller is LayerController) layer = controller as LayerController;
-                    else if (controller is ItemController) layer = (controller as ItemController).ParentLayer;
-                    else return;
-                    
-                    if (layer.ParentSlice == targettedLayer.ParentSlice)
-                    {
-                        layer.ParentSlice.SwapLayers(layer, targettedLayer);
-                    }
-                    else
-                    {
-                        SliceController slice = layer.ParentSlice;
-                        targettedSlice.TransferLayer(targettedLayer, slice, layer.GetId());
-
-                        if (targettedSlice == oldSlice)
-                        {
-                            if (targettedSlice.LayerCount == 0)
-                            {
-                                tempLayer = targettedSlice.CreateLayer();
-                                createdTempLayer = true;
-                            }
-                        }
-                        else if (slice == oldSlice)
-                        {
-                            if (createdTempLayer)
-                            {
-                                slice.DeleteLayer(tempLayer);
-                                createdTempLayer = false;
-                            }
-                        }
-
-                        targettedSlice = slice;
-                    }
-                }
-                else if (state == CursorState.MoveSlice)
-                {
-
+                    if (ParentRectangle.Contains(e.Location)) UpdateCache(e.X);
                 }
                 else
                 {
-                    int start = (int)Math.Round(e.X / timeline.TimelineZoom + offset);
+                    IController controller = handler.GetTargettedController(e.Location);
+                    handler.UpdateControllerAction(e.Location, controller);
 
-                    CursorType[] types = new CursorType[2];
-                    types[0] = types[1] = CursorType.ItemEdge;
-
-                    if (state == CursorState.MoveItem)
+                    if (state == CursorState.MoveItem || state == CursorState.ResizeItemLeft || state == CursorState.ResizeItemRight)
                     {
+                        CursorType[] types = new CursorType[2];
                         types[0] = types[1] = CursorType.ItemEdge;
 
-                        targettedItem.StartPosition = start;
-
-                        if (controller != targettedItem)
+                        if (state == CursorState.MoveItem)
                         {
-                            LayerController layer = null;
-                            if (controller is LayerController) layer = controller as LayerController;
-                            else if (controller is ItemController) layer = (controller as ItemController).ParentLayer;
-                            
-                            if (layer != null && layer != targettedLayer)
+                            types[0] = types[1] = CursorType.ItemEdge;
+                        }
+                        else
+                        {
+                            if (state == CursorState.ResizeItemLeft)
                             {
-                                targettedLayer.TransferItem(targettedItem, layer);
-                                targettedLayer = targettedItem.ParentLayer;
+                                types[0] = CursorType.ItemResize;
+                                types[1] = CursorType.ItemAnchor;
+                            }
+                            else if (state == CursorState.ResizeItemRight)
+                            {
+                                types[0] = CursorType.ItemAnchor;
+                                types[1] = CursorType.ItemResize;
                             }
                         }
-                    }
-                    else
-                    {
-                        int diff = start - oldStart;
-                        if (state == CursorState.ResizeItemLeft)
-                        {
-                            types[0] = CursorType.ItemResize;
-                            types[1] = CursorType.ItemAnchor;
 
-                            int length = targettedItem.ItemLength;
-                            targettedItem.ItemLength = oldLength - diff;
-                            if (targettedItem.ItemLength != length)
-                            {
-                                targettedItem.StartPosition = start;
-                            }
-                        }
-                        else if (state == CursorState.ResizeItemRight)
-                        {
-                            types[0] = CursorType.ItemAnchor;
-                            types[1] = CursorType.ItemResize;
+                        ItemController item = handler.ActionController as ItemController;
 
-                            targettedItem.ItemLength = oldLength + diff;
-                        }
+                        int x1 = item.Rectangle.X;
+                        int x2 = item.Rectangle.Right;
+                        UpdateCache(new int[] { x1, x2 }, types);
                     }
-                    
-                    int x1 = targettedItem.Rectangle.X;
-                    int x2 = targettedItem.Rectangle.Right;
-                    UpdateCache(new int[] { x1, x2 }, types);
                 }
                 UpdateUI();
             }
-        }
-
-        private CursorState CalculateCursorState(ItemController item, int x)
-        {
-            if (x - item.Rectangle.X <= GlobalConfig.ItemResizeHandleWidth)
-                return CursorState.ResizeItemLeft;
-            else if (x >= item.Rectangle.Right - GlobalConfig.ItemResizeHandleWidth)
-                return CursorState.ResizeItemRight;
-            else
-                return CursorState.MoveItem;
         }
 
         private void UpdateCache(int[] xs, CursorType[] types)
@@ -390,48 +265,7 @@ namespace Scissors.Timeline
         private void Timeline_TimelineLengthChanged(object sender, EventArgs e)
         {
             if (TimelineLengthChanged != null) TimelineLengthChanged.Invoke(this, EventArgs.Empty);
-        }
-
-        private IController GetTargettedController(Point mouseLocation)
-        {
-            if (!rectangleProvider.ContainerRectangle.Contains(mouseLocation)) return null;
-
-            List<IController> timelineChildren = timeline.GetChildren();
-            foreach (IController timelineChild in timelineChildren)
-            {
-                if (timelineChild.FullOccupiedRegion.IsVisible(mouseLocation))
-                {
-                    if (timelineChild is SliceController)
-                    {
-                        List<IController> sliceChildren = (timelineChild as SliceController).GetChildren();
-                        foreach (IController sliceChild in sliceChildren)
-                        {
-                            if (sliceChild.FullOccupiedRegion.IsVisible(mouseLocation))
-                            {
-                                if (sliceChild is LayerController)
-                                {
-                                    List<IController> layerChildren = (sliceChild as LayerController).GetChildren();
-                                    foreach (IController layerChild in layerChildren)
-                                    {
-                                        if (layerChild.FullOccupiedRegion.IsVisible(mouseLocation))
-                                        {
-                                            if (layerChild is ItemController) return layerChild;
-                                        }
-                                    }
-                                    return sliceChild;
-                                }
-                            }
-                        }
-                        return timelineChild;
-                    }
-                    else if (timelineChild is RulerController)
-                    {
-                        return timelineChild;
-                    }
-                }
-            }
-            return timeline;
-        }
+        }        
 
         private Cursor CreateCursor(int x, CursorType type)
         {
