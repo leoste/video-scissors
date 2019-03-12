@@ -10,7 +10,7 @@ namespace Scissors.Timeline
 {
     class SliceController : IFrameController, IControlController, IChildController, IDraggableController
     {
-        public static readonly int padding = 3;
+        public static readonly int padding = 6;
         public static readonly int layerMargin = 2;
         public static readonly int controlsWidth = 72;
         public static readonly int dragWidth = 16;
@@ -418,6 +418,9 @@ namespace Scissors.Timeline
                       controlsWidth - dragWidth, controlRectangle.Height));
 
                     e.Graphics.FillRectangle(Brushes.DimGray, MoveHandleRectangle);
+
+                    //for debugging
+                    e.Graphics.DrawString(ToString(), SystemFonts.DefaultFont, Brushes.White, new Point(MoveHandleRectangle.Right + 3, controlRectangle.Y + 3 + padding));
                 }
 
                 e.Graphics.Clip = graphicsClip;
@@ -467,6 +470,11 @@ namespace Scissors.Timeline
             timeline.TimelineZoomChanged -= Timeline_TimelineZoomChanged;
             timeline.TimelineLengthChanged -= Timeline_TimelineLengthChanged;
             timeline.LocationChanged -= Timeline_LocationChanged;
+        }
+
+        public override string ToString()
+        {
+            return $"id:{id}";
         }
     }
 }

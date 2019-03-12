@@ -104,7 +104,6 @@ namespace Scissors.Timeline
             items = new List<ItemController>();
 
             Random rnd = new Random();
-            int r, o;
 
             items.Add(new ItemController(this, rnd.Next(0, 20), rnd.Next(3, 13)));
             System.Threading.Thread.Sleep(5);
@@ -322,17 +321,16 @@ namespace Scissors.Timeline
 
                     e.Graphics.FillRectangle(brush, new Rectangle(
                         e.ClipRectangle.X, layerRectangle.Y,
-                        e.ClipRectangle.Width, height));
-
-                    //writes scroll position for debug
-                    e.Graphics.DrawString(Rectangle.X.ToString(), SystemFonts.DefaultFont, new SolidBrush(Color.Black), ParentRectangle.X + 3, Rectangle.Y + 3);
-
+                        e.ClipRectangle.Width, height));                    
                 }
 
                 if (redrawControl)
                 {
                     e.Graphics.Clip = new Region(ControlParentRectangle);
                     e.Graphics.FillRectangle(Brushes.DimGray, MoveHandleRectangle);
+
+                    //for debugging
+                    e.Graphics.DrawString(ToString(), SystemFonts.DefaultFont, Brushes.Black, new Point(MoveHandleRectangle.Right + 3, controlRectangle.Y + 3));
                 }
 
                 e.Graphics.Clip = graphicsClip;
@@ -388,6 +386,11 @@ namespace Scissors.Timeline
             rectangleProvider.Paint -= TimelineContent_Paint;
             rectangleProvider.Resize -= TimelineContent_Resize;
             RemoveSliceEvents();
+        }
+
+        public override string ToString()
+        {
+            return $"id:{id}";
         }
     }
 }

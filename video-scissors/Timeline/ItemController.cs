@@ -244,7 +244,10 @@ namespace Scissors.Timeline
                 Brush brush = new SolidBrush(backColor);
                 e.Graphics.FillRectangle(brush, itemRectangle);
 
-                e.Graphics.Clip = graphicsClip;
+                //for debugging
+                e.Graphics.DrawString(ToString(), SystemFonts.DefaultFont, Brushes.White, new Point(itemRectangle.X + 3, itemRectangle.Y + 3));
+
+                e.Graphics.Clip = graphicsClip;                
             }
         }
 
@@ -280,6 +283,11 @@ namespace Scissors.Timeline
             rectangleProvider.Paint -= TimelineContent_Paint;
             rectangleProvider.Resize -= TimelineContent_Resize;
             RemoveLayerEvents();
+        }
+
+        public override string ToString()
+        {
+            return $"x:{startPosition} w:{itemLength}";
         }
     }
 }
