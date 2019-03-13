@@ -124,14 +124,21 @@ namespace Scissors.Timeline
 
             if (state == CursorState.Hover)
             {
-                if (controller is ItemController)
+                CursorState protoState = handler.GetCursorState(e.Location, controller);
+
+                switch (protoState)
                 {
-                    CursorState protoState = handler.GetCursorState(e.Location, controller);
-                    if (protoState == CursorState.ResizeItemLeft || protoState == CursorState.ResizeItemRight)
-                        rectangleProvider.Cursor = Cursors.SizeWE;
-                    else rectangleProvider.Cursor = Cursors.SizeAll;
+                    default:
+                    case CursorState.Hover:
+                        rectangleProvider.Cursor = Cursors.Default; break;
+                    case CursorState.MoveItem:
+                    case CursorState.MoveLayer:
+                    case CursorState.MoveSlice:
+                        rectangleProvider.Cursor = Cursors.SizeAll; break;
+                    case CursorState.ResizeItemLeft:
+                    case CursorState.ResizeItemRight:
+                        rectangleProvider.Cursor = Cursors.SizeWE; break;
                 }
-                else rectangleProvider.Cursor = Cursors.Default;
             }
 
             UpdateMouse(e);
@@ -237,6 +244,9 @@ namespace Scissors.Timeline
 
         private void RectangleProvider_Paint(object sender, PaintEventArgs e)
         {
+            Region graphicsClip = e.Graphics.Clip;
+            e.Graphics.Clip = new Region(rectangleProvider.HorizontalContainerRectangle);
+
             foreach (Cursor cursor in cursors)
             {
                 if (e.ClipRectangle.IntersectsWith(cursor.Rectangle))
@@ -251,6 +261,8 @@ namespace Scissors.Timeline
                     e.Graphics.FillRectangle(brush, cursor.Rectangle);
                 }
             }
+
+            e.Graphics.Clip = graphicsClip;
         }
 
         private void Timeline_LocationChanged(object sender, LocationChangeEventArgs e)

@@ -207,6 +207,7 @@ namespace Scissors.Timeline
             {
                 Region graphicsClip = e.Graphics.Clip;
                 Region region = graphicsClip;
+                region.Intersect(ParentRectangle);
                 region.Exclude(ParentTimeline.Cursor.FullOccupiedRegion);
                 e.Graphics.Clip = region;
 
