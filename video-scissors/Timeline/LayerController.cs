@@ -50,9 +50,9 @@ namespace Scissors.Timeline
             set
             {
                 backColor = value;
-                lockColor = ColorProvider.Mix(backColor, Color.Gold, 0.3f);
-                hiddenColor = ColorProvider.Mix(backColor, Color.DimGray, 0.8f);
-                hiddenLockColor = ColorProvider.Mix(lockColor, Color.DimGray, 0.65f);
+                lockColor = ColorProvider.Mix(backColor, Color.DimGray, 0.8f);
+                hiddenColor = ColorProvider.Mix(backColor, Color.Blue, 0.3f);
+                hiddenLockColor = ColorProvider.Mix(lockColor, Color.Blue, 0.2f);
                 UpdateUI();
             }
         }
