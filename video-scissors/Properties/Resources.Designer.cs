@@ -63,6 +63,16 @@ namespace Scissors.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap closed_eye {
+            get {
+                object obj = ResourceManager.GetObject("closed_eye", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap closed_lock {
             get {
                 object obj = ResourceManager.GetObject("closed_lock", resourceCulture);
@@ -76,6 +86,16 @@ namespace Scissors.Properties {
         internal static System.Drawing.Bitmap image {
             get {
                 object obj = ResourceManager.GetObject("image", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap open_eye {
+            get {
+                object obj = ResourceManager.GetObject("open_eye", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

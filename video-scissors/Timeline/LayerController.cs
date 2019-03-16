@@ -23,6 +23,9 @@ namespace Scissors.Timeline
         private Rectangle layerRectangle;
         private Rectangle controlRectangle;
         private Color backColor;
+        private Color lockColor;
+        private Color hiddenColor;
+        private Color hiddenLockColor;
 
         public RectangleProvider RectangleProvider { get { return rectangleProvider; } }
 
@@ -40,13 +43,16 @@ namespace Scissors.Timeline
         public int ProjectFrameWidth { get { return slice.ProjectFrameWidth; } }
         public int ProjectFrameHeight { get { return slice.ProjectFrameHeight; } }
         public bool IsLocked { get { return slice.IsLocked || toggleLock; } }
-        public bool IsVisible { get { return slice.IsVisible || toggleVisibility; } }
+        public bool IsVisible { get { return slice.IsVisible && toggleVisibility; } }
 
         public Color BackColor {
             get { return backColor; }
             set
             {
                 backColor = value;
+                lockColor = ColorProvider.Mix(backColor, Color.Gold, 0.3f);
+                hiddenColor = ColorProvider.Mix(backColor, Color.DimGray, 0.8f);
+                hiddenLockColor = ColorProvider.Mix(lockColor, Color.DimGray, 0.65f);
                 UpdateUI();
             }
         }
@@ -83,8 +89,13 @@ namespace Scissors.Timeline
         {
             get
             {
-                if (IsLocked) return Color.Gray;
-                else return backColor;
+                if (IsLocked)
+                {
+                    if (IsVisible) return lockColor;
+                    else return hiddenLockColor;
+                }
+                else if (IsVisible) return backColor;
+                else return hiddenColor;
             }
         }
 
@@ -103,6 +114,8 @@ namespace Scissors.Timeline
         private void Initialize(SliceController slice)
         {
             this.slice = slice;
+            toggleLock = false;
+            toggleVisibility = true;
 
             rectangleProvider = slice.RectangleProvider;
             rectangleProvider.Paint += TimelineContent_Paint;
@@ -110,7 +123,7 @@ namespace Scissors.Timeline
 
             AddSliceEvents();
 
-            backColor = ColorProvider.GetRandomLayerColor();
+            BackColor = ColorProvider.GetRandomLayerColor();
 
             SetId();
 
@@ -127,14 +140,13 @@ namespace Scissors.Timeline
                 5 + dragWidth + ButtonController.margin,
                 ButtonController.margin));
             lockButton.ButtonClicked += LockButton_ButtonClicked;
-            toggleLock = false;
             lockButton.Icon = Properties.Resources.open_lock;
 
             visibilityButton = new ButtonController(this, new Point(
                 5 + dragWidth + ButtonController.margin * 3 + ButtonController.width, 
                 ButtonController.margin));
             visibilityButton.ButtonClicked += VisibilityButton_ButtonClicked;
-            toggleVisibility = false;
+            visibilityButton.Icon = Properties.Resources.open_eye;
 
             addLayerButton = new ButtonController(this, new Point(
                 5 + dragWidth + ButtonController.margin,
@@ -161,13 +173,16 @@ namespace Scissors.Timeline
 
         private void VisibilityButton_ButtonClicked(object sender, EventArgs e)
         {
-            if (slice.IsLocked) return;
+            toggleVisibility = !toggleVisibility;
+
+            if (toggleVisibility) visibilityButton.Icon = Properties.Resources.open_eye;
+            else visibilityButton.Icon = Properties.Resources.closed_eye;
+
+            UpdateUI();
         }
 
         private void LockButton_ButtonClicked(object sender, EventArgs e)
         {
-            if (slice.IsLocked) return;
-
             toggleLock = !toggleLock;
 
             if (toggleLock) lockButton.Icon = Properties.Resources.closed_lock;

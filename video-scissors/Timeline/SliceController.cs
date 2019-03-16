@@ -32,6 +32,9 @@ namespace Scissors.Timeline
         private Rectangle sliceRectangle;
         private Rectangle controlRectangle;
         private Color backColor;
+        private Color lockColor;
+        private Color hiddenColor;
+        private Color hiddenLockColor;
 
         public int LayerCount { get { return layers.Count; } } 
         
@@ -49,6 +52,9 @@ namespace Scissors.Timeline
             set
             {
                 backColor = value;
+                lockColor = ColorProvider.Mix(backColor, Color.Gold, 0.3f);
+                hiddenColor = ColorProvider.Mix(backColor, Color.DimGray, 0.8f);
+                hiddenLockColor = ColorProvider.Mix(lockColor, Color.DimGray, 0.65f);
                 UpdateUI();
             }
         }
@@ -98,8 +104,13 @@ namespace Scissors.Timeline
         {
             get
             {
-                if (IsLocked) return Color.DimGray;
-                else return backColor;
+                if (IsLocked)
+                {
+                    if (IsVisible) return lockColor;
+                    else return hiddenLockColor;
+                }
+                else if (IsVisible) return backColor;
+                else return hiddenColor;
             }
         }
 
@@ -120,7 +131,9 @@ namespace Scissors.Timeline
             layers = new List<LayerController>();
 
             this.timeline = timeline;
-
+            toggleLock = false;
+            toggleVisibility = true;
+            
             rectangleProvider = timeline.RectangleProvider;
             rectangleProvider.Paint += TimelineContent_Paint;
             rectangleProvider.Resize += TimelineContent_Resize;
@@ -141,13 +154,13 @@ namespace Scissors.Timeline
                 5 + dragWidth + ButtonController.margin,
                 padding + ButtonController.margin));
             lockButton.ButtonClicked += LockButton_ButtonClicked;
-            toggleLock = false;
             lockButton.Icon = Properties.Resources.open_lock;
 
             visibilityButton = new ButtonController(this, new Point(
                 5 + dragWidth + ButtonController.margin * 3 + ButtonController.width,
                 padding + ButtonController.margin));
             visibilityButton.ButtonClicked += VisibilityButton_ButtonClicked;
+            visibilityButton.Icon = Properties.Resources.open_eye;
 
             addSliceButton = new ButtonController(this, new Point(
                 5 + dragWidth + ButtonController.margin,
@@ -165,17 +178,22 @@ namespace Scissors.Timeline
 
         private void RemoveSliceButton_ButtonClicked(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            
         }
 
         private void AddSliceButton_ButtonClicked(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            
         }
 
         private void VisibilityButton_ButtonClicked(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            toggleVisibility = !toggleVisibility;
+
+            if (toggleVisibility) visibilityButton.Icon = Properties.Resources.open_eye;
+            else visibilityButton.Icon = Properties.Resources.closed_eye;
+
+            UpdateUI();
         }
 
         private void LockButton_ButtonClicked(object sender, EventArgs e)
