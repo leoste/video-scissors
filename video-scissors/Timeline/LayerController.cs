@@ -11,7 +11,7 @@ namespace Scissors.Timeline
     class LayerController : IFrameController, IControlController, IChildController, IDraggableController
     {
         public static readonly int height = 40;
-        public static readonly int controlsWidth = 72;
+        public static readonly int controlsWidth = 56;
         public static readonly int dragWidth = 16;
 
         private bool toggleLock;
@@ -27,6 +27,10 @@ namespace Scissors.Timeline
         public RectangleProvider RectangleProvider { get { return rectangleProvider; } }
 
         private List<ItemController> items;
+        private ButtonController lockButton;
+        private ButtonController visibilityButton;
+        private ButtonController addLayerButton;
+        private ButtonController removeLayerButton;
         
         internal Panel ItemContentsPanel { get { return new Panel(); } }
 
@@ -102,15 +106,26 @@ namespace Scissors.Timeline
             SetId();
 
             items = new List<ItemController>();
-
             Random rnd = new Random();
-
             items.Add(new ItemController(this, rnd.Next(0, 20), rnd.Next(3, 13)));
             System.Threading.Thread.Sleep(5);
             items.Add(new ItemController(this, rnd.Next(45, 50), rnd.Next(6, 30)));
             System.Threading.Thread.Sleep(5);
             items.Add(new ItemController(this, rnd.Next(70, 90), rnd.Next(10, 15)));
             System.Threading.Thread.Sleep(5);
+            
+            lockButton = new ButtonController(this, new Point(
+                5 + dragWidth + ButtonController.margin,
+                ButtonController.margin));
+            visibilityButton = new ButtonController(this, new Point(
+                5 + dragWidth + ButtonController.margin * 3 + ButtonController.width, 
+                ButtonController.margin));
+            addLayerButton = new ButtonController(this, new Point(
+                5 + dragWidth + ButtonController.margin,
+                ButtonController.margin * 3 + ButtonController.height));
+            removeLayerButton = new ButtonController(this, new Point(
+                5 + dragWidth + ButtonController.margin * 3 + ButtonController.width,
+                ButtonController.margin * 3 + ButtonController.height));
 
             UpdateUI();
         }
@@ -315,7 +330,11 @@ namespace Scissors.Timeline
                         Rectangle rectangle = ControlParentRectangle;
                         rectangle.X += offset;
                         rectangle.Width -= offset;
-                        region.Union(rectangle);                        
+                        region.Union(rectangle);
+                        region.Exclude(lockButton.Rectangle);
+                        region.Exclude(visibilityButton.Rectangle);
+                        region.Exclude(addLayerButton.Rectangle);
+                        region.Exclude(removeLayerButton.Rectangle);
                     }
                     e.Graphics.Clip = region;
 
@@ -383,6 +402,10 @@ namespace Scissors.Timeline
         public void Delete()
         {
             foreach (ItemController item in items) item.Delete();
+            lockButton.Delete();
+            visibilityButton.Delete();
+            addLayerButton.Delete();
+            removeLayerButton.Delete();
             rectangleProvider.Paint -= TimelineContent_Paint;
             rectangleProvider.Resize -= TimelineContent_Resize;
             RemoveSliceEvents();

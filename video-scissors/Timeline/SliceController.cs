@@ -12,7 +12,7 @@ namespace Scissors.Timeline
     {
         public static readonly int padding = 6;
         public static readonly int layerMargin = 2;
-        public static readonly int controlsWidth = 72;
+        public static readonly int controlsWidth = 66;
         public static readonly int dragWidth = 16;
                 
         private int layersHeight = 40;
@@ -24,7 +24,11 @@ namespace Scissors.Timeline
         private RectangleProvider rectangleProvider;
                 
         private List<LayerController> layers;
-        
+        private ButtonController lockButton;
+        private ButtonController visibilityButton;
+        private ButtonController addSliceButton;
+        private ButtonController removeSliceButton;
+
         private Rectangle sliceRectangle;
         private Rectangle controlRectangle;
         private Color backColor;
@@ -122,7 +126,21 @@ namespace Scissors.Timeline
 
             CreateLayer();
             CreateLayer();
-            CreateLayer();            
+            CreateLayer();
+
+            lockButton = new ButtonController(this, new Point(
+                5 + dragWidth + ButtonController.margin,
+                padding + ButtonController.margin));
+            visibilityButton = new ButtonController(this, new Point(
+                5 + dragWidth + ButtonController.margin * 3 + ButtonController.width,
+                padding + ButtonController.margin));
+            addSliceButton = new ButtonController(this, new Point(
+                5 + dragWidth + ButtonController.margin,
+                padding + ButtonController.margin * 3 + ButtonController.height));
+            removeSliceButton = new ButtonController(this, new Point(
+                5 + dragWidth + ButtonController.margin * 3 + ButtonController.width,
+                padding + ButtonController.margin * 3 + ButtonController.height));
+
             UpdateCache();
             UpdateUI();
         }
@@ -388,7 +406,7 @@ namespace Scissors.Timeline
                         Rectangle rectangle = ControlParentRectangle;
                         rectangle.X += controlsWidth;
                         rectangle.Width -= controlsWidth;
-                        region.Union(rectangle);
+                        region.Union(rectangle);                        
                     }
 
                     e.Graphics.Clip = region;
@@ -411,7 +429,12 @@ namespace Scissors.Timeline
 
                 if (redrawControl)
                 {
-                    e.Graphics.Clip = new Region(ControlParentRectangle);
+                    Region region = new Region(ControlParentRectangle);
+                    region.Exclude(lockButton.Rectangle);
+                    region.Exclude(visibilityButton.Rectangle);
+                    region.Exclude(addSliceButton.Rectangle);
+                    region.Exclude(removeSliceButton.Rectangle);
+                    e.Graphics.Clip = region;
 
                     e.Graphics.FillRectangle(brush, new Rectangle(
                       controlRectangle.X + dragWidth, controlRectangle.Y, 

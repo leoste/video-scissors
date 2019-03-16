@@ -41,7 +41,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.rectangleProvider1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.rectangleProvider1.ControlWidth = 144;
+            this.rectangleProvider1.ControlWidth = 132;
             this.rectangleProvider1.HorizontalScroll = 0;
             this.rectangleProvider1.Location = new System.Drawing.Point(27, 0);
             this.rectangleProvider1.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
