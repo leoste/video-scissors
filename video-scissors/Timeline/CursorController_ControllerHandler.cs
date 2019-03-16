@@ -119,7 +119,7 @@ namespace Scissors.Timeline
                 {
                     if (targettedController is ItemController item)
                     {
-                        if (item.ParentLayer.IsLocked) return CursorState.Hover;
+                        if (item.IsLocked) return CursorState.Hover;
                         else
                         {
                             if (rc.LeftResizeHandleRectangle.Contains(mouseLocation))

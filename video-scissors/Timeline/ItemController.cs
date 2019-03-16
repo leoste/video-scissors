@@ -9,7 +9,7 @@ using Scissors.Config;
 
 namespace Scissors.Timeline
 {
-    internal class ItemController : IFrameController, IDraggableController, IResizableController
+    internal class ItemController : IFrameController, IDraggableController, IResizableController, ILockableController
     {
         public static readonly int resizeHandleWidth = 3;
 
@@ -18,7 +18,10 @@ namespace Scissors.Timeline
 
         private Rectangle itemRectangle;
         private Rectangle oldRectangle;
-        private Color backColor;      
+        private Color backColor;
+        private Color lockColor;
+        private Color hiddenColor;
+        private Color hiddenLockColor;
 
         private int startPosition;
         private int endPosition;
@@ -89,7 +92,17 @@ namespace Scissors.Timeline
 
         public RectangleProvider RectangleProvider => throw new NotImplementedException();
 
-        public Color BackColor { get { return backColor; } set { backColor = value; } }
+        public Color BackColor {
+            get { return backColor; }
+            set
+            {
+                backColor = value;
+                lockColor = ColorProvider.Mix(backColor, Color.DimGray, 0.8f);
+                hiddenColor = ColorProvider.Mix(backColor, Color.Blue, 0.3f);
+                hiddenLockColor = ColorProvider.Mix(lockColor, Color.Blue, 0.2f);
+                UpdateUI();
+            }
+        }
         public Color ForeColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public Rectangle Rectangle
@@ -143,6 +156,23 @@ namespace Scissors.Timeline
         public Region FullParentRegion
         { get { return new Region(ParentRectangle); } }
 
+        public bool IsLocked { get { return layer.IsLocked; } }
+        public bool IsVisible { get { return layer.IsVisible; } }
+
+        public Color RealBackColor
+        {
+            get
+            {
+                if (IsLocked)
+                {
+                    if (IsVisible) return lockColor;
+                    else return hiddenLockColor;
+                }
+                else if (IsVisible) return backColor;
+                else return hiddenColor;
+            }
+        }
+
         public event EventHandler SizeChanged;
         private void InvokeSizeChanged()
         { if (SizeChanged != null) SizeChanged.Invoke(this, EventArgs.Empty); }
@@ -156,12 +186,12 @@ namespace Scissors.Timeline
 
         internal ItemController(LayerController layer, int startPosition, int length)
         {
-            backColor = Color.DarkGray;
-
             this.layer = layer;
             rectangleProvider = layer.RectangleProvider;
             UpdateCache();
             oldRectangle = itemRectangle;
+
+            BackColor = Color.DarkGray;
 
             rectangleProvider.Paint += TimelineContent_Paint;
             rectangleProvider.Resize += TimelineContent_Resize;
@@ -241,7 +271,7 @@ namespace Scissors.Timeline
                 region.Exclude(ParentTimeline.Cursor.FullOccupiedRegion);
                 e.Graphics.Clip = region;
 
-                Brush brush = new SolidBrush(backColor);
+                Brush brush = new SolidBrush(RealBackColor);
                 e.Graphics.FillRectangle(brush, itemRectangle);
 
                 //for debugging
