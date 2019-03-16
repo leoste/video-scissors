@@ -250,6 +250,32 @@ namespace Scissors.Timeline
             {
                 slices[i].SetId(i);
             }
+            InvokeLocationChanged(false, true);
+            InvokeSizeChanged();
+        }
+
+        private void RemoveSlice(SliceController slice)
+        {
+            int id = slice.GetId();
+            RemoveSlice(id);
+        }
+
+        private void RemoveSlice(int id)
+        {
+            SliceController slice = slices[id];
+            slices.Remove(slice);
+            for (int i = id; i < SliceCount; i += 1)
+            {
+                slices[i].SetId(i);                
+            }
+
+            if (SliceCount == 0)
+            {
+                slices.Add(new SliceController(this));
+            }
+
+            InvokeLocationChanged(false, true);
+            InvokeSizeChanged();
         }
 
         private void Slice_SizeChanged(object sender, EventArgs e)
@@ -258,20 +284,18 @@ namespace Scissors.Timeline
             InvokeSizeChanged();
         }
 
-        internal void RemoveSlice(int id)
+        private void CheckSliceExist(SliceController slice)
         {
-            SliceController slice = slices[id];
-            slices.Remove(slice);
-            for (int i = id; i < SliceCount; i += 1)
-            {
-                slices[i].SetId(i);
-            }
-
-            if (SliceCount == 0)
-            {
-                slices.Add(new SliceController(this));
-            }
+            if (!slices.Exists(x => x == slice)) throw new ArgumentException("This timeline doesn't contain given slice.");
         }
+
+        public void DeleteSlice(SliceController slice)
+        {
+            CheckSliceExist(slice);
+            RemoveSlice(slice);
+            slice.Delete();
+            InvokeLocationChanged(false, true);
+        }        
 
         internal void SwapSlices(int id1, int id2)
         {

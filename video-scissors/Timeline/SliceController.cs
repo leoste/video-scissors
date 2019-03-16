@@ -147,8 +147,6 @@ namespace Scissors.Timeline
             SetId();
 
             CreateLayer();
-            CreateLayer();
-            CreateLayer();
 
             lockButton = new ButtonController(this, new Point(
                 5 + dragWidth + ButtonController.margin,
@@ -166,11 +164,13 @@ namespace Scissors.Timeline
                 5 + dragWidth + ButtonController.margin,
                 padding + ButtonController.margin * 3 + ButtonController.height));
             addSliceButton.ButtonClicked += AddSliceButton_ButtonClicked;
+            addSliceButton.Icon = Properties.Resources.plus;
 
             removeSliceButton = new ButtonController(this, new Point(
                 5 + dragWidth + ButtonController.margin * 3 + ButtonController.width,
                 padding + ButtonController.margin * 3 + ButtonController.height));
             removeSliceButton.ButtonClicked += RemoveSliceButton_ButtonClicked;
+            removeSliceButton.Icon = Properties.Resources.minus;
 
             UpdateCache();
             UpdateUI();
@@ -178,12 +178,12 @@ namespace Scissors.Timeline
 
         private void RemoveSliceButton_ButtonClicked(object sender, EventArgs e)
         {
-            
+            timeline.DeleteSlice(this);
         }
 
         private void AddSliceButton_ButtonClicked(object sender, EventArgs e)
         {
-            
+            timeline.CreateSlice(id + 1);
         }
 
         private void VisibilityButton_ButtonClicked(object sender, EventArgs e)
@@ -317,6 +317,8 @@ namespace Scissors.Timeline
         {
             LayerController layer = new LayerController(this, id);
             AddLayer(layer, id);
+
+            UpdateCache();
             
             if (id < timeline.SliceCount)
             {
@@ -325,6 +327,9 @@ namespace Scissors.Timeline
                 UpdateSlicesUI(slices);
             }
 
+            UpdateUI();
+
+            InvokeLocationChanged(new LocationChangeEventArgs(false, true));
             InvokeSizeChanged();
 
             return layer;
@@ -344,6 +349,8 @@ namespace Scissors.Timeline
             RemoveLayer(layer);
             layer.Delete();
 
+            if (layers.Count == 0) AddLayer(new LayerController(this));
+
             if (id < timeline.SliceCount)
             {
                 List<SliceController> slices = timeline.GetSlices(id, timeline.SliceCount - id);
@@ -351,6 +358,7 @@ namespace Scissors.Timeline
                 UpdateSlicesUI(slices);
             }
 
+            InvokeLocationChanged(new LocationChangeEventArgs(false, true));
             InvokeSizeChanged();
         }
 
@@ -361,7 +369,7 @@ namespace Scissors.Timeline
             for (int i = LayerCount - 1; i >= id; i -= 1)
             {
                 layers[i].SetId(i);
-            }
+            }            
         }
 
         private void RemoveLayer(LayerController layer)
@@ -544,6 +552,10 @@ namespace Scissors.Timeline
         public void Delete()
         {            
             foreach (LayerController layer in layers) layer.Delete();
+            lockButton.Delete();
+            visibilityButton.Delete();
+            addSliceButton.Delete();
+            removeSliceButton.Delete();
 
             rectangleProvider.Paint -= TimelineContent_Paint;
             rectangleProvider.Resize -= TimelineContent_Resize;

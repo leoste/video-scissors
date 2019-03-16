@@ -152,23 +152,25 @@ namespace Scissors.Timeline
                 5 + dragWidth + ButtonController.margin,
                 ButtonController.margin * 3 + ButtonController.height));
             addLayerButton.ButtonClicked += AddLayerButton_ButtonClicked;
+            addLayerButton.Icon = Properties.Resources.plus;
 
             removeLayerButton = new ButtonController(this, new Point(
                 5 + dragWidth + ButtonController.margin * 3 + ButtonController.width,
                 ButtonController.margin * 3 + ButtonController.height));
             removeLayerButton.ButtonClicked += RemoveLayerButton_ButtonClicked;
+            removeLayerButton.Icon = Properties.Resources.minus;
 
             UpdateUI();
         }
 
         private void RemoveLayerButton_ButtonClicked(object sender, EventArgs e)
         {
-            
+            slice.DeleteLayer(this);
         }
 
         private void AddLayerButton_ButtonClicked(object sender, EventArgs e)
         {
-            
+            slice.CreateLayer(id + 1);
         }
 
         private void VisibilityButton_ButtonClicked(object sender, EventArgs e)
