@@ -14,5 +14,7 @@ namespace Scissors.Timeline
 
         Rectangle ControlRectangle { get; }
         Rectangle ControlParentRectangle { get; }
+
+        Color RealBackColor { get; }
     }
 }

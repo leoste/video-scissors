@@ -11,7 +11,7 @@ namespace Scissors.Timeline
     class LayerController : IFrameController, IControlController, IChildController, IDraggableController
     {
         public static readonly int height = 40;
-        public static readonly int controlsWidth = 56;
+        public static readonly int controlsWidth = 66;
         public static readonly int dragWidth = 16;
 
         private bool toggleLock;
@@ -79,6 +79,15 @@ namespace Scissors.Timeline
         public Region FullParentRegion
         { get { return slice.FullParentRegion; } }
 
+        public Color RealBackColor
+        {
+            get
+            {
+                if (IsLocked) return Color.Gray;
+                else return backColor;
+            }
+        }
+
         public event EventHandler SizeChanged;
         private void InvokeSizeChanged()
         { if (SizeChanged != null) SizeChanged.Invoke(this, EventArgs.Empty); }
@@ -117,15 +126,52 @@ namespace Scissors.Timeline
             lockButton = new ButtonController(this, new Point(
                 5 + dragWidth + ButtonController.margin,
                 ButtonController.margin));
+            lockButton.ButtonClicked += LockButton_ButtonClicked;
+            toggleLock = false;
+            lockButton.Icon = Properties.Resources.open_lock;
+
             visibilityButton = new ButtonController(this, new Point(
                 5 + dragWidth + ButtonController.margin * 3 + ButtonController.width, 
                 ButtonController.margin));
+            visibilityButton.ButtonClicked += VisibilityButton_ButtonClicked;
+            toggleVisibility = false;
+
             addLayerButton = new ButtonController(this, new Point(
                 5 + dragWidth + ButtonController.margin,
                 ButtonController.margin * 3 + ButtonController.height));
+            addLayerButton.ButtonClicked += AddLayerButton_ButtonClicked;
+
             removeLayerButton = new ButtonController(this, new Point(
                 5 + dragWidth + ButtonController.margin * 3 + ButtonController.width,
                 ButtonController.margin * 3 + ButtonController.height));
+            removeLayerButton.ButtonClicked += RemoveLayerButton_ButtonClicked;
+
+            UpdateUI();
+        }
+
+        private void RemoveLayerButton_ButtonClicked(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void AddLayerButton_ButtonClicked(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void VisibilityButton_ButtonClicked(object sender, EventArgs e)
+        {
+            if (slice.IsLocked) return;
+        }
+
+        private void LockButton_ButtonClicked(object sender, EventArgs e)
+        {
+            if (slice.IsLocked) return;
+
+            toggleLock = !toggleLock;
+
+            if (toggleLock) lockButton.Icon = Properties.Resources.closed_lock;
+            else lockButton.Icon = Properties.Resources.open_lock;
 
             UpdateUI();
         }
@@ -187,36 +233,6 @@ namespace Scissors.Timeline
             controlRectangle.Y = layerRectangle.Y;
             controlRectangle.Width = controlsWidth;
             controlRectangle.Height = height;
-        }
-
-        private void Control_ToggleVisibilityClicked(object sender, ToggleEventArgs e)
-        {
-            toggleVisibility = e.ToggleValue;
-        }
-
-        private void Control_ToggleLockClicked(object sender, ToggleEventArgs e)
-        {
-            toggleLock = e.ToggleValue;
-        }
-
-        private void Control_AddClicked(object sender, EventArgs e)
-        {
-            slice.CreateLayer(id + 1);
-        }
-
-        private void Control_RemoveClicked(object sender, EventArgs e)
-        {
-            slice.DeleteLayer(id);
-        }
-
-        private void Control_MoveUpClicked(object sender, EventArgs e)
-        {
-            if (id > 0) slice.SwapLayers(id, id - 1);
-        }
-
-        private void Control_MoveDownClicked(object sender, EventArgs e)
-        {
-            if (id < slice.LayerCount - 1) slice.SwapLayers(id, id + 1);
         }
 
         internal LayerController(SliceController slice)
@@ -312,7 +328,7 @@ namespace Scissors.Timeline
             if (redrawContent || redrawControl)
             {
                 Region graphicsClip = e.Graphics.Clip;
-                Brush brush = new SolidBrush(backColor);
+                Brush brush = new SolidBrush(RealBackColor);
 
                 if (redrawContent)
                 {
@@ -347,9 +363,6 @@ namespace Scissors.Timeline
                 {
                     e.Graphics.Clip = new Region(ControlParentRectangle);
                     e.Graphics.FillRectangle(Brushes.DimGray, MoveHandleRectangle);
-
-                    //for debugging
-                    e.Graphics.DrawString(ToString(), SystemFonts.DefaultFont, Brushes.Black, new Point(MoveHandleRectangle.Right + 3, controlRectangle.Y + 3));
                 }
 
                 e.Graphics.Clip = graphicsClip;
@@ -409,6 +422,10 @@ namespace Scissors.Timeline
             rectangleProvider.Paint -= TimelineContent_Paint;
             rectangleProvider.Resize -= TimelineContent_Resize;
             RemoveSliceEvents();
+            lockButton.ButtonClicked -= LockButton_ButtonClicked;
+            visibilityButton.ButtonClicked -= VisibilityButton_ButtonClicked;
+            addLayerButton.ButtonClicked -= AddLayerButton_ButtonClicked;            
+            removeLayerButton.ButtonClicked -= RemoveLayerButton_ButtonClicked;
         }
 
         public override string ToString()

@@ -61,7 +61,7 @@ namespace Scissors.Timeline
                     if (timelineChild.FullOccupiedRegion.IsVisible(mouseLocation))
                     {
                         if (timelineChild is SliceController)
-                        {
+                        {                            
                             List<IController> sliceChildren = (timelineChild as SliceController).GetChildren();
                             foreach (IController sliceChild in sliceChildren)
                             {
@@ -102,19 +102,33 @@ namespace Scissors.Timeline
             {
                 if (targettedController is IDraggableController dc && dc.MoveHandleRectangle.Contains(mouseLocation))
                 {
-                    if (targettedController is ItemController) return CursorState.MoveItem;
-                    if (targettedController is LayerController) return CursorState.MoveLayer;
-                    else if (targettedController is SliceController) return CursorState.MoveSlice;
+                    if (targettedController is SliceController) return CursorState.MoveSlice;
+                    else if (targettedController is LayerController layer)
+                    {
+                        if (layer.ParentSlice.IsLocked) return CursorState.Hover;
+                        else return CursorState.MoveLayer;
+                    }
+                    else if (targettedController is ItemController item)
+                    {
+                        if (item.ParentLayer.IsLocked) return CursorState.Hover;
+                        else return CursorState.MoveItem;
+                    }
                     else return CursorState.Hover;
                 }
-                else if (targettedController is IResizableController rc1 && rc1.LeftResizeHandleRectangle.Contains(mouseLocation))
+                else if (targettedController is IResizableController rc)
                 {
-                    if (targettedController is ItemController) return CursorState.ResizeItemLeft;
-                    else return CursorState.Hover;
-                }
-                else if (targettedController is IResizableController rc2 && rc2.RightResizeHandleRectangle.Contains(mouseLocation))
-                {
-                    if (targettedController is ItemController) return CursorState.ResizeItemRight;
+                    if (targettedController is ItemController item)
+                    {
+                        if (item.ParentLayer.IsLocked) return CursorState.Hover;
+                        else
+                        {
+                            if (rc.LeftResizeHandleRectangle.Contains(mouseLocation))
+                                return CursorState.ResizeItemLeft;
+                            else if (rc.RightResizeHandleRectangle.Contains(mouseLocation))
+                                return CursorState.ResizeItemRight;
+                            else return CursorState.Hover;
+                        }
+                    }
                     else return CursorState.Hover;
                 }
                 else return CursorState.Hover;
@@ -174,7 +188,7 @@ namespace Scissors.Timeline
                     {
                         layer.ParentSlice.SwapLayers(layer, targetLayer);
                     }
-                    else
+                    else if (!layer.ParentSlice.IsLocked)
                     {
                         SliceController slice = layer.ParentSlice;
                         targetSlice.TransferLayer(targetLayer, slice, layer.GetId());
@@ -230,7 +244,7 @@ namespace Scissors.Timeline
                             if (targettedController is LayerController) layer = targettedController as LayerController;
                             else if (targettedController is ItemController) layer = (targettedController as ItemController).ParentLayer;
 
-                            if (layer != null && layer != targetLayer)
+                            if (layer != null && layer != targetLayer && !layer.IsLocked)
                             {
                                 targetLayer.TransferItem(targetItem, layer);
                                 targetLayer = targetItem.ParentLayer;

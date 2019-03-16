@@ -139,5 +139,11 @@
   <ItemGroup>
     <None Include="Resources\image.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\closed_lock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\open_lock.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

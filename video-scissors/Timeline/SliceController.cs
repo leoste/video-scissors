@@ -94,6 +94,15 @@ namespace Scissors.Timeline
             }
         }
 
+        public Color RealBackColor
+        {
+            get
+            {
+                if (IsLocked) return Color.DimGray;
+                else return backColor;
+            }
+        }
+
         public event EventHandler SizeChanged;
         private void InvokeSizeChanged()
         { if (SizeChanged != null) SizeChanged.Invoke(this, EventArgs.Empty); }
@@ -131,17 +140,51 @@ namespace Scissors.Timeline
             lockButton = new ButtonController(this, new Point(
                 5 + dragWidth + ButtonController.margin,
                 padding + ButtonController.margin));
+            lockButton.ButtonClicked += LockButton_ButtonClicked;
+            toggleLock = false;
+            lockButton.Icon = Properties.Resources.open_lock;
+
             visibilityButton = new ButtonController(this, new Point(
                 5 + dragWidth + ButtonController.margin * 3 + ButtonController.width,
                 padding + ButtonController.margin));
+            visibilityButton.ButtonClicked += VisibilityButton_ButtonClicked;
+
             addSliceButton = new ButtonController(this, new Point(
                 5 + dragWidth + ButtonController.margin,
                 padding + ButtonController.margin * 3 + ButtonController.height));
+            addSliceButton.ButtonClicked += AddSliceButton_ButtonClicked;
+
             removeSliceButton = new ButtonController(this, new Point(
                 5 + dragWidth + ButtonController.margin * 3 + ButtonController.width,
                 padding + ButtonController.margin * 3 + ButtonController.height));
+            removeSliceButton.ButtonClicked += RemoveSliceButton_ButtonClicked;
 
             UpdateCache();
+            UpdateUI();
+        }
+
+        private void RemoveSliceButton_ButtonClicked(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void AddSliceButton_ButtonClicked(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void VisibilityButton_ButtonClicked(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void LockButton_ButtonClicked(object sender, EventArgs e)
+        {
+            toggleLock = !toggleLock;
+
+            if (toggleLock) lockButton.Icon = Properties.Resources.closed_lock;
+            else lockButton.Icon = Properties.Resources.open_lock;
+
             UpdateUI();
         }
 
@@ -393,8 +436,8 @@ namespace Scissors.Timeline
 
             if (redrawContent || redrawControl)
             {
-                Region graphicsClip = e.Graphics.Clip;
-                Brush brush = new SolidBrush(backColor);
+                Region graphicsClip = e.Graphics.Clip;                
+                Brush brush = new SolidBrush(RealBackColor);
 
                 if (redrawContent)
                 {
@@ -441,9 +484,6 @@ namespace Scissors.Timeline
                       controlsWidth - dragWidth, controlRectangle.Height));
 
                     e.Graphics.FillRectangle(Brushes.DimGray, MoveHandleRectangle);
-
-                    //for debugging
-                    e.Graphics.DrawString(ToString(), SystemFonts.DefaultFont, Brushes.White, new Point(MoveHandleRectangle.Right + 3, controlRectangle.Y + 3 + padding));
                 }
 
                 e.Graphics.Clip = graphicsClip;
@@ -493,6 +533,11 @@ namespace Scissors.Timeline
             timeline.TimelineZoomChanged -= Timeline_TimelineZoomChanged;
             timeline.TimelineLengthChanged -= Timeline_TimelineLengthChanged;
             timeline.LocationChanged -= Timeline_LocationChanged;
+
+            lockButton.ButtonClicked -= LockButton_ButtonClicked;
+            visibilityButton.ButtonClicked -= VisibilityButton_ButtonClicked;
+            addSliceButton.ButtonClicked -= AddSliceButton_ButtonClicked;
+            removeSliceButton.ButtonClicked -= RemoveSliceButton_ButtonClicked;
         }
 
         public override string ToString()

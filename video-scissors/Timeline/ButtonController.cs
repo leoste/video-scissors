@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Scissors.Timeline
@@ -18,8 +14,8 @@ namespace Scissors.Timeline
         RectangleProvider rectangleProvider;
 
         private Rectangle buttonRectangle;
-
-        private Color backColor;
+        private Bitmap icon;
+        
         private int left;
         private int top;
 
@@ -31,26 +27,27 @@ namespace Scissors.Timeline
 
         public RectangleProvider RectangleProvider { get { return rectangleProvider; } }
 
-        public Color BackColor
-        {
-            get { return backColor; }
-            set
-            {
-                backColor = value;
-                UpdateUI();
-            }
-        }
+        public Color BackColor { get; set; }
         public Color ForeColor { get; set; }
 
         public Rectangle Rectangle { get { return buttonRectangle; } }
 
         public Rectangle ParentRectangle { get { return control.ControlParentRectangle; } }
 
-        public Region FullOccupiedRegion => throw new NotImplementedException();
+        public Region FullOccupiedRegion { get { return new Region(Rectangle); } }
 
-        public Region FullParentRegion => throw new NotImplementedException();
+        public Region FullParentRegion { get { return control.FullParentRegion; } }
 
         public TimelineController ParentTimeline { get { return control.ParentTimeline; } }
+
+        public Bitmap Icon {
+            get { return icon; }
+            set
+            {
+                icon = value;
+                UpdateUI();
+            }
+        }
         
         public event EventHandler<LocationChangeEventArgs> LocationChanged;
         private void InvokeLocationChanged(LocationChangeEventArgs e)
@@ -59,6 +56,8 @@ namespace Scissors.Timeline
         public event EventHandler SizeChanged;
         public event EventHandler TimelineLengthChanged;
         public event EventHandler TimelineZoomChanged;
+
+        public event EventHandler ButtonClicked;
 
         public ButtonController(IControlController control, Point relativePosition)
         {
@@ -74,10 +73,19 @@ namespace Scissors.Timeline
             control.TimelineZoomChanged += Timeline_TimelineZoomChanged;
             control.TimelineLengthChanged += Timeline_TimelineLengthChanged;
             control.LocationChanged += Control_LocationChanged;
-            rectangleProvider.Paint += RectangleProvider_Paint;            
+            rectangleProvider.Paint += RectangleProvider_Paint;
+            rectangleProvider.MouseDown += RectangleProvider_MouseDown;
 
             UpdateCache();
             UpdateUI();
+        }
+
+        private void RectangleProvider_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (Rectangle.Contains(e.Location))
+            {
+                if (ButtonClicked != null) ButtonClicked.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private void Control_LocationChanged(object sender, LocationChangeEventArgs e)
@@ -110,7 +118,14 @@ namespace Scissors.Timeline
                 region.Exclude(ParentTimeline.Cursor.FullOccupiedRegion);
                 e.Graphics.Clip = region;
 
-                e.Graphics.FillRectangle(Brushes.Black, Rectangle);
+                e.Graphics.FillRectangle(new SolidBrush(control.RealBackColor), buttonRectangle);
+
+                if (icon != null)
+                {
+                    e.Graphics.DrawImage(icon, 
+                        buttonRectangle.X, buttonRectangle.Y,
+                        buttonRectangle.Width, buttonRectangle.Height);
+                }                
 
                 e.Graphics.Clip = graphicsClip;
             }
@@ -132,6 +147,7 @@ namespace Scissors.Timeline
             control.TimelineLengthChanged -= Timeline_TimelineLengthChanged;
             control.LocationChanged -= Control_LocationChanged;
             rectangleProvider.Paint -= RectangleProvider_Paint;
+            rectangleProvider.MouseDown -= RectangleProvider_MouseDown;
         }
     }
 }
