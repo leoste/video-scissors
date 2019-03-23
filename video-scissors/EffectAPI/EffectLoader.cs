@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Scissors.EffectAPI
 {
-    public partial class EffectLoader : Form
+    internal partial class EffectLoader : Form
     {
         public EffectLoader()
         {
