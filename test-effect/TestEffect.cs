@@ -8,22 +8,16 @@ using Scissors.EffectAPI;
 namespace test_effect
 {
     [EffectInfo("test_effect", "TestEffect", new int[] {0, 0, 1})]
-    class Program : IEffect
+    class TestEffect : IEffect
     {
-
-        public static void Main()
-        {
-
-        }
-
         public void OnLoad()
         {
-            Console.WriteLine("hello");
+            Console.WriteLine("test_effect loaded!");
         }
 
         public void OnUnload()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("test_effect unloaded!");
         }
 
         public void Update()
