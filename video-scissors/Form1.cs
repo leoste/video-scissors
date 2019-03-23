@@ -19,6 +19,7 @@ namespace Scissors
         {
             InitializeComponent();
             EffectManager.LoadEffect(Path.GetFullPath("test-effect.dll"));
+            pluginThread.RunWorkerAsync();
         }
 
         private void timeline1_Load(object sender, EventArgs e)
@@ -36,6 +37,11 @@ namespace Scissors
         private void timeline2_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void Update(object sender, DoWorkEventArgs e)
+        {
+            //TODO: Implement performance friendly update loop (tried with while(true) but that's trash and slow)
         }
     }
 }
