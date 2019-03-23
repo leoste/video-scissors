@@ -11,7 +11,7 @@ namespace Scissors.EffectAPI
 {
     internal class EffectManager
     {
-        public static List<Effect> effects = new List<Effect>();
+        public static List<Effect> Effects { get; } = new List<Effect>();
 
         public static void LoadEffect(string path)
         {
@@ -25,8 +25,9 @@ namespace Scissors.EffectAPI
                     Effect effect = new Effect(effectInfo, effectInstance);
 
                     effect.EffectInstance.OnLoad();
-                    effects.Add(effect);
+                    Effects.Add(effect);
                 }
+
             }
             catch (ReflectionTypeLoadException e)
             {
@@ -34,9 +35,10 @@ namespace Scissors.EffectAPI
             }
         }
 
-        public static void RemoveEffect(Effect effect)
+        public static void UnloadEffect(Effect effect)
         {
-            effects.Remove(effect);
+            effect.EffectInstance.OnUnload();
+            Effects.Remove(effect);
         }
     }
 }
