@@ -7,8 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Scissors.UserControls;
 using Scissors.Timeline;
+using Scissors.EffectAPI;
+using System.IO;
 
 namespace Scissors
 {
@@ -16,7 +17,8 @@ namespace Scissors
     {
         public Form1()
         {
-            InitializeComponent();            
+            InitializeComponent();
+            EffectManager.LoadEffect(Path.GetFullPath("test-effect.dll"));
         }
 
         private void timeline1_Load(object sender, EventArgs e)
@@ -27,6 +29,8 @@ namespace Scissors
         {
             EffectLoader effectLoader = new EffectLoader();
             effectLoader.Show();
+            EffectManager.UnloadEffect(EffectManager.Effects[0]);
+
         }
 
         private void timeline2_Load(object sender, EventArgs e)

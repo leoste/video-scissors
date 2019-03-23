@@ -36,7 +36,7 @@
             this.saveAsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.effectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.timeline2 = new Scissors.UserControls.Timeline();
+            this.timeline2 = new Scissors.Timeline.Timeline();
             this.topBar.SuspendLayout();
             this.timeline1 = new Scissors.Timeline.Timeline();
             this.SuspendLayout();
@@ -135,7 +135,6 @@
 
         #endregion
 
-        private UserControls.Timeline timeline1;
         private System.Windows.Forms.MenuStrip topBar;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem projectToolStripMenuItem;
@@ -144,8 +143,8 @@
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem effectsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
-        private UserControls.Timeline timeline2;
         private Timeline.Timeline timeline1;
+        private Timeline.Timeline timeline2;
     }
 }
 
