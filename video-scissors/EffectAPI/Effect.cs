@@ -7,31 +7,15 @@ using System.Threading.Tasks;
 
 namespace Scissors.EffectAPI
 {
-    class Effect
+    internal class Effect
     {
-        private readonly EffectInfo info;
-        private readonly IEffect effect;
-
-        public EffectInfo Info
-        {
-            get
-            {
-                return info;
-            }
-        }
-
-        public IEffect EffectInstance
-        {
-            get
-            {
-                return effect;
-            }
-        }
+        public EffectInfo Info { get; }
+        public IEffect EffectInstance { get; }
 
         public Effect(EffectInfo info, IEffect effect)
         {
-            this.info = info;
-            this.effect = effect;
+            Info = info;
+            EffectInstance = effect;
         }
     }
 }
