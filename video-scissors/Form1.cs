@@ -17,17 +17,22 @@ namespace Scissors
         public Form1()
         {
             InitializeComponent();
+            EffectManager.LoadEffect("C:\\Users\\danie\\Desktop\\Summer Decorations\\video-scissors\\test-effect\\bin\\Debug\\test-effect.dll");
         }
 
         private void timeline1_Load(object sender, EventArgs e)
         {
-
         }
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EffectLoader effectLoader = new EffectLoader();
             effectLoader.Show();
+        }
+
+        private void timeline2_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
