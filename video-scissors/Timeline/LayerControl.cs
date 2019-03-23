@@ -8,21 +8,31 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Scissors.UserControls
+namespace Scissors.Timeline
 {
-    public partial class LayerControl : UserControl
+    public partial class LayerControl : UserControl, IControl
     {
+        private bool toggleLock;
+        private bool toggleVisibility;
+
         public LayerControl()
         {
             InitializeComponent();
+            toggleLock = false;
+            toggleLockButton.BackColor = ColorProvider.GetToggleColor(false);
+            toggleVisibility = false;
+            toggleVisibilityButton.BackColor = ColorProvider.GetToggleColor(false);
         }
 
         public event EventHandler RemoveClicked;
         public event EventHandler AddClicked;
         public event EventHandler MoveUpClicked;
         public event EventHandler MoveDownClicked;
-        public event EventHandler ToggleLockClicked;
-        public event EventHandler ToggleVisibilityClicked;
+        public event EventHandler<ToggleEventArgs> ToggleLockClicked;
+        public event EventHandler<ToggleEventArgs> ToggleVisibilityClicked;
+
+        public bool IsLockToggled { get { return toggleLock; } }
+        public bool IsVisibilityToggled { get { return toggleVisibility; } }
 
         private void removeLayer_Click(object sender, EventArgs e)
         {
@@ -46,12 +56,16 @@ namespace Scissors.UserControls
 
         private void toggleLock_Click(object sender, EventArgs e)
         {
-            if (ToggleLockClicked != null) ToggleLockClicked.Invoke(this, EventArgs.Empty);
+            toggleLock = !toggleLock;
+            toggleLockButton.BackColor = ColorProvider.GetToggleColor(toggleLock);
+            if (ToggleLockClicked != null) ToggleLockClicked.Invoke(this, new ToggleEventArgs(toggleLock));
         }
 
         private void toggleVisibility_Click(object sender, EventArgs e)
         {
-            if (ToggleVisibilityClicked != null) ToggleVisibilityClicked.Invoke(this, EventArgs.Empty);
+            toggleVisibility = !toggleVisibility;
+            toggleVisibilityButton.BackColor = ColorProvider.GetToggleColor(toggleVisibility);
+            if (ToggleVisibilityClicked != null) ToggleVisibilityClicked.Invoke(this, new ToggleEventArgs(toggleVisibility));
         }
     }
 }

@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Scissors.UserControls
+namespace Scissors.Timeline
 {
-    public partial class SliceContent : UserControl
+    public partial class SliceContent : UserControl, IContent
     {
         internal FlowLayoutPanel Panel { get { return flowLayoutPanel1; } }
 

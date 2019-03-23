@@ -1,4 +1,4 @@
-﻿namespace Scissors.UserControls
+﻿namespace Scissors.Timeline
 {
     partial class SliceControl
     {
@@ -32,8 +32,8 @@
             this.createSlice = new System.Windows.Forms.Button();
             this.moveUp = new System.Windows.Forms.Button();
             this.moveDown = new System.Windows.Forms.Button();
-            this.toggleLock = new System.Windows.Forms.Button();
-            this.toggleVisibility = new System.Windows.Forms.Button();
+            this.toggleLockButton = new System.Windows.Forms.Button();
+            this.toggleVisibilityButton = new System.Windows.Forms.Button();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.SuspendLayout();
             // 
@@ -85,29 +85,29 @@
             this.moveDown.UseVisualStyleBackColor = true;
             this.moveDown.Click += new System.EventHandler(this.moveDown_Click);
             // 
-            // toggleLock
+            // toggleLockButton
             // 
-            this.toggleLock.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
-            this.toggleLock.Location = new System.Drawing.Point(49, 6);
-            this.toggleLock.Margin = new System.Windows.Forms.Padding(0);
-            this.toggleLock.Name = "toggleLock";
-            this.toggleLock.Size = new System.Drawing.Size(20, 20);
-            this.toggleLock.TabIndex = 4;
-            this.toggleLock.Text = "l";
-            this.toggleLock.UseVisualStyleBackColor = true;
-            this.toggleLock.Click += new System.EventHandler(this.toggleLock_Click);
+            this.toggleLockButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
+            this.toggleLockButton.Location = new System.Drawing.Point(49, 6);
+            this.toggleLockButton.Margin = new System.Windows.Forms.Padding(0);
+            this.toggleLockButton.Name = "toggleLockButton";
+            this.toggleLockButton.Size = new System.Drawing.Size(20, 20);
+            this.toggleLockButton.TabIndex = 4;
+            this.toggleLockButton.Text = "l";
+            this.toggleLockButton.UseVisualStyleBackColor = true;
+            this.toggleLockButton.Click += new System.EventHandler(this.toggleLock_Click);
             // 
-            // toggleVisibility
+            // toggleVisibilityButton
             // 
-            this.toggleVisibility.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
-            this.toggleVisibility.Location = new System.Drawing.Point(49, 26);
-            this.toggleVisibility.Margin = new System.Windows.Forms.Padding(0);
-            this.toggleVisibility.Name = "toggleVisibility";
-            this.toggleVisibility.Size = new System.Drawing.Size(20, 20);
-            this.toggleVisibility.TabIndex = 5;
-            this.toggleVisibility.Text = "v";
-            this.toggleVisibility.UseVisualStyleBackColor = true;
-            this.toggleVisibility.Click += new System.EventHandler(this.toggleVisibility_Click);
+            this.toggleVisibilityButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
+            this.toggleVisibilityButton.Location = new System.Drawing.Point(49, 26);
+            this.toggleVisibilityButton.Margin = new System.Windows.Forms.Padding(0);
+            this.toggleVisibilityButton.Name = "toggleVisibilityButton";
+            this.toggleVisibilityButton.Size = new System.Drawing.Size(20, 20);
+            this.toggleVisibilityButton.TabIndex = 5;
+            this.toggleVisibilityButton.Text = "v";
+            this.toggleVisibilityButton.UseVisualStyleBackColor = true;
+            this.toggleVisibilityButton.Click += new System.EventHandler(this.toggleVisibility_Click);
             // 
             // flowLayoutPanel1
             // 
@@ -127,8 +127,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.flowLayoutPanel1);
-            this.Controls.Add(this.toggleVisibility);
-            this.Controls.Add(this.toggleLock);
+            this.Controls.Add(this.toggleVisibilityButton);
+            this.Controls.Add(this.toggleLockButton);
             this.Controls.Add(this.moveDown);
             this.Controls.Add(this.moveUp);
             this.Controls.Add(this.createSlice);
@@ -146,8 +146,8 @@
         private System.Windows.Forms.Button createSlice;
         private System.Windows.Forms.Button moveUp;
         private System.Windows.Forms.Button moveDown;
-        private System.Windows.Forms.Button toggleLock;
-        private System.Windows.Forms.Button toggleVisibility;
+        private System.Windows.Forms.Button toggleLockButton;
+        private System.Windows.Forms.Button toggleVisibilityButton;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }

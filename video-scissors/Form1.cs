@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Scissors.EffectAPI;
 using Scissors.UserControls;
+using Scissors.Timeline;
 
 namespace Scissors
 {
@@ -16,7 +16,7 @@ namespace Scissors
     {
         public Form1()
         {
-            InitializeComponent();
+            InitializeComponent();            
         }
 
         private void timeline1_Load(object sender, EventArgs e)

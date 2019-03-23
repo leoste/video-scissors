@@ -38,6 +38,7 @@
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timeline2 = new Scissors.UserControls.Timeline();
             this.topBar.SuspendLayout();
+            this.timeline1 = new Scissors.Timeline.Timeline();
             this.SuspendLayout();
             // 
             // topBar
@@ -107,6 +108,13 @@
             this.timeline2.Size = new System.Drawing.Size(640, 320);
             this.timeline2.TabIndex = 1;
             this.timeline2.Load += new System.EventHandler(this.timeline2_Load);
+            this.timeline1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.timeline1.Location = new System.Drawing.Point(12, 12);
+            this.timeline1.Name = "timeline1";
+            this.timeline1.Size = new System.Drawing.Size(800, 477);
+            this.timeline1.TabIndex = 0;
             // 
             // Form1
             // 
@@ -137,6 +145,7 @@
         private System.Windows.Forms.ToolStripMenuItem effectsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
         private UserControls.Timeline timeline2;
+        private Timeline.Timeline timeline1;
     }
 }
 

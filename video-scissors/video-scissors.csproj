@@ -58,49 +58,87 @@
     </Compile>
     <Compile Include="EffectAPI\EffectManager.cs" />
     <Compile Include="EffectAPI\IEffect.cs" />
+    <Compile Include="Config\Cursor_config.cs" />
+    <Compile Include="Config\Framerate.cs" />
+    <Compile Include="Config\Item_config.cs" />
+    <Compile Include="Config\Project_config.cs" />
+    <Compile Include="Config\Resolution.cs" />
+    <Compile Include="Exceptions.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Config\Timeline_config.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserControls\LayerControl.cs">
+    <Compile Include="Timeline\CursorController.cs" />
+    <Compile Include="Timeline\FancyScrollbar.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserControls\LayerControl.Designer.cs">
+    <Compile Include="Timeline\FancyScrollbar.Designer.cs">
+      <DependentUpon>FancyScrollbar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Timeline\Frame.cs" />
+    <Compile Include="Timeline\IChildrenController.cs" />
+    <Compile Include="Timeline\IContent.cs" />
+    <Compile Include="Timeline\IControl.cs" />
+    <Compile Include="Timeline\IControlController.cs" />
+    <Compile Include="Timeline\IController.cs" />
+    <Compile Include="Timeline\IFrameController.cs" />
+    <Compile Include="Timeline\RulerContent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Timeline\RulerContent.Designer.cs">
+      <DependentUpon>RulerContent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Timeline\RulerController.cs" />
+    <Compile Include="Timeline\ScrollDirection.cs" />
+    <Compile Include="Timeline\TimelineController.cs" />
+    <Compile Include="Timeline\ItemContent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Timeline\ItemContent.Designer.cs">
+      <DependentUpon>ItemContent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Timeline\ItemController.cs" />
+    <Compile Include="Timeline\LayerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Timeline\LayerControl.Designer.cs">
       <DependentUpon>LayerControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\LayerController.cs" />
-    <Compile Include="UserControls\LayerContent.cs">
+    <Compile Include="Timeline\LayerController.cs" />
+    <Compile Include="Timeline\LayerContent.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserControls\LayerContent.Designer.cs">
+    <Compile Include="Timeline\LayerContent.Designer.cs">
       <DependentUpon>LayerContent.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\SliceControl.cs">
+    <Compile Include="Timeline\SliceControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserControls\SliceControl.Designer.cs">
+    <Compile Include="Timeline\SliceControl.Designer.cs">
       <DependentUpon>SliceControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\SliceController.cs" />
-    <Compile Include="UserControls\SliceContent.cs">
+    <Compile Include="Timeline\SliceController.cs" />
+    <Compile Include="Timeline\SliceContent.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserControls\SliceContent.Designer.cs">
+    <Compile Include="Timeline\SliceContent.Designer.cs">
       <DependentUpon>SliceContent.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\Timeline.cs">
+    <Compile Include="Timeline\Timeline.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserControls\Timeline.Designer.cs">
+    <Compile Include="Timeline\Timeline.Designer.cs">
       <DependentUpon>Timeline.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="EffectAPI\EffectLoader.resx">
       <DependentUpon>EffectLoader.cs</DependentUpon>
     </EmbeddedResource>
+    <Compile Include="Timeline\ToggleEventArgs.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -114,19 +152,28 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="UserControls\LayerControl.resx">
+    <EmbeddedResource Include="Timeline\FancyScrollbar.resx">
+      <DependentUpon>FancyScrollbar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Timeline\ItemContent.resx">
+      <DependentUpon>ItemContent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Timeline\LayerControl.resx">
       <DependentUpon>LayerControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\LayerContent.resx">
+    <EmbeddedResource Include="Timeline\LayerContent.resx">
       <DependentUpon>LayerContent.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\SliceControl.resx">
+    <EmbeddedResource Include="Timeline\RulerContent.resx">
+      <DependentUpon>RulerContent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Timeline\SliceControl.resx">
       <DependentUpon>SliceControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\SliceContent.resx">
+    <EmbeddedResource Include="Timeline\SliceContent.resx">
       <DependentUpon>SliceContent.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\Timeline.resx">
+    <EmbeddedResource Include="Timeline\Timeline.resx">
       <DependentUpon>Timeline.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">

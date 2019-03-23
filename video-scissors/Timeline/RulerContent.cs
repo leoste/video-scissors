@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Scissors.UserControls
+namespace Scissors.Timeline
 {
-    public partial class LayerContent : UserControl
+    public partial class RulerContent : UserControl, IContent
     {
-        public LayerContent()
+        public RulerContent()
         {
             InitializeComponent();
         }
