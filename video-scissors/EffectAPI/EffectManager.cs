@@ -9,25 +9,23 @@ namespace Scissors.EffectAPI
     {
         public static List<Effect> Effects { get; } = new List<Effect>();
 
-        public static void LoadEffect(string path)
+        public static Effect LoadEffect(string path)
         {
             try
             {
                 Assembly effectDll = Assembly.LoadFile(path);
-                foreach (Type type in effectDll.GetTypes())
-                {
-                    IEffect effectInstance = (IEffect)Activator.CreateInstance(type);
-                    EffectInfo effectInfo = (EffectInfo)type.GetCustomAttribute(typeof(EffectInfo), false);
-                    Effect effect = new Effect(effectInfo, effectInstance);
+                Type type = effectDll.GetTypes()[0];
+                IEffect effectInstance = (IEffect)Activator.CreateInstance(type);
+                EffectInfo effectInfo = (EffectInfo)type.GetCustomAttribute(typeof(EffectInfo), false);
+                Effect effect = new Effect(effectInfo, effectInstance);
 
-                    effect.EffectInstance.OnLoad();
-                    Effects.Add(effect);
-                }
-
+                effect.EffectInstance.OnLoad();
+                Effects.Add(effect);
+                return effect;
             }
             catch (ReflectionTypeLoadException e)
             {
-                Debug.Fail(e.StackTrace);
+                return null;
             }
         }
 
