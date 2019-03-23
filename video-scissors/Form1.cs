@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Scissors.UserControls;
 using Scissors.Timeline;
 
 namespace Scissors
@@ -19,6 +20,16 @@ namespace Scissors
         }
 
         private void timeline1_Load(object sender, EventArgs e)
+        {
+        }
+
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EffectLoader effectLoader = new EffectLoader();
+            effectLoader.Show();
+        }
+
+        private void timeline2_Load(object sender, EventArgs e)
         {
 
         }
