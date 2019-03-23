@@ -7,22 +7,22 @@ using Scissors.EffectAPI;
 
 namespace test_effect
 {
-    [EffectInfo("test_effect", "TestEffect", new int[] {0, 0, 1})]
+    [EffectInfo("test_effect", "Meme Deep Fryer", "Makes your videos have the deep fryer meme effect :joy: :ok_hand:", new int[] {0, 0, 1})]
     class TestEffect : IEffect
     {
         public void OnLoad()
         {
-            Console.WriteLine("test_effect loaded!");
-        }
-
-        public void OnUnload()
-        {
-            Console.WriteLine("test_effect unloaded!");
+            Console.WriteLine($"{Math.Sin(9)}");
         }
 
         public void OnUpdate()
         {
             Console.WriteLine("test_effect updated!");
+        }
+
+        public void OnUnload()
+        {
+            Console.WriteLine("test_effect unloaded!");
         }
     }
 }
