@@ -17,7 +17,6 @@ namespace Scissors
         public Form1()
         {
             InitializeComponent();
-            EffectManager.LoadEffect("C:\\Users\\danie\\Desktop\\Summer Decorations\\video-scissors\\test-effect\\bin\\Debug\\test-effect.dll");
         }
 
         private void timeline1_Load(object sender, EventArgs e)
