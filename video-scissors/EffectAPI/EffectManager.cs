@@ -11,29 +11,32 @@ namespace Scissors.EffectAPI
 {
     internal class EffectManager
     {
-        public static List<Assembly> effects = new List<Assembly>();
+        public static List<Effect> effects = new List<Effect>();
 
         public static void LoadEffect(string path)
         {
             try
             {
-                Assembly effect = Assembly.LoadFile(path);
-                effects.Add(effect);
-                foreach (Type type in effect.GetTypes())
+                Assembly effectDll = Assembly.LoadFile(path);
+                foreach (Type type in effectDll.GetTypes())
                 {
-                    EffectInfo attribute = (EffectInfo)type.GetCustomAttribute(typeof(EffectInfo), false);
-                    Console.WriteLine(attribute.id);
+                    IEffect effectInstance = (IEffect)Activator.CreateInstance(type);
+                    EffectInfo effectInfo = (EffectInfo)type.GetCustomAttribute(typeof(EffectInfo), false);
+                    Effect effect = new Effect(effectInfo, effectInstance);
+
+                    effect.EffectInstance.OnLoad();
+                    effects.Add(effect);
                 }
             }
-            catch (Exception e)
+            catch (ReflectionTypeLoadException e)
             {
                 Debug.Fail(e.StackTrace);
             }
         }
 
-        public static void RemoveEffect(Assembly assembly)
+        public static void RemoveEffect(Effect effect)
         {
-            effects.Remove(assembly);
+            effects.Remove(effect);
         }
     }
 }
