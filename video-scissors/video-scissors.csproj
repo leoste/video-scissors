@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColorProvider.cs" />
+    <Compile Include="EffectAPI\Effect.cs" />
     <Compile Include="EffectAPI\EffectInfo.cs" />
     <Compile Include="EffectAPI\EffectLoader.cs">
       <SubType>Form</SubType>
