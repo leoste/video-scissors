@@ -10,7 +10,7 @@ namespace Scissors.EffectAPI
     {
 
         void OnLoad();
-        void Update();
+        void OnUpdate();
         void OnUnload();
     }
 }

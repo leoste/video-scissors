@@ -20,9 +20,9 @@ namespace test_effect
             Console.WriteLine("test_effect unloaded!");
         }
 
-        public void Update()
+        public void OnUpdate()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("test_effect updated!");
         }
     }
 }
