@@ -11,12 +11,14 @@ namespace Scissors.EffectAPI
     {
         public readonly string id;
         public readonly string name;
+        public readonly string description;
         public readonly int[] version = new int[3];
 
-        public EffectInfo(string id, string name, int[] version)
+        public EffectInfo(string id, string name, string description, int[] version)
         {
             this.id = id;
             this.name = name;
+            this.description = description;
             this.version = version;
         }
     }
