@@ -18,7 +18,6 @@ namespace Scissors
         public Form1()
         {
             InitializeComponent();
-            EffectManager.LoadEffect(Path.GetFullPath("test-effect.dll"));
             pluginThread.RunWorkerAsync();
         }
 
@@ -30,7 +29,6 @@ namespace Scissors
         {
             EffectLoader effectLoader = new EffectLoader();
             effectLoader.Show();
-            EffectManager.UnloadEffect(EffectManager.Effects[0]);
 
         }
 
