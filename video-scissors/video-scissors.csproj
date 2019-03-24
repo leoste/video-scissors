@@ -52,11 +52,11 @@
     <Compile Include="Config\Framerate.cs" />
     <Compile Include="Config\Project_config.cs" />
     <Compile Include="Config\Resolution.cs" />
-    <Compile Include="UITests.cs">
+    <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UITests.Designer.cs">
-      <DependentUpon>UITests.cs</DependentUpon>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Config\Timeline_config.cs" />
     <Compile Include="Program.cs" />
@@ -102,8 +102,8 @@
       <DependentUpon>Timeline.cs</DependentUpon>
     </Compile>
     <Compile Include="Timeline\ToggleEventArgs.cs" />
-    <EmbeddedResource Include="UITests.resx">
-      <DependentUpon>UITests.cs</DependentUpon>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -16,7 +16,7 @@ namespace Scissors
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new UITests());
+            Application.Run(new Form1());
         }
     }
 }

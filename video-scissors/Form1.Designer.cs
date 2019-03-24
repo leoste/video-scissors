@@ -1,6 +1,6 @@
 ﻿namespace Scissors
 {
-    partial class UITests
+    partial class Form1
     {
         /// <summary>
         /// Required designer variable.

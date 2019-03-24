@@ -11,9 +11,9 @@ using Scissors.Timeline;
 
 namespace Scissors
 {
-    public partial class UITests : Form
+    public partial class Form1 : Form
     {
-        public UITests()
+        public Form1()
         {
             InitializeComponent();
         }
