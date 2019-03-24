@@ -68,7 +68,6 @@
     <Compile Include="EffectAPI\UserControls\EffectControl.Designer.cs">
       <DependentUpon>EffectControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Exceptions.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -28,43 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.timeline1 = new Scissors.Timeline.Timeline();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-            this.splitContainer2.SuspendLayout();
-            this.SuspendLayout();
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.timeline1);
-            this.splitContainer1.Size = new System.Drawing.Size(1284, 661);
-            this.splitContainer1.SplitterDistance = 274;
-            this.splitContainer1.TabIndex = 0;
-            // 
-            // splitContainer2
-            // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Size = new System.Drawing.Size(1284, 274);
-            this.splitContainer2.SplitterDistance = 428;
-            this.splitContainer2.TabIndex = 0;
             this.topBar = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -73,10 +36,19 @@
             this.saveAsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.effectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.timeline2 = new Scissors.Timeline.Timeline();
-            this.timeline1 = new Scissors.Timeline.Timeline();
             this.pluginThread = new System.ComponentModel.BackgroundWorker();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.timeline1 = new Scissors.Timeline.Timeline();
             this.topBar.SuspendLayout();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.SuspendLayout();
             this.SuspendLayout();
             // 
             // topBar
@@ -139,13 +111,48 @@
             this.loadToolStripMenuItem.Text = "Load";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
-            // timeline2
+            // pluginThread
             // 
-            this.timeline2.Location = new System.Drawing.Point(12, 27);
-            this.timeline2.Name = "timeline2";
-            this.timeline2.Size = new System.Drawing.Size(640, 320);
-            this.timeline2.TabIndex = 1;
-            this.timeline2.Load += new System.EventHandler(this.timeline2_Load);
+            this.pluginThread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.Update);
+            // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.splitContainer1);
+            this.panel1.Location = new System.Drawing.Point(0, 24);
+            this.panel1.Margin = new System.Windows.Forms.Padding(0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(824, 479);
+            this.panel1.TabIndex = 1;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.timeline1);
+            this.splitContainer1.Size = new System.Drawing.Size(824, 479);
+            this.splitContainer1.SplitterDistance = 130;
+            this.splitContainer1.TabIndex = 1;
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Size = new System.Drawing.Size(824, 130);
+            this.splitContainer2.SplitterDistance = 272;
+            this.splitContainer2.TabIndex = 0;
             // 
             // timeline1
             // 
@@ -153,45 +160,35 @@
             this.timeline1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.timeline1.Location = new System.Drawing.Point(0, 0);
             this.timeline1.Name = "timeline1";
-            this.timeline1.Size = new System.Drawing.Size(1284, 383);
+            this.timeline1.Size = new System.Drawing.Size(824, 345);
             this.timeline1.TabIndex = 0;
-            // 
-            // pluginThread
-            // 
-            this.pluginThread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.Update);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1284, 661);
-            this.Controls.Add(this.splitContainer1);
+            this.ClientSize = new System.Drawing.Size(824, 501);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.topBar);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
+            this.MainMenuStrip = this.topBar;
             this.Name = "Form1";
             this.Text = "Form1";
+            this.topBar.ResumeLayout(false);
+            this.topBar.PerformLayout();
+            this.panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
-            this.ClientSize = new System.Drawing.Size(824, 501);
-            this.Controls.Add(this.timeline2);
-            this.Controls.Add(this.topBar);
-            this.MainMenuStrip = this.topBar;
-            this.Name = "Form1";
-            this.Text = "Form1";
-            this.topBar.ResumeLayout(false);
-            this.topBar.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.MenuStrip topBar;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem projectToolStripMenuItem;
@@ -200,9 +197,11 @@
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem effectsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
-        private Timeline.Timeline timeline1;
-        private Timeline.Timeline timeline2;
         private System.ComponentModel.BackgroundWorker pluginThread;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private Timeline.Timeline timeline1;
     }
 }
 
