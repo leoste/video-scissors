@@ -18,7 +18,7 @@ namespace Scissors.Config
         
         public static void SetDefaultProjectFramerate(Framerate framerate)
         {
-            defaultProjectFrameHeight = (int)framerate;
+            defaultProjectFramerate = (int)framerate;
         }
 
         public static void SetDefaultProjectResolution(Resolution resolution)

@@ -48,10 +48,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColorProvider.cs" />
+    <Compile Include="EffectAPI\Effect.cs" />
+    <Compile Include="EffectAPI\EffectInfo.cs" />
+    <Compile Include="EffectAPI\EffectLoader.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EffectAPI\EffectLoader.Designer.cs">
+      <DependentUpon>EffectLoader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EffectAPI\EffectManager.cs" />
+    <Compile Include="EffectAPI\IEffect.cs" />
     <Compile Include="Config\Cursor_config.cs" />
     <Compile Include="Config\Framerate.cs" />
     <Compile Include="Config\Project_config.cs" />
     <Compile Include="Config\Resolution.cs" />
+    <Compile Include="EffectAPI\UserControls\EffectControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EffectAPI\UserControls\EffectControl.Designer.cs">
+      <DependentUpon>EffectControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Exceptions.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -101,7 +118,13 @@
     <Compile Include="Timeline\Timeline.Designer.cs">
       <DependentUpon>Timeline.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="EffectAPI\EffectLoader.resx">
+      <DependentUpon>EffectLoader.cs</DependentUpon>
+    </EmbeddedResource>
     <Compile Include="Timeline\ToggleEventArgs.cs" />
+    <EmbeddedResource Include="EffectAPI\UserControls\EffectControl.resx">
+      <DependentUpon>EffectControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
