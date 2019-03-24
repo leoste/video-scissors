@@ -25,6 +25,7 @@ namespace Scissors.EffectAPI
             }
             catch (ReflectionTypeLoadException e)
             {
+                Debug.Fail(e.StackTrace);
                 return null;
             }
         }
