@@ -207,7 +207,7 @@ namespace Scissors.Timeline
         }
 
         private void Timeline_LocationChanged(object sender, LocationChangeEventArgs e)
-        {
+        {            
             UpdateCache();
             InvokeLocationChanged(e);
 
@@ -360,6 +360,8 @@ namespace Scissors.Timeline
 
             InvokeLocationChanged(new LocationChangeEventArgs(false, true));
             InvokeSizeChanged();
+
+            rectangleProvider.Invalidate();
         }
 
         private void AddLayer(LayerController layer, int id = 0)

@@ -295,6 +295,7 @@ namespace Scissors.Timeline
             RemoveSlice(slice);
             slice.Delete();
             InvokeLocationChanged(false, true);
+            rectangleProvider.Invalidate();
         }        
 
         internal void SwapSlices(int id1, int id2)

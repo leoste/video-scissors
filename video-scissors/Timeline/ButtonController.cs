@@ -6,6 +6,8 @@ namespace Scissors.Timeline
 {
     class ButtonController : IController
     {
+        public static bool noButtonPressed = true;
+
         public static readonly int width = 18;
         public static readonly int height = 18;
         public static readonly int margin = 1;
@@ -75,6 +77,7 @@ namespace Scissors.Timeline
             control.LocationChanged += Control_LocationChanged;
             rectangleProvider.Paint += RectangleProvider_Paint;
             rectangleProvider.MouseDown += RectangleProvider_MouseDown;
+            rectangleProvider.MouseUp += RectangleProvider_MouseUp;
 
             UpdateCache();
             UpdateUI();
@@ -82,10 +85,19 @@ namespace Scissors.Timeline
 
         private void RectangleProvider_MouseDown(object sender, MouseEventArgs e)
         {
-            if (Rectangle.Contains(e.Location))
+            if (noButtonPressed)
             {
-                if (ButtonClicked != null) ButtonClicked.Invoke(this, EventArgs.Empty);
-            }
+                if (Rectangle.Contains(e.Location))
+                {
+                    if (ButtonClicked != null) ButtonClicked.Invoke(this, EventArgs.Empty);
+                    noButtonPressed = false;
+                }
+            }            
+        }
+
+        private void RectangleProvider_MouseUp(object sender, MouseEventArgs e)
+        {
+            noButtonPressed = true;
         }
 
         private void Control_LocationChanged(object sender, LocationChangeEventArgs e)
@@ -148,6 +160,7 @@ namespace Scissors.Timeline
             control.LocationChanged -= Control_LocationChanged;
             rectangleProvider.Paint -= RectangleProvider_Paint;
             rectangleProvider.MouseDown -= RectangleProvider_MouseDown;
+            rectangleProvider.MouseUp -= RectangleProvider_MouseUp;
         }
     }
 }
