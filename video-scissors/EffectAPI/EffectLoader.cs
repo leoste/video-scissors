@@ -22,7 +22,10 @@ namespace Scissors.EffectAPI
 
         private void AddEffect(object sender, EventArgs e)
         {
-            OpenFileDialog fileDialog = new OpenFileDialog();
+            OpenFileDialog fileDialog = new OpenFileDialog
+            {
+                Filter = "Dynamic Link Library | *.dll"
+            };
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
                 Effect effect = EffectManager.LoadEffect(fileDialog.FileName);
