@@ -38,7 +38,6 @@
             // effectName
             // 
             this.effectName.AutoSize = true;
-            this.effectName.BackColor = System.Drawing.SystemColors.Control;
             this.effectName.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.effectName.Location = new System.Drawing.Point(3, 3);
             this.effectName.Name = "effectName";
