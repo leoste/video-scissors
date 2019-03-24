@@ -8,24 +8,34 @@ using System.Windows.Forms;
 
 namespace Scissors.Timeline
 {
-    class LayerController : IFrameController, IControlController, IChildController
+    class LayerController : IFrameController, IControlController, IChildController, IDraggableController
     {
+        public static readonly int height = 40;
+        public static readonly int controlsWidth = 66;
+        public static readonly int dragWidth = 16;
+
         private bool toggleLock;
         private bool toggleVisibility;
         private int id;
         private SliceController slice;
-        private FlowLayoutPanel controlsPanel;
-        private FlowLayoutPanel contentsPanel;
+        private RectangleProvider rectangleProvider;
 
-        private LayerControl control;
-        private LayerContent content;
+        private Rectangle layerRectangle;
+        private Rectangle controlRectangle;
+        private Color backColor;
+        private Color lockColor;
+        private Color hiddenColor;
+        private Color hiddenLockColor;
+
+        public RectangleProvider RectangleProvider { get { return rectangleProvider; } }
 
         private List<ItemController> items;
+        private ButtonController lockButton;
+        private ButtonController visibilityButton;
+        private ButtonController addLayerButton;
+        private ButtonController removeLayerButton;
         
-        private int oldLength;
-        private float oldZoom;
-
-        internal Panel ItemContentsPanel { get { return content.Panel; } }
+        internal Panel ItemContentsPanel { get { return new Panel(); } }
 
         public int TimelineLength { get { return slice.TimelineLength; } }
         public float TimelineZoom { get { return slice.TimelineZoom; } }
@@ -33,74 +43,213 @@ namespace Scissors.Timeline
         public int ProjectFrameWidth { get { return slice.ProjectFrameWidth; } }
         public int ProjectFrameHeight { get { return slice.ProjectFrameHeight; } }
         public bool IsLocked { get { return slice.IsLocked || toggleLock; } }
-        public bool IsVisible { get { return slice.IsVisible || toggleVisibility; } }
+        public bool IsVisible { get { return slice.IsVisible && toggleVisibility; } }
+
+        public Color BackColor {
+            get { return backColor; }
+            set
+            {
+                backColor = value;
+                lockColor = ColorProvider.Mix(backColor, Color.DimGray, 0.8f);
+                hiddenColor = ColorProvider.Mix(backColor, Color.Blue, 0.3f);
+                hiddenLockColor = ColorProvider.Mix(lockColor, Color.Blue, 0.2f);
+                UpdateUI();
+            }
+        }
+        public Color ForeColor { get; set; }
+
+        public Rectangle Rectangle { get { return layerRectangle; } }
+        public Rectangle ParentRectangle { get { return slice.ParentRectangle; } }
+
+        public Rectangle ControlRectangle { get { return controlRectangle; } }
+
+        public Rectangle ControlParentRectangle
+        { get { return slice.ControlParentRectangle; } }
+
+        public Rectangle MoveHandleRectangle
+        { get { return new Rectangle(controlRectangle.X, controlRectangle.Y, dragWidth, controlRectangle.Height); } }
+
+        public TimelineController ParentTimeline { get { return slice.ParentTimeline; } }
+        public SliceController ParentSlice { get { return slice; } }
+
+        public Region FullOccupiedRegion
+        {
+            get
+            {
+                Region region = new Region(layerRectangle);
+                region.Union(controlRectangle);
+                return region;
+            }
+        }
+
+        public Region FullParentRegion
+        { get { return slice.FullParentRegion; } }
+
+        public Color RealBackColor
+        {
+            get
+            {
+                if (IsLocked)
+                {
+                    if (IsVisible) return lockColor;
+                    else return hiddenLockColor;
+                }
+                else if (IsVisible) return backColor;
+                else return hiddenColor;
+            }
+        }
+
+        public event EventHandler SizeChanged;
+        private void InvokeSizeChanged()
+        { if (SizeChanged != null) SizeChanged.Invoke(this, EventArgs.Empty); }
+
+        public event EventHandler<LocationChangeEventArgs> LocationChanged;
+        private void InvokeLocationChanged(LocationChangeEventArgs e)
+        { if (LocationChanged != null) LocationChanged.Invoke(this, e); }
+
+        public event EventHandler TimelineLengthChanged;
+        public event EventHandler TimelineZoomChanged;
+        public event EventHandler<DisownEventArgs> Disowning;
 
         private void Initialize(SliceController slice)
         {
-            oldLength = -1;
-            oldZoom = -1;
-
             this.slice = slice;
-            controlsPanel = slice.LayerControlsPanel;
-            contentsPanel = slice.LayerContentsPanel;
+            toggleLock = false;
+            toggleVisibility = true;
 
-            Color color = ColorProvider.GetRandomLayerColor();
+            rectangleProvider = slice.RectangleProvider;
+            rectangleProvider.Paint += TimelineContent_Paint;
+            rectangleProvider.Resize += TimelineContent_Resize;
 
-            control = new LayerControl();
-            control.BackColor = color;
-            controlsPanel.Controls.Add(control);
-            control.AddClicked += Control_AddClicked;
-            control.RemoveClicked += Control_RemoveClicked;
-            control.MoveUpClicked += Control_MoveUpClicked;
-            control.MoveDownClicked += Control_MoveDownClicked;
-            control.ToggleLockClicked += Control_ToggleLockClicked;
-            control.ToggleVisibilityClicked += Control_ToggleVisibilityClicked;
-            toggleLock = control.IsLockToggled;
-            toggleVisibility = control.IsVisibilityToggled;
+            AddSliceEvents();
 
-            content = new LayerContent();
-            content.BackColor = color;
-            contentsPanel.Controls.Add(content);
+            BackColor = ColorProvider.GetRandomLayerColor();
 
             SetId();
 
             items = new List<ItemController>();
+            Random rnd = new Random();
+            items.Add(new ItemController(this, rnd.Next(0, 20), rnd.Next(3, 13)));
+            System.Threading.Thread.Sleep(5);
+            items.Add(new ItemController(this, rnd.Next(45, 50), rnd.Next(6, 30)));
+            System.Threading.Thread.Sleep(5);
+            items.Add(new ItemController(this, rnd.Next(70, 90), rnd.Next(10, 15)));
+            System.Threading.Thread.Sleep(5);
+            
+            lockButton = new ButtonController(this, new Point(
+                5 + dragWidth + ButtonController.margin,
+                ButtonController.margin));
+            lockButton.ButtonClicked += LockButton_ButtonClicked;
+            lockButton.Icon = Properties.Resources.open_lock;
 
-            items.Add(new ItemController(this, 2, 10));
-            items.Add(new ItemController(this, 15, 10));
-            items.Add(new ItemController(this, 40, 5));
+            visibilityButton = new ButtonController(this, new Point(
+                5 + dragWidth + ButtonController.margin * 3 + ButtonController.width, 
+                ButtonController.margin));
+            visibilityButton.ButtonClicked += VisibilityButton_ButtonClicked;
+            visibilityButton.Icon = Properties.Resources.open_eye;
+
+            addLayerButton = new ButtonController(this, new Point(
+                5 + dragWidth + ButtonController.margin,
+                ButtonController.margin * 3 + ButtonController.height));
+            addLayerButton.ButtonClicked += AddLayerButton_ButtonClicked;
+            addLayerButton.Icon = Properties.Resources.plus;
+
+            removeLayerButton = new ButtonController(this, new Point(
+                5 + dragWidth + ButtonController.margin * 3 + ButtonController.width,
+                ButtonController.margin * 3 + ButtonController.height));
+            removeLayerButton.ButtonClicked += RemoveLayerButton_ButtonClicked;
+            removeLayerButton.Icon = Properties.Resources.minus;
 
             UpdateUI();
         }
 
-        private void Control_ToggleVisibilityClicked(object sender, ToggleEventArgs e)
+        private void RemoveLayerButton_ButtonClicked(object sender, EventArgs e)
         {
-            toggleVisibility = e.ToggleValue;
+            slice.DeleteLayer(this);
         }
 
-        private void Control_ToggleLockClicked(object sender, ToggleEventArgs e)
-        {
-            toggleLock = e.ToggleValue;
-        }
-
-        private void Control_AddClicked(object sender, EventArgs e)
+        private void AddLayerButton_ButtonClicked(object sender, EventArgs e)
         {
             slice.CreateLayer(id + 1);
         }
 
-        private void Control_RemoveClicked(object sender, EventArgs e)
+        private void VisibilityButton_ButtonClicked(object sender, EventArgs e)
         {
-            slice.RemoveLayer(id);
+            toggleVisibility = !toggleVisibility;
+
+            if (toggleVisibility) visibilityButton.Icon = Properties.Resources.open_eye;
+            else visibilityButton.Icon = Properties.Resources.closed_eye;
+
+            UpdateUI();
         }
 
-        private void Control_MoveUpClicked(object sender, EventArgs e)
+        private void LockButton_ButtonClicked(object sender, EventArgs e)
         {
-            if (id > 0) slice.SwapLayers(id, id - 1);
+            toggleLock = !toggleLock;
+
+            if (toggleLock) lockButton.Icon = Properties.Resources.closed_lock;
+            else lockButton.Icon = Properties.Resources.open_lock;
+
+            UpdateUI();
         }
 
-        private void Control_MoveDownClicked(object sender, EventArgs e)
+        private void AddSliceEvents()
         {
-            if (id < slice.LayerCount - 1) slice.SwapLayers(id, id + 1);
+            slice.TimelineZoomChanged += Timeline_TimelineZoomChanged;
+            slice.TimelineLengthChanged += Timeline_TimelineLengthChanged;
+            slice.LocationChanged += Slice_LocationChanged;
+            slice.Disowning += Slice_Disowning;
+        }
+
+        private void RemoveSliceEvents()
+        {
+            slice.TimelineZoomChanged -= Timeline_TimelineZoomChanged;
+            slice.TimelineLengthChanged -= Timeline_TimelineLengthChanged;
+            slice.LocationChanged -= Slice_LocationChanged;
+            slice.Disowning -= Slice_Disowning;
+        }
+
+        private void Slice_LocationChanged(object sender, LocationChangeEventArgs e)
+        {
+            UpdateCache();
+            InvokeLocationChanged(e);
+
+            UpdateContentUI();
+            if (e.TopChanged) UpdateControlUI();
+        }
+
+        private void TimelineContent_Resize(object sender, EventArgs e)
+        {
+            UpdateCache();
+            UpdateUI();
+        }
+
+        private void Timeline_TimelineZoomChanged(object sender, EventArgs e)
+        {
+            UpdateCache();
+            if (TimelineZoomChanged != null) TimelineZoomChanged.Invoke(this, EventArgs.Empty);
+            UpdateUI();
+        }
+
+        private void Timeline_TimelineLengthChanged(object sender, EventArgs e)
+        {
+            UpdateCache();
+            if (TimelineLengthChanged != null) TimelineLengthChanged.Invoke(this, EventArgs.Empty);
+            UpdateUI();
+        }
+
+        private void UpdateCache()
+        {
+            int offset = id * (height + SliceController.layerMargin);
+            layerRectangle.X = slice.LayersRectangle.X;
+            layerRectangle.Y = slice.LayersRectangle.Y + offset;
+            layerRectangle.Width = slice.LayersRectangle.Width;
+            layerRectangle.Height = height;
+
+            controlRectangle.X = slice.ControlRectangle.X + SliceController.controlsWidth;
+            controlRectangle.Y = layerRectangle.Y;
+            controlRectangle.Width = controlsWidth;
+            controlRectangle.Height = height;
         }
 
         internal LayerController(SliceController slice)
@@ -117,8 +266,8 @@ namespace Scissors.Timeline
 
         private void SetId()
         {
-            controlsPanel.Controls.SetChildIndex(control, id);
-            contentsPanel.Controls.SetChildIndex(content, id);
+            UpdateCache();
+            UpdateUI();
         }
 
         internal int GetId()
@@ -128,24 +277,113 @@ namespace Scissors.Timeline
 
         internal void SetId(int id)
         {
-            this.id = id;
-            SetId();
+            if (this.id != id)
+            {
+                this.id = id;
+                SetId();
+                InvokeLocationChanged(new LocationChangeEventArgs(false, true));
+            }
+        }
+
+        internal void TransferItem(ItemController item, LayerController layer)
+        {
+            if (layer == this) throw new ArgumentException("Layer can't be this layer.");
+            if (!items.Exists(x => x == item)) throw new ArgumentException("This layer doesn't contain given item.");            
+
+            RectangleProvider.InvalidateContentContainerRectangle(item.Rectangle);
+
+            items.Remove(item);
+            layer.items.Add(item);
+            if (Disowning != null) Disowning.Invoke(this, new DisownEventArgs(item, layer));
+
+            RectangleProvider.InvalidateContentContainerRectangle(item.Rectangle);
+        }
+
+        internal void AddItem(ItemController item)
+        {
+            items.Add(item);
+            RectangleProvider.InvalidateContentContainerRectangle(item.Rectangle);
+        }
+
+        internal void RemoveItem(ItemController item)
+        {
+            items.Remove(item);
+            RectangleProvider.InvalidateContentContainerRectangle(item.Rectangle);
+        }
+
+        private void Slice_Disowning(object sender, DisownEventArgs e)
+        {
+            if (e.DisownedChild == this)
+            {
+                RemoveSliceEvents();
+                slice = e.NewParent as SliceController;
+                AddSliceEvents();
+                id = slice.GetLayerId(this);
+                UpdateCache();
+                UpdateUI();
+                InvokeLocationChanged(new LocationChangeEventArgs(false, true));
+            }
         }
 
         public void UpdateUI()
         {
-            if (TimelineLength != oldLength || TimelineZoom != oldZoom)
+            UpdateControlUI();
+            UpdateContentUI();
+        }
+
+        public void UpdateControlUI()
+        { rectangleProvider.InvalidateVerticalContainerRectangle(controlRectangle); }
+
+        public void UpdateContentUI()
+        { rectangleProvider.InvalidateContentContainerRectangle(layerRectangle); }
+        
+        private void TimelineContent_Paint(object sender, PaintEventArgs e)
+        {
+            bool redrawContent = e.ClipRectangle.IntersectsWith(layerRectangle);
+            bool redrawControl = e.ClipRectangle.IntersectsWith(controlRectangle);
+
+            if (redrawContent || redrawControl)
             {
-                oldLength = TimelineLength;
-                oldZoom = TimelineZoom;
+                Region graphicsClip = e.Graphics.Clip;
+                Brush brush = new SolidBrush(RealBackColor);
 
-                content.Width = (int)(TimelineLength * TimelineZoom);
-
-                foreach (ItemController item in items)
+                if (redrawContent)
                 {
-                    item.UpdateUI();
+                    Region region = new Region(ParentRectangle);
+                    region.Exclude(ParentTimeline.Cursor.FullOccupiedRegion);
+
+                    foreach (ItemController item in items)
+                    {
+                        region.Exclude(item.Rectangle);
+                    }
+
+                    if (redrawControl)
+                    {
+                        int offset = SliceController.controlsWidth + dragWidth;
+                        Rectangle rectangle = ControlParentRectangle;
+                        rectangle.X += offset;
+                        rectangle.Width -= offset;
+                        region.Union(rectangle);
+                        region.Exclude(lockButton.Rectangle);
+                        region.Exclude(visibilityButton.Rectangle);
+                        region.Exclude(addLayerButton.Rectangle);
+                        region.Exclude(removeLayerButton.Rectangle);
+                    }
+                    e.Graphics.Clip = region;
+
+                    e.Graphics.FillRectangle(brush, new Rectangle(
+                        e.ClipRectangle.X, layerRectangle.Y,
+                        e.ClipRectangle.Width, height));                    
                 }
-            }            
+
+                if (redrawControl)
+                {
+                    e.Graphics.Clip = new Region(ControlParentRectangle);
+                    e.Graphics.FillRectangle(Brushes.DimGray, MoveHandleRectangle);
+                }
+
+                e.Graphics.Clip = graphicsClip;
+            }
         }
 
         public void ProcessFrame(Frame frame, int position)
@@ -159,19 +397,6 @@ namespace Scissors.Timeline
                     break;
                 }
             }
-        }
-
-        public void Dispose()
-        {
-            foreach (ItemController item in items)
-            {
-                item.Dispose();
-            }
-
-            controlsPanel.Controls.Remove(control);
-            contentsPanel.Controls.Remove(content);
-            control.Dispose();
-            content.Dispose();
         }
 
         public bool IsPositionOkay(ItemController item)
@@ -202,6 +427,27 @@ namespace Scissors.Timeline
         public List<IController> GetChildrenDeep()
         {
             return GetChildren();
+        }
+
+        public void Delete()
+        {
+            foreach (ItemController item in items) item.Delete();
+            lockButton.Delete();
+            visibilityButton.Delete();
+            addLayerButton.Delete();
+            removeLayerButton.Delete();
+            rectangleProvider.Paint -= TimelineContent_Paint;
+            rectangleProvider.Resize -= TimelineContent_Resize;
+            RemoveSliceEvents();
+            lockButton.ButtonClicked -= LockButton_ButtonClicked;
+            visibilityButton.ButtonClicked -= VisibilityButton_ButtonClicked;
+            addLayerButton.ButtonClicked -= AddLayerButton_ButtonClicked;            
+            removeLayerButton.ButtonClicked -= RemoveLayerButton_ButtonClicked;
+        }
+
+        public override string ToString()
+        {
+            return $"id:{id}";
         }
     }
 }

@@ -52,5 +52,16 @@ namespace Scissors
             if (toggle) return Color.LightGreen;
             else return Color.LightCoral;
         }
+
+        public static Color Mix(Color from, Color to, float percent)
+        {
+            float amountFrom = 1.0f - percent;
+
+            return Color.FromArgb(
+                (int)(from.A * amountFrom + to.A * percent),
+                (int)(from.R * amountFrom + to.R * percent),
+                (int)(from.G * amountFrom + to.G * percent),
+                (int)(from.B * amountFrom + to.B * percent));
+        }
     }
 }

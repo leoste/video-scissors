@@ -19,6 +19,7 @@ namespace Scissors.Timeline
         private int scrollWidth = 3;
 
         Brush brush;
+        Brush backBrush;
         private float relation;
         private int scrollerLeftX;
         private int scrollerRightX;
@@ -34,9 +35,11 @@ namespace Scissors.Timeline
             {
                 if (value <= maximum - scrollWidth)
                 {
-                    if (this.value < value) this.value = value;
+                    bool changeValue = this.value < value;
+                    if (changeValue) this.value = value;
                     minimum = value;
                     UpdateCacheAndUI();
+                    if (changeValue) InvokeScroll();
                 }
             }
         }
@@ -48,9 +51,11 @@ namespace Scissors.Timeline
             {
                 if (value >= minimum + scrollWidth)
                 {
-                    if (this.value + scrollWidth > value) this.value = maximum - scrollWidth;
+                    bool changeValue = this.value + scrollWidth > value;
+                    if (changeValue) this.value = maximum - scrollWidth;
                     maximum = value;
                     UpdateCacheAndUI();
+                    if (changeValue) InvokeScroll();
                 }
             }
         }
@@ -97,22 +102,18 @@ namespace Scissors.Timeline
             InitializeComponent();
             
             brush = new SolidBrush(ForeColor);
-            pictureBox1.Image = new Bitmap(Width, Height);
 
             UpdateCacheAndUI();
         }
 
-        private void FancyScrollbar_UpdateUI(object sender, EventArgs e)
+        private void FancyScrollbar_BackColorChanged(object sender, EventArgs e)
         {
+            backBrush = new SolidBrush(BackColor);
             UpdateCacheAndUI();
         }
 
         private void FancyScrollbar_Resize(object sender, EventArgs e)
         {
-            if (Width == 0 || Height == 0) return;
-
-            pictureBox1.Image.Dispose();
-            pictureBox1.Image = new Bitmap(Width, Height);
             UpdateCacheAndUI();
         }
 
@@ -143,10 +144,21 @@ namespace Scissors.Timeline
 
             if (proposedValue != value)
             {
-                Value = proposedValue;
+                if (proposedValue >= 0)
+                    proposedValue = Math.Min(proposedValue, maximum - scrollWidth);
+                else proposedValue = 0;
 
-                if (Scroll != null) Scroll.Invoke(this, new ScrollEventArgs(ScrollEventType.SmallIncrement, value));
+                if (proposedValue != value)
+                {
+                    Value = proposedValue;
+                    InvokeScroll();
+                }
             }
+        }
+
+        private void InvokeScroll()
+        {
+            if (Scroll != null) Scroll.Invoke(this, new ScrollEventArgs(ScrollEventType.SmallIncrement, value));
         }
 
         private void FancyScrollbar_MouseUp(object sender, MouseEventArgs e)
@@ -166,7 +178,7 @@ namespace Scissors.Timeline
         {
             int left = (value - minimum);
             scrollerLeftX = (int)(left * relation);
-            scrollerWidthX = (int)(scrollWidth * relation);
+            scrollerWidthX = (int)Math.Ceiling(scrollWidth * relation);
             scrollerRightX = (int)((left + scrollWidth) * relation);
         }
 
@@ -178,23 +190,22 @@ namespace Scissors.Timeline
 
         private void UpdateUI()
         {
-            Bitmap bitmap = (Bitmap)pictureBox1.Image;
+            Refresh();
+        }
 
+        private void FancyScrollbar_Paint(object sender, PaintEventArgs e)
+        {
             Rectangle scrollRectangle = scrollDirection == ScrollDirection.LeftToRight
                 ? new Rectangle(scrollerLeftX, 0, scrollerWidthX, Height)
                 : new Rectangle(0, scrollerLeftX, Width, scrollerWidthX);
 
-            bitmap.MakeTransparent(ForeColor);
-
-            using (Graphics graphics = Graphics.FromImage(bitmap))
+            if (scrollRectangle.IntersectsWith(e.ClipRectangle))
             {
-                graphics.FillRectangle(brush, scrollRectangle);
+                e.Graphics.FillRectangle(backBrush, oldRectangle);
+                e.Graphics.FillRectangle(brush, scrollRectangle);
+
+                oldRectangle = scrollRectangle;
             }
-
-            pictureBox1.Invalidate(oldRectangle);
-            pictureBox1.Invalidate(scrollRectangle);
-
-            oldRectangle = scrollRectangle;
         }
     }
 }

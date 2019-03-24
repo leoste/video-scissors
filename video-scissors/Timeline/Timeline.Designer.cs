@@ -28,129 +28,56 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.optionScroll = new System.Windows.Forms.FlowLayoutPanel();
-            this.sliceScroll = new System.Windows.Forms.FlowLayoutPanel();
-            this.rulerScroll = new System.Windows.Forms.FlowLayoutPanel();
-            this.cursorPanel = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.timelineHorizontalScroll = new System.Windows.Forms.Panel();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.rectangleProvider1 = new Scissors.Timeline.RectangleProvider();
             this.verticalScrollbar = new Scissors.Timeline.FancyScrollbar();
             this.horizontalScrollBar = new Scissors.Timeline.FancyScrollbar();
-            this.cursorPanel.SuspendLayout();
-            this.panel2.SuspendLayout();
-            this.timelineHorizontalScroll.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // optionScroll
+            // rectangleProvider1
             // 
-            this.optionScroll.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.optionScroll.AutoSize = true;
-            this.optionScroll.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.optionScroll.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.optionScroll.Location = new System.Drawing.Point(0, 0);
-            this.optionScroll.Margin = new System.Windows.Forms.Padding(0);
-            this.optionScroll.Name = "optionScroll";
-            this.optionScroll.Size = new System.Drawing.Size(0, 0);
-            this.optionScroll.TabIndex = 7;
-            this.optionScroll.WrapContents = false;
-            this.optionScroll.Resize += new System.EventHandler(this.optionScroll_Resize);
-            // 
-            // sliceScroll
-            // 
-            this.sliceScroll.AutoSize = true;
-            this.sliceScroll.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.sliceScroll.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.sliceScroll.Location = new System.Drawing.Point(0, 0);
-            this.sliceScroll.Margin = new System.Windows.Forms.Padding(0);
-            this.sliceScroll.Name = "sliceScroll";
-            this.sliceScroll.Size = new System.Drawing.Size(0, 0);
-            this.sliceScroll.TabIndex = 8;
-            this.sliceScroll.WrapContents = false;
-            this.sliceScroll.Resize += new System.EventHandler(this.sliceScroll_Resize);
-            // 
-            // rulerScroll
-            // 
-            this.rulerScroll.AutoSize = true;
-            this.rulerScroll.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.rulerScroll.Location = new System.Drawing.Point(0, 0);
-            this.rulerScroll.Margin = new System.Windows.Forms.Padding(0);
-            this.rulerScroll.Name = "rulerScroll";
-            this.rulerScroll.Size = new System.Drawing.Size(0, 0);
-            this.rulerScroll.TabIndex = 9;
-            // 
-            // cursorPanel
-            // 
-            this.cursorPanel.AutoSize = true;
-            this.cursorPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cursorPanel.Controls.Add(this.panel2);
-            this.cursorPanel.Controls.Add(this.rulerScroll);
-            this.cursorPanel.Location = new System.Drawing.Point(0, 0);
-            this.cursorPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.cursorPanel.Name = "cursorPanel";
-            this.cursorPanel.Size = new System.Drawing.Size(525, 436);
-            this.cursorPanel.TabIndex = 10;
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.sliceScroll);
-            this.panel2.Location = new System.Drawing.Point(0, 43);
-            this.panel2.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(525, 393);
-            this.panel2.TabIndex = 10;
-            // 
-            // timelineHorizontalScroll
-            // 
-            this.timelineHorizontalScroll.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.rectangleProvider1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.timelineHorizontalScroll.Controls.Add(this.cursorPanel);
-            this.timelineHorizontalScroll.Location = new System.Drawing.Point(174, 0);
-            this.timelineHorizontalScroll.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.timelineHorizontalScroll.Name = "timelineHorizontalScroll";
-            this.timelineHorizontalScroll.Size = new System.Drawing.Size(734, 524);
-            this.timelineHorizontalScroll.TabIndex = 11;
+            this.rectangleProvider1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.rectangleProvider1.ControlWidth = 132;
+            this.rectangleProvider1.HorizontalScroll = 0;
+            this.rectangleProvider1.Location = new System.Drawing.Point(27, 0);
+            this.rectangleProvider1.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.rectangleProvider1.Name = "rectangleProvider1";
+            this.rectangleProvider1.RulerHeight = 40;
+            this.rectangleProvider1.SeparatorHeight = 3;
+            this.rectangleProvider1.SeparatorWidth = 3;
+            this.rectangleProvider1.Size = new System.Drawing.Size(877, 524);
+            this.rectangleProvider1.TabIndex = 17;
+            this.rectangleProvider1.VerticalScroll = 0;
+            this.rectangleProvider1.Resize += new System.EventHandler(this.rectangleProvider1_Resize);
             // 
-            // panel1
-            // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.panel1.Controls.Add(this.optionScroll);
-            this.panel1.Location = new System.Drawing.Point(27, 43);
-            this.panel1.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(144, 481);
-            this.panel1.TabIndex = 13;
-            this.panel1.Resize += new System.EventHandler(this.panel1_Resize);
-            // 
-            // fancyScrollbar1
+            // verticalScrollbar
             // 
             this.verticalScrollbar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.verticalScrollbar.BackColor = System.Drawing.SystemColors.HotTrack;
-            this.verticalScrollbar.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.verticalScrollbar.Location = new System.Drawing.Point(0, 42);
+            this.verticalScrollbar.BackColor = System.Drawing.Color.Gray;
+            this.verticalScrollbar.ForeColor = System.Drawing.Color.DarkGray;
+            this.verticalScrollbar.Location = new System.Drawing.Point(0, 43);
             this.verticalScrollbar.Margin = new System.Windows.Forms.Padding(0);
             this.verticalScrollbar.Maximum = 10;
             this.verticalScrollbar.Minimum = 0;
-            this.verticalScrollbar.Name = "fancyScrollbar1";
+            this.verticalScrollbar.Name = "verticalScrollbar";
             this.verticalScrollbar.ScrollDirection = Scissors.Timeline.ScrollDirection.UpToDown;
             this.verticalScrollbar.ScrollWidth = 3;
-            this.verticalScrollbar.Size = new System.Drawing.Size(24, 482);
+            this.verticalScrollbar.Size = new System.Drawing.Size(24, 481);
             this.verticalScrollbar.TabIndex = 12;
             this.verticalScrollbar.Value = 3;
             this.verticalScrollbar.Scroll += new System.EventHandler<System.Windows.Forms.ScrollEventArgs>(this.verticalScrollbar_Scroll);
-            this.verticalScrollbar.Resize += new System.EventHandler(this.verticalScrollbar_Resize);
             // 
             // horizontalScrollBar
             // 
             this.horizontalScrollBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.horizontalScrollBar.BackColor = System.Drawing.SystemColors.HotTrack;
-            this.horizontalScrollBar.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.horizontalScrollBar.BackColor = System.Drawing.Color.Gray;
+            this.horizontalScrollBar.ForeColor = System.Drawing.Color.DarkGray;
             this.horizontalScrollBar.Location = new System.Drawing.Point(174, 527);
             this.horizontalScrollBar.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.horizontalScrollBar.Maximum = 10;
@@ -158,43 +85,54 @@
             this.horizontalScrollBar.Name = "horizontalScrollBar";
             this.horizontalScrollBar.ScrollDirection = Scissors.Timeline.ScrollDirection.LeftToRight;
             this.horizontalScrollBar.ScrollWidth = 3;
-            this.horizontalScrollBar.Size = new System.Drawing.Size(734, 24);
+            this.horizontalScrollBar.Size = new System.Drawing.Size(730, 24);
             this.horizontalScrollBar.TabIndex = 11;
             this.horizontalScrollBar.Value = 3;
             this.horizontalScrollBar.Scroll += new System.EventHandler<System.Windows.Forms.ScrollEventArgs>(this.horizontalScrollBar_Scroll);
-            this.horizontalScrollBar.Resize += new System.EventHandler(this.horizontalScrollBar_Resize);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(27, 0);
+            this.button1.Margin = new System.Windows.Forms.Padding(0);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(41, 41);
+            this.button1.TabIndex = 18;
+            this.button1.Text = "Z-";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(68, 0);
+            this.button2.Margin = new System.Windows.Forms.Padding(0);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(41, 41);
+            this.button2.TabIndex = 19;
+            this.button2.Text = "Z+";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // Timeline
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.panel1);
+            this.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.rectangleProvider1);
             this.Controls.Add(this.verticalScrollbar);
             this.Controls.Add(this.horizontalScrollBar);
-            this.Controls.Add(this.timelineHorizontalScroll);
             this.Name = "Timeline";
-            this.Size = new System.Drawing.Size(908, 551);
-            this.cursorPanel.ResumeLayout(false);
-            this.cursorPanel.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            this.timelineHorizontalScroll.ResumeLayout(false);
-            this.timelineHorizontalScroll.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.Size = new System.Drawing.Size(904, 551);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.FlowLayoutPanel optionScroll;
-        private System.Windows.Forms.FlowLayoutPanel sliceScroll;
-        private System.Windows.Forms.FlowLayoutPanel rulerScroll;
-        private System.Windows.Forms.Panel cursorPanel;
-        private System.Windows.Forms.Panel timelineHorizontalScroll;
         private FancyScrollbar horizontalScrollBar;
         private FancyScrollbar verticalScrollbar;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
+        private RectangleProvider rectangleProvider1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
     }
 }

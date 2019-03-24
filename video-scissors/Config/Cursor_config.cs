@@ -9,7 +9,9 @@ namespace Scissors.Config
 {
     public static partial class GlobalConfig
     {        
-        public static Brush CursorRegularBrush { get; set; } = new SolidBrush(Color.Crimson);
-        public static Brush CursorMoveItemBrush { get; set; } = new SolidBrush(Color.Orchid);
+        public static Brush CursorMainBrush { get; set; } = new SolidBrush(Color.Crimson);
+        public static Brush CursorItemEdgeBrush { get; set; } = new SolidBrush(Color.DodgerBlue);
+        public static Brush CursorItemResizeBrush { get; set; } = new SolidBrush(Color.DeepSkyBlue);
+        public static Brush CursorItemAnchorBrush { get; set; } = new SolidBrush(Color.DimGray);
     }
 }

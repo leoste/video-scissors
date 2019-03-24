@@ -15,59 +15,76 @@ namespace Scissors.Timeline
     {
         private TimelineController controller;
 
-        internal FlowLayoutPanel ControlsPanel { get { return optionScroll; } }
-        internal FlowLayoutPanel ContentsPanel { get { return sliceScroll; } }
-        internal FlowLayoutPanel RulerPanel { get { return rulerScroll; } }
-        internal Panel CursorPanel { get { return cursorPanel; } }
+        internal FlowLayoutPanel ControlsPanel { get { return new FlowLayoutPanel(); } }
+        internal FlowLayoutPanel ContentsPanel { get { return new FlowLayoutPanel(); } }
+        internal FlowLayoutPanel RulerPanel { get { return new FlowLayoutPanel(); } }
+        internal Panel CursorPanel { get { return new Panel(); } }
+        private int oldScroll = 0;
 
         public Timeline()
         {
             InitializeComponent();
-            controller = new TimelineController(this, 90);
+            controller = new TimelineController(this, rectangleProvider1, 540);
+            rectangleProvider1.TimelineController = controller;
+
+            controller.SizeChanged += Timeline_SizeChanged;                
             horizontalScrollBar.Minimum = 0;
+            UpdateHorizontalScrollbar();            
         }
 
-        private void horizontalScrollBar_Resize(object sender, EventArgs e)
+        private int oldWidth;
+        private int oldHeight;
+
+        private void rectangleProvider1_Resize(object sender, EventArgs e)
         {
-            horizontalScrollBar.Maximum = (int)(controller.TimelineLength * controller.TimelineZoom);
-            horizontalScrollBar.ScrollWidth = timelineHorizontalScroll.Width;
+            if (rectangleProvider1.Width != oldWidth)
+            {
+                UpdateHorizontalScrollbar();
+                oldWidth = rectangleProvider1.Width;
+            }
+            if (rectangleProvider1.Height != oldHeight)
+            {
+                UpdateVerticalScrollbar();
+                oldHeight = rectangleProvider1.Height;
+            }
         }
 
         private void horizontalScrollBar_Scroll(object sender, ScrollEventArgs e)
         {
-            cursorPanel.Left = -horizontalScrollBar.Value;
+           rectangleProvider1.HorizontalScroll = horizontalScrollBar.Value;
         }
 
-        private void verticalScrollbar_Resize(object sender, EventArgs e)
+        private void UpdateHorizontalScrollbar()
         {
+            horizontalScrollBar.Maximum = controller.Ruler.Rectangle.Width;
+            horizontalScrollBar.ScrollWidth = rectangleProvider1.HorizontalContainerRectangle.Width;
+        }
+
+        private void Timeline_SizeChanged(object sender, EventArgs e)
+        {
+            UpdateHorizontalScrollbar();
             UpdateVerticalScrollbar();
         }
 
         private void verticalScrollbar_Scroll(object sender, ScrollEventArgs e)
         {
-            optionScroll.Top = -verticalScrollbar.Value;
-            sliceScroll.Top = -verticalScrollbar.Value;
-        }
-
-        private void optionScroll_Resize(object sender, EventArgs e)
-        {
-            UpdateVerticalScrollbar();
+            rectangleProvider1.VerticalScroll = verticalScrollbar.Value;
         }
 
         private void UpdateVerticalScrollbar()
         {
-            verticalScrollbar.Maximum = optionScroll.Height;
-            verticalScrollbar.ScrollWidth = panel1.Height;
+            verticalScrollbar.Maximum = controller.SlicesRectangle.Height;
+            verticalScrollbar.ScrollWidth = rectangleProvider1.VerticalContainerRectangle.Height;
         }
 
-        private void sliceScroll_Resize(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
-            panel2.Width = sliceScroll.Width;
+            controller.TimelineZoom *= 0.8f;
         }
 
-        private void panel1_Resize(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e)
         {
-            panel2.Height = panel1.Height;
+            controller.TimelineZoom *= 1.25f;
         }
     }
 }

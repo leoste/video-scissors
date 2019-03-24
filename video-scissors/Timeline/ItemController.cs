@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,16 +9,19 @@ using Scissors.Config;
 
 namespace Scissors.Timeline
 {
-    internal class ItemController : IFrameController
+    internal class ItemController : IFrameController, IDraggableController, IResizableController, ILockableController
     {
-        private LayerController layer;
-        private Panel contentsPanel;
+        public static readonly int resizeHandleWidth = 3;
 
-        private ItemContent content;
-        
-        private int oldItemLength;
-        private int oldStartPosition;
-        private float oldZoom;        
+        private LayerController layer;
+        private RectangleProvider rectangleProvider;
+
+        private Rectangle itemRectangle;
+        private Rectangle oldRectangle;
+        private Color backColor;
+        private Color lockColor;
+        private Color hiddenColor;
+        private Color hiddenLockColor;
 
         private int startPosition;
         private int endPosition;
@@ -34,11 +38,11 @@ namespace Scissors.Timeline
                     {
                         startPosition = value;
                         endPosition = startPosition + itemLength;
+                        UpdateCache();
+                        InvokeLocationChanged(new LocationChangeEventArgs(true, false));
                         UpdateUI();
                     }
-                    else throw Exceptions.EndTooBigException;
                 }
-                else throw Exceptions.StartTooSmallException;
             }
         }
 
@@ -53,11 +57,11 @@ namespace Scissors.Timeline
                     {
                         endPosition = value;
                         itemLength = endPosition - startPosition;
+                        UpdateCache();
+                        InvokeSizeChanged();
                         UpdateUI();
                     }
-                    else throw Exceptions.EndTooSmallException;
                 }
-                else throw Exceptions.EndTooBigException;
             }
         }
 
@@ -72,11 +76,11 @@ namespace Scissors.Timeline
                     {
                         itemLength = value;
                         endPosition = startPosition + value;
+                        UpdateCache();
+                        InvokeSizeChanged();
                         UpdateUI();
                     }
-                    else throw Exceptions.EndTooBigException;
                 }
-                else throw Exceptions.LengthTooSmallException;
             }
         }
 
@@ -86,21 +90,113 @@ namespace Scissors.Timeline
         public int ProjectFrameWidth { get { return layer.ProjectFrameWidth; } }
         public int ProjectFrameHeight { get { return layer.ProjectFrameHeight; } }
 
+        public RectangleProvider RectangleProvider => throw new NotImplementedException();
+
+        public Color BackColor {
+            get { return backColor; }
+            set
+            {
+                backColor = value;
+                lockColor = ColorProvider.Mix(backColor, Color.DimGray, 0.8f);
+                hiddenColor = ColorProvider.Mix(backColor, Color.Blue, 0.3f);
+                hiddenLockColor = ColorProvider.Mix(lockColor, Color.Blue, 0.2f);
+                UpdateUI();
+            }
+        }
+        public Color ForeColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public Rectangle Rectangle
+        { get { return itemRectangle; } }
+
+        public Rectangle ParentRectangle
+        { get { return rectangleProvider.ContentContainerRectangle; } }
+
+        public Rectangle MoveHandleRectangle
+        {
+            get
+            {
+                return new Rectangle(
+                    itemRectangle.X + resizeHandleWidth, 
+                    itemRectangle.Y,
+                    itemRectangle.Width - 2 * resizeHandleWidth,
+                    itemRectangle.Height);
+            }
+        }
+
+        public Rectangle LeftResizeHandleRectangle
+        {
+            get
+            {
+                return new Rectangle(
+                    itemRectangle.X, 
+                    itemRectangle.Y,
+                    resizeHandleWidth,
+                    itemRectangle.Height);
+            }
+        }
+
+        public Rectangle RightResizeHandleRectangle
+        {
+            get
+            {
+                return new Rectangle(
+                    itemRectangle.Right - resizeHandleWidth,
+                    itemRectangle.Y, 
+                    resizeHandleWidth,
+                    itemRectangle.Height);
+            }
+        }
+
+        public TimelineController ParentTimeline { get { return layer.ParentTimeline; } }
+        public LayerController ParentLayer { get { return layer; } }
+
+        public Region FullOccupiedRegion
+        { get { return new Region(itemRectangle); } }
+
+        public Region FullParentRegion
+        { get { return new Region(ParentRectangle); } }
+
+        public bool IsLocked { get { return layer.IsLocked; } }
+        public bool IsVisible { get { return layer.IsVisible; } }
+
+        public Color RealBackColor
+        {
+            get
+            {
+                if (IsLocked)
+                {
+                    if (IsVisible) return lockColor;
+                    else return hiddenLockColor;
+                }
+                else if (IsVisible) return backColor;
+                else return hiddenColor;
+            }
+        }
+
+        public event EventHandler SizeChanged;
+        private void InvokeSizeChanged()
+        { if (SizeChanged != null) SizeChanged.Invoke(this, EventArgs.Empty); }
+
+        public event EventHandler<LocationChangeEventArgs> LocationChanged;
+        private void InvokeLocationChanged(LocationChangeEventArgs e)
+        { if (LocationChanged != null) LocationChanged.Invoke(this, e); }
+
+        public event EventHandler TimelineLengthChanged;
+        public event EventHandler TimelineZoomChanged;
+
         internal ItemController(LayerController layer, int startPosition, int length)
         {
-            oldZoom = -1;
-            oldItemLength = -1;
-            oldStartPosition = -1;
-            ui_change = 0;
-
             this.layer = layer;
-            contentsPanel = layer.ItemContentsPanel;
-            content = new ItemContent();
-            contentsPanel.Controls.Add(content);
-            content.MouseDown += Content_MouseDown;
-            content.MouseMove += Content_MouseMove;
-            content.MouseUp += Content_MouseUp;
-            content.MouseLeave += Content_MouseLeave;
+            rectangleProvider = layer.RectangleProvider;
+            UpdateCache();
+            oldRectangle = itemRectangle;
+
+            BackColor = Color.DarkGray;
+
+            rectangleProvider.Paint += TimelineContent_Paint;
+            rectangleProvider.Resize += TimelineContent_Resize;
+
+            AddLayerEvents();
 
             this.startPosition = startPosition;
             ItemLength = length;
@@ -108,132 +204,81 @@ namespace Scissors.Timeline
             UpdateUI();
         }
 
-        private byte ui_change;
-        private int mouseOffsetX;
-        private int originalStart;
-        private int originalLength;
+        private void AddLayerEvents()
+        {
+            layer.TimelineZoomChanged += Layer_TimelineZoomChanged;
+            layer.TimelineLengthChanged += Layer_TimelineLengthChanged;
+            layer.LocationChanged += Layer_LocationChanged;
+            layer.Disowning += Layer_Disowning;
+        }
+
+        private void RemoveLayerEvents()
+        {
+            layer.TimelineZoomChanged -= Layer_TimelineZoomChanged;
+            layer.TimelineLengthChanged -= Layer_TimelineLengthChanged;
+            layer.LocationChanged -= Layer_LocationChanged;
+            layer.Disowning -= Layer_Disowning;
+        }
+
+        private void Layer_LocationChanged(object sender, LocationChangeEventArgs e)
+        {
+            UpdateCache();
+            InvokeLocationChanged(e);
+            UpdateUI();
+        }
+
+        private void Layer_TimelineZoomChanged(object sender, EventArgs e)
+        {
+            UpdateCache();
+            if (TimelineZoomChanged != null) TimelineZoomChanged.Invoke(this, EventArgs.Empty);
+            UpdateUI();
+        }
+
+        private void Layer_TimelineLengthChanged(object sender, EventArgs e)
+        {
+            UpdateCache();
+            if (TimelineLengthChanged != null) TimelineLengthChanged.Invoke(this, EventArgs.Empty);
+            UpdateUI();
+        }
+
+        private void TimelineContent_Resize(object sender, EventArgs e)
+        {
+            UpdateCache();
+            UpdateUI();
+        }
         
-        //drag clip up or down to change layer
-        private int mouseOffsetY;
-
-        private void Content_MouseDown(object sender, MouseEventArgs e)
+        private void UpdateCache()
         {
-            if (layer.IsLocked) return;
-
-            Control control = sender as Control;
-
-            if (e.X > control.Width - GlobalConfig.ItemResizeHandleWidth * 2)
-            {
-                ui_change = 2;
-            }
-            else if (e.X < GlobalConfig.ItemResizeHandleWidth)
-            {
-                ui_change = 3;
-            }
-            else
-            {
-                ui_change = 1;
-            }
-
-            mouseOffsetX = e.X;
-            mouseOffsetY = e.Y;
-            originalStart = startPosition;
-            originalLength = itemLength;
-        }
-
-        private void Content_MouseUp(object sender, MouseEventArgs e)
-        {
-            ui_change = 0;
-
-            if (!layer.IsPositionOkay(this))
-            {
-                StartPosition = originalStart;
-                ItemLength = originalLength;
-            }
-        }
-
-        private void Content_MouseMove(object sender, MouseEventArgs e)
-        {
-            Control control = sender as Control;
-
-            if (e.X > control.Width - GlobalConfig.ItemResizeHandleWidth * 2)
-                control.Cursor = Cursors.SizeWE;
-            else if (e.X < GlobalConfig.ItemResizeHandleWidth)
-                control.Cursor = Cursors.SizeWE;
-            else
-                control.Cursor = Cursors.SizeAll;
-
-            if (ui_change == 0) return;
-
-            int x = (int)((e.X - mouseOffsetX) / TimelineZoom);
-
-            if (ui_change == 1)
-            {
-                try { StartPosition = x + startPosition; } catch { }
-            }
-            else if (ui_change == 2)
-            {
-                try { ItemLength = x + originalLength; } catch { }
-            }
-            else if (ui_change == 3)
-            {
-                int oldLength = itemLength;
-                int oldStart = startPosition;
-                try
-                {
-                    ItemLength = -x + itemLength;
-                    StartPosition = x + startPosition;
-                }
-                catch
-                {
-                    ItemLength = oldLength;
-                    StartPosition = oldStart;
-                }
-            }
-        }
-
-        private void Content_MouseLeave(object sender, EventArgs e)
-        {
-            if (ui_change == 0) return;
+            itemRectangle.X = (int)(startPosition * TimelineZoom) + layer.Rectangle.X;
+            itemRectangle.Y = layer.Rectangle.Y;
+            itemRectangle.Width = (int)(itemLength * TimelineZoom);
+            itemRectangle.Height = layer.Rectangle.Height;
         }
 
         public void UpdateUI()
         {
-            bool updatePos = false;
-            bool updateWidth = false;
-
-            if (startPosition != oldStartPosition)
-            {
-                oldStartPosition = startPosition;
-                updatePos = true;
-            }
-            if (itemLength != oldItemLength)
-            {
-                oldItemLength = ItemLength;
-                updateWidth = true;
-            }
-            if (TimelineZoom != oldZoom)
-            {
-                oldZoom = TimelineZoom;
-                updatePos = true;
-                updateWidth = true;
-            }
-
-            if (updatePos)
-            {
-                content.Left = (int)(startPosition * TimelineZoom);
-            }
-
-            if (updateWidth)
-            {
-                content.Width = (int)(itemLength * TimelineZoom);
-            }
+            rectangleProvider.InvalidateContentContainerRectangle(oldRectangle);
+            rectangleProvider.InvalidateContentContainerRectangle(itemRectangle);
+            oldRectangle = itemRectangle;
         }
 
-        public void Dispose()
+        private void TimelineContent_Paint(object sender, PaintEventArgs e)
         {
-            contentsPanel.Controls.Remove(content);
-            content.Dispose();
+            if (e.ClipRectangle.IntersectsWith(itemRectangle))
+            {
+                Region graphicsClip = e.Graphics.Clip;
+                Region region = new Region(ParentRectangle);
+                region.Exclude(ParentTimeline.Cursor.FullOccupiedRegion);
+                e.Graphics.Clip = region;
+
+                Brush brush = new SolidBrush(RealBackColor);
+                e.Graphics.FillRectangle(brush, itemRectangle);
+
+                //for debugging
+                e.Graphics.DrawString(ToString(), SystemFonts.DefaultFont, Brushes.White, new Point(itemRectangle.X + 3, itemRectangle.Y + 3));
+
+                e.Graphics.Clip = graphicsClip;                
+            }
         }
 
         public void ProcessFrame(Frame frame, int position)
@@ -249,6 +294,30 @@ namespace Scissors.Timeline
         public bool IsOverlapping(int timelinePosition)
         {
             return timelinePosition >= startPosition && timelinePosition < endPosition;
+        }
+
+        private void Layer_Disowning(object sender, DisownEventArgs e)
+        {
+            if (e.DisownedChild == this)
+            {
+                RemoveLayerEvents();
+                layer = e.NewParent as LayerController;
+                AddLayerEvents();
+                UpdateCache();
+                UpdateUI();
+            }
+        }
+
+        public void Delete()
+        {
+            rectangleProvider.Paint -= TimelineContent_Paint;
+            rectangleProvider.Resize -= TimelineContent_Resize;
+            RemoveLayerEvents();
+        }
+
+        public override string ToString()
+        {
+            return $"x:{startPosition} w:{itemLength}";
         }
     }
 }

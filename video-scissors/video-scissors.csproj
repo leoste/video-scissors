@@ -60,7 +60,6 @@
     <Compile Include="EffectAPI\IEffect.cs" />
     <Compile Include="Config\Cursor_config.cs" />
     <Compile Include="Config\Framerate.cs" />
-    <Compile Include="Config\Item_config.cs" />
     <Compile Include="Config\Project_config.cs" />
     <Compile Include="Config\Resolution.cs" />
     <Compile Include="EffectAPI\UserControls\EffectControl.cs">
@@ -79,7 +78,9 @@
     <Compile Include="Config\Timeline_config.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Timeline\ButtonController.cs" />
     <Compile Include="Timeline\CursorController.cs" />
+    <Compile Include="Timeline\CursorController_ControllerHandler.cs" />
     <Compile Include="Timeline\FancyScrollbar.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -88,53 +89,29 @@
     </Compile>
     <Compile Include="Timeline\Frame.cs" />
     <Compile Include="Timeline\IChildrenController.cs" />
-    <Compile Include="Timeline\IContent.cs" />
-    <Compile Include="Timeline\IControl.cs" />
     <Compile Include="Timeline\IControlController.cs" />
     <Compile Include="Timeline\IController.cs" />
     <Compile Include="Timeline\IFrameController.cs" />
-    <Compile Include="Timeline\RulerContent.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Timeline\RulerContent.Designer.cs">
-      <DependentUpon>RulerContent.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Timeline\IDraggableController.cs" />
+    <Compile Include="Timeline\ILockableController.cs" />
+    <Compile Include="Timeline\IResizableController.cs" />
+    <Compile Include="Timeline\LocationChangeEventArgs.cs" />
+    <Compile Include="Timeline\DisownEventArgs.cs" />
     <Compile Include="Timeline\RulerController.cs" />
     <Compile Include="Timeline\ScrollDirection.cs" />
+    <Compile Include="Timeline\RectangleProvider.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Timeline\RectangleProvider.Designer.cs">
+      <DependentUpon>RectangleProvider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Timeline\RectangleProviderDesigner.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Timeline\TimelineController.cs" />
-    <Compile Include="Timeline\ItemContent.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Timeline\ItemContent.Designer.cs">
-      <DependentUpon>ItemContent.cs</DependentUpon>
-    </Compile>
     <Compile Include="Timeline\ItemController.cs" />
-    <Compile Include="Timeline\LayerControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Timeline\LayerControl.Designer.cs">
-      <DependentUpon>LayerControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Timeline\LayerController.cs" />
-    <Compile Include="Timeline\LayerContent.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Timeline\LayerContent.Designer.cs">
-      <DependentUpon>LayerContent.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Timeline\SliceControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Timeline\SliceControl.Designer.cs">
-      <DependentUpon>SliceControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Timeline\SliceController.cs" />
-    <Compile Include="Timeline\SliceContent.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Timeline\SliceContent.Designer.cs">
-      <DependentUpon>SliceContent.cs</DependentUpon>
-    </Compile>
     <Compile Include="Timeline\Timeline.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -164,26 +141,11 @@
     <EmbeddedResource Include="Timeline\FancyScrollbar.resx">
       <DependentUpon>FancyScrollbar.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Timeline\ItemContent.resx">
-      <DependentUpon>ItemContent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Timeline\LayerControl.resx">
-      <DependentUpon>LayerControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Timeline\LayerContent.resx">
-      <DependentUpon>LayerContent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Timeline\RulerContent.resx">
-      <DependentUpon>RulerContent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Timeline\SliceControl.resx">
-      <DependentUpon>SliceControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Timeline\SliceContent.resx">
-      <DependentUpon>SliceContent.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Timeline\Timeline.resx">
       <DependentUpon>Timeline.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Timeline\RectangleProvider.resx">
+      <DependentUpon>RectangleProvider.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -201,6 +163,23 @@
   <ItemGroup>
     <None Include="Resources\image.jpg" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\closed_lock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\open_lock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\closed_eye.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\open_eye.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\minus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\plus.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

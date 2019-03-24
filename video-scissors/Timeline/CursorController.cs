@@ -9,220 +9,327 @@ using Scissors.Config;
 
 namespace Scissors.Timeline
 {
-    class CursorController : IController
+    partial class CursorController : IController
     {
         private static readonly int cursorWidth = 2;
-        
-        private int oldLeft;
-        private int oldWidth;
-        private bool oldLockToControl;
-        private bool lockToControl;
+
+        private ControllerHandler handler;
+        private CursorState state;
+
         private TimelineController timeline;
-        private Dictionary<Control, ControlInfo> generations;
-        private Panel panel;
-        
-        public CursorController(TimelineController timeline)
-        {
-            generations = new Dictionary<Control, ControlInfo>();
-            oldLeft = 0;
-            oldWidth = 0;
-            oldLockToControl = false;
-            lockToControl = false;
+        private RectangleProvider rectangleProvider;
 
-            this.timeline = timeline;            
-            panel = timeline.CursorPanel;            
-
-            AddEventsDeep(panel);            
-        }
-        
-        private void AddEventsDeep(Control control)
-        {
-            int level;
-            if (generations.TryGetValue(control.Parent, out ControlInfo info)) level = info.Level;
-            else level = -1;
-            
-            generations.Add(control, new ControlInfo(level + 1, Graphics.FromHwnd(control.Handle)));
-
-            control.ControlAdded += Control_ControlAdded;
-            control.ControlRemoved += Control_ControlRemoved;
-            control.MouseMove += Control_MouseMove;
-            control.Resize += Control_Resize;
-
-            if (control is ItemContent)
-            {
-                ItemContent item = control as ItemContent;
-                item.MouseDown += Item_MouseDown;
-                item.MouseUp += Item_MouseUp;
-            }
-
-            foreach (Control child in control.Controls)
-            {
-                AddEventsDeep(child);
-            }
-        }
-
-        private void Item_MouseDown(object sender, MouseEventArgs e)
-        {
-            lockToControl = true;
-        }
-
-        private void Item_MouseUp(object sender, MouseEventArgs e)
-        {
-            lockToControl = false;
-
-            Control control = sender as Control;
-
-            control.Invalidate(new Rectangle(0, 0, cursorWidth, control.Height));
-            control.Invalidate(new Rectangle(control.Width - cursorWidth, 0, cursorWidth, control.Height));
-        }
-
-        private void Control_MouseMove(object sender, MouseEventArgs e)
-        {
-            Control control = sender as Control;
-            int cx;
-            int width = oldWidth;
-            if (lockToControl)
-            {
-                cx = 0;
-                width = control.Width - cursorWidth;
-            }
-            else cx = e.X;
-
-            int left = GetCursorAbsoluteX(control, cx);
-            int diff;
-            if (left == oldLeft) diff = width - oldWidth;
-            else diff = left - oldLeft;
-
-            int diffw;
-            int abs = Math.Abs(diff);
-            if (abs < cursorWidth)
-            {
-                diffw = abs;
-                if (diff < 0) diff = -cursorWidth;
-            }
-            else diffw = cursorWidth;
-
-            foreach (KeyValuePair<Control, ControlInfo> pair in generations)
-            {
-                int x = GetCursorRelativeX(pair.Key, left);
-                if (abs > 0)
-                {
-                    pair.Key.Invalidate(new Rectangle(x - diff, 0, diffw, pair.Key.Height));
-                    if (lockToControl || oldLockToControl)
-                    {
-                        pair.Key.Invalidate(new Rectangle(x - diff + width, 0, diffw, pair.Key.Height));
-                    }
-                }
-                pair.Key.Update();
-                if (lockToControl)
-                {
-                    pair.Value.Graphics.FillRectangle(GlobalConfig.CursorMoveItemBrush, x, 0, cursorWidth, pair.Key.Height);
-                    pair.Value.Graphics.FillRectangle(GlobalConfig.CursorMoveItemBrush, x + width, 0, cursorWidth, pair.Key.Height);
-                }
-                else pair.Value.Graphics.FillRectangle(GlobalConfig.CursorRegularBrush, x, 0, cursorWidth, pair.Key.Height);
-            }
-
-            oldLeft = left;
-            oldWidth = width;
-            oldLockToControl = lockToControl;
-        }
-
-        private void Control_Resize(object sender, EventArgs e)
-        {
-            Control control = sender as Control;
-            if (generations.TryGetValue(control, out ControlInfo info))
-            {                
-                generations[control] = new ControlInfo(info.Level, Graphics.FromHwnd(control.Handle));
-                info.Dispose();
-            }
-        }
-
-        private void Control_ControlAdded(object sender, ControlEventArgs e)
-        {
-            AddEventsDeep(e.Control);
-        }
-
-        private void RemoveEventsDeep(Control control)
-        {
-            generations.Remove(control);
-            control.ControlAdded -= Control_ControlAdded;
-            control.ControlRemoved -= Control_ControlRemoved;
-            control.MouseMove -= Control_MouseMove;
-            control.Resize -= Control_Resize;
-
-            if (control is ItemContent)
-            {
-                ItemContent item = control as ItemContent;
-                item.MouseDown -= Item_MouseDown;
-                item.MouseUp -= Item_MouseUp;
-            }
-
-            foreach (Control child in control.Controls)
-            {
-                RemoveEventsDeep(child);
-            }
-        }
-
-        private void Control_ControlRemoved(object sender, ControlEventArgs e)
-        {
-            RemoveEventsDeep(e.Control);
-        }
-
-        private int GetCursorAbsoluteX(Control control, int x)
-        {
-            if (generations.TryGetValue(control, out ControlInfo info))
-            {
-
-                if (info.Level > 0) x += GetCursorAbsoluteX(control.Parent, control.Left);
-
-                return x;
-            }
-            else throw new ArgumentException();
-        }
-
-        private int GetCursorRelativeX(Control control, int x)
-        {
-            return x - GetCursorAbsoluteX(control, 0);
-        }
+        private Rectangle protoCursor;
+        private List<Cursor> cursors;
+        private List<Cursor> oldCursors;
 
         public int TimelineLength { get { return timeline.TimelineLength; } }
-
         public float TimelineZoom { get { return timeline.TimelineZoom; } }
-
         public int ProjectFramerate { get { return timeline.ProjectFramerate; } }
-
         public int ProjectFrameWidth { get { return timeline.ProjectFrameWidth; } }
-
         public int ProjectFrameHeight { get { return timeline.ProjectFrameHeight; } }
 
-        public void Dispose()
+        public RectangleProvider RectangleProvider { get { return rectangleProvider; } }
+
+        public Color BackColor { get; set; }
+        public Color ForeColor { get; set; }
+        
+        public Rectangle Rectangle
         {
-            foreach (KeyValuePair<Control, ControlInfo> pair in generations)
+            get
             {
-                pair.Value.Dispose();
+                Rectangle rectangle = new Rectangle();
+
+                rectangle.X = cursors[0].Rectangle.X;
+                rectangle.Y = cursors[0].Rectangle.Y;
+                rectangle.Height = cursors[0].Rectangle.Height;
+                rectangle.Width = cursors.Last().Rectangle.Right - rectangle.X;
+
+                return rectangle;
             }
+        }
+
+        public Rectangle ParentRectangle
+        { get { return rectangleProvider.HorizontalContainerRectangle; } }
+        
+        public Region FullOccupiedRegion
+        {
+            get
+            {
+                Region region = new Region(cursors[0].Rectangle);
+                
+                for (int i = 1; i < cursors.Count; i += 1)
+                {
+                    region.Union(cursors[i].Rectangle);
+                }
+
+                return region;
+            }
+        }
+
+        public Region FullParentRegion
+        { get { return new Region(ParentRectangle); } }
+
+        public TimelineController ParentTimeline { get { return timeline; } }
+
+        public event EventHandler SizeChanged;
+        private void InvokeSizeChanged()
+        { if (SizeChanged != null) SizeChanged.Invoke(this, EventArgs.Empty); }
+
+        public event EventHandler<LocationChangeEventArgs> LocationChanged;
+        private void InvokeLocationChanged(LocationChangeEventArgs e)
+        { if (LocationChanged != null) LocationChanged.Invoke(this, e); }
+
+        public event EventHandler TimelineLengthChanged;
+        public event EventHandler TimelineZoomChanged;
+
+        public CursorController(TimelineController timeline)
+        {            
+            state = CursorState.Hover;
+            this.timeline = timeline;
+            rectangleProvider = timeline.RectangleProvider;
+            handler = new ControllerHandler(this);
+
+            protoCursor = new Rectangle();
+            cursors = new List<Cursor>();
+            oldCursors = new List<Cursor>();
+            UpdateCache();
+            oldCursors.AddRange(cursors);
+
+            timeline.TimelineZoomChanged += Timeline_TimelineZoomChanged;
+            timeline.TimelineLengthChanged += Timeline_TimelineLengthChanged;
+            timeline.LocationChanged += Timeline_LocationChanged;
+
+            rectangleProvider.MouseDown += RectangleProvider_MouseDown;
+            rectangleProvider.MouseMove += RectangleProvider_MouseMove;
+            rectangleProvider.MouseUp += RectangleProvider_MouseUp;
+
+            rectangleProvider.Paint += RectangleProvider_Paint;
+        }
+
+        private void RectangleProvider_MouseDown(object sender, MouseEventArgs e)
+        {
+            IController controller = handler.GetTargettedController(e.Location);
+            state = handler.GetCursorState(e.Location, controller);
+
+            if (state == CursorState.Hover) return;
+            else handler.BeginControllerAction(e.Location, controller, state);            
+            
+            UpdateMouse(e);
+        }
+
+        private void RectangleProvider_MouseMove(object sender, MouseEventArgs e)
+        {
+            IController controller = handler.GetTargettedController(e.Location);
+
+            if (state == CursorState.Hover)
+            {
+                CursorState protoState = handler.GetCursorState(e.Location, controller);
+
+                switch (protoState)
+                {
+                    default:
+                    case CursorState.Hover:
+                        rectangleProvider.Cursor = Cursors.Default; break;
+                    case CursorState.MoveItem:
+                    case CursorState.MoveLayer:
+                    case CursorState.MoveSlice:
+                        rectangleProvider.Cursor = Cursors.SizeAll; break;
+                    case CursorState.ResizeItemLeft:
+                    case CursorState.ResizeItemRight:
+                        rectangleProvider.Cursor = Cursors.SizeWE; break;
+                }
+            }
+
+            UpdateMouse(e);
+        }
+
+        private void RectangleProvider_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (state != CursorState.Hover)
+            {
+                handler.EndControllerAction();
+                state = CursorState.Hover;
+            }
+        }
+        
+        private void UpdateMouse(MouseEventArgs e)
+        {
+            if (rectangleProvider.ContainerRectangle.Contains(e.Location))
+            {
+                if (state == CursorState.Hover)
+                {
+                    if (ParentRectangle.Contains(e.Location)) UpdateCache(e.X);
+                }
+                else
+                {
+                    IController controller = handler.GetTargettedController(e.Location);
+                    handler.UpdateControllerAction(e.Location, controller);
+
+                    if (state == CursorState.MoveItem || state == CursorState.ResizeItemLeft || state == CursorState.ResizeItemRight)
+                    {
+                        CursorType[] types = new CursorType[2];
+                        types[0] = types[1] = CursorType.ItemEdge;
+
+                        if (state == CursorState.MoveItem)
+                        {
+                            types[0] = types[1] = CursorType.ItemEdge;
+                        }
+                        else
+                        {
+                            if (state == CursorState.ResizeItemLeft)
+                            {
+                                types[0] = CursorType.ItemResize;
+                                types[1] = CursorType.ItemAnchor;
+                            }
+                            else if (state == CursorState.ResizeItemRight)
+                            {
+                                types[0] = CursorType.ItemAnchor;
+                                types[1] = CursorType.ItemResize;
+                            }
+                        }
+
+                        ItemController item = handler.ActionController as ItemController;
+
+                        int x1 = item.Rectangle.X;
+                        int x2 = item.Rectangle.Right;
+                        UpdateCache(new int[] { x1, x2 }, types);
+                    }
+                }
+                UpdateUI();
+            }
+        }
+
+        private void UpdateCache(int[] xs, CursorType[] types)
+        {
+            protoCursor.X = 0;
+            protoCursor.Y = rectangleProvider.ContainerRectangle.Y;
+            protoCursor.Width = cursorWidth;
+            protoCursor.Height = rectangleProvider.ContainerRectangle.Height;
+
+            oldCursors.AddRange(cursors);
+            cursors.Clear();
+
+            for (int i = 0; i < xs.Length; i += 1)
+            {
+                Rectangle rect = protoCursor;
+                rect.X = xs[i];
+                cursors.Add(new Cursor(rect, types[i]));
+            }
+        }
+
+        private void UpdateCache(int x)
+        {
+            UpdateCache(new int[] { x }, new CursorType[] { CursorType.Main });
+        }
+
+        private void UpdateCache()
+        {
+            UpdateCache(new int[] { ParentRectangle.X }, new CursorType[] { CursorType.Main });
         }
 
         public void UpdateUI()
         {
-            
+            foreach (Cursor cursor in oldCursors)
+            {
+                rectangleProvider.Invalidate(cursor.Rectangle);
+            }
+            oldCursors.Clear();
+
+            foreach (Cursor cursor in cursors)
+            {
+                rectangleProvider.Invalidate(cursor.Rectangle);
+            }
         }
 
-        class ControlInfo : IDisposable
+        private void RectangleProvider_Paint(object sender, PaintEventArgs e)
         {
-            public int Level { get; private set; }
-            public Graphics Graphics { get; private set; }
+            Region graphicsClip = e.Graphics.Clip;
+            e.Graphics.Clip = new Region(rectangleProvider.HorizontalContainerRectangle);
 
-            public ControlInfo(int level, Graphics graphics)
+            foreach (Cursor cursor in cursors)
             {
-                Level = level;
-                Graphics = graphics;
+                if (e.ClipRectangle.IntersectsWith(cursor.Rectangle))
+                {
+                    Brush brush;
+                    if (cursor.Type == CursorType.Main) brush = GlobalConfig.CursorMainBrush;
+                    else if (cursor.Type == CursorType.ItemEdge) brush = GlobalConfig.CursorItemEdgeBrush;
+                    else if (cursor.Type == CursorType.ItemResize) brush = GlobalConfig.CursorItemResizeBrush;
+                    else if (cursor.Type == CursorType.ItemAnchor) brush = GlobalConfig.CursorItemAnchorBrush;
+                    else brush = Brushes.Black;
+
+                    e.Graphics.FillRectangle(brush, cursor.Rectangle);
+                }
             }
 
-            public void Dispose()
+            e.Graphics.Clip = graphicsClip;
+        }
+
+        private void Timeline_LocationChanged(object sender, LocationChangeEventArgs e)
+        {
+            UpdateCache(cursors.First().Rectangle.X);
+            UpdateUI();
+            InvokeLocationChanged(e);
+        }
+
+        private void Timeline_TimelineZoomChanged(object sender, EventArgs e)
+        {
+            if (TimelineZoomChanged != null) TimelineZoomChanged.Invoke(this, EventArgs.Empty);
+        }
+
+        private void Timeline_TimelineLengthChanged(object sender, EventArgs e)
+        {
+            if (TimelineLengthChanged != null) TimelineLengthChanged.Invoke(this, EventArgs.Empty);
+        }        
+
+        private Cursor CreateCursor(int x, CursorType type)
+        {
+            Rectangle rectangle = protoCursor;
+            rectangle.X = x;
+            return new Cursor(rectangle, type);
+        }
+
+        public void Delete()
+        {
+            timeline.TimelineZoomChanged -= Timeline_TimelineZoomChanged;
+            timeline.TimelineLengthChanged -= Timeline_TimelineLengthChanged;
+            timeline.LocationChanged -= Timeline_LocationChanged;
+
+            rectangleProvider.MouseDown -= RectangleProvider_MouseDown;
+            rectangleProvider.MouseMove -= RectangleProvider_MouseMove;
+            rectangleProvider.MouseUp -= RectangleProvider_MouseUp;
+
+            rectangleProvider.Paint -= RectangleProvider_Paint;
+        }
+
+        private class Cursor
+        {
+            public Cursor(Rectangle rectangle, CursorType type)
             {
-                Graphics.Dispose();
+                Rectangle = rectangle;
+                Type = type;
             }
+
+            public Rectangle Rectangle { get; set; }
+            public CursorType Type { get; set; }
+        }
+
+        private enum CursorType
+        {
+            Main,
+            ItemEdge,
+            ItemResize,
+            ItemAnchor
+        }
+
+        private enum CursorState
+        {
+            Hover,
+            MoveItem,
+            ResizeItemLeft,
+            ResizeItemRight,
+            MoveLayer,
+            MoveSlice
         }
     }
 }

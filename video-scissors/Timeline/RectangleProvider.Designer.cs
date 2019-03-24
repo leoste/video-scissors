@@ -1,6 +1,6 @@
 ﻿namespace Scissors.Timeline
 {
-    partial class RulerContent
+    partial class RectangleProvider
     {
         /// <summary> 
         /// Required designer variable.
@@ -30,14 +30,12 @@
         {
             this.SuspendLayout();
             // 
-            // RulerContent
+            // TimelineContent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.HotTrack;
-            this.Margin = new System.Windows.Forms.Padding(0);
-            this.Name = "RulerContent";
-            this.Size = new System.Drawing.Size(150, 40);
+            this.Name = "TimelineContent";
+            this.Size = new System.Drawing.Size(548, 358);
             this.ResumeLayout(false);
 
         }

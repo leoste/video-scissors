@@ -23,6 +23,7 @@ namespace Scissors
 
         private void timeline1_Load(object sender, EventArgs e)
         {
+        
         }
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
