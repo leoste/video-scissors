@@ -68,6 +68,7 @@
             // 
             // timeline1
             // 
+            this.timeline1.BackColor = System.Drawing.Color.WhiteSmoke;
             this.timeline1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.timeline1.Location = new System.Drawing.Point(0, 0);
             this.timeline1.Name = "timeline1";

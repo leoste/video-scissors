@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Scissors.Timeline
 {
-    interface IControlController : ILockableController
+    interface IResizableController : IController
     {
-        Rectangle ControlRectangle { get; }
-        Rectangle ControlParentRectangle { get; }
+        Rectangle LeftResizeHandleRectangle { get; }
+        Rectangle RightResizeHandleRectangle { get; }
     }
 }

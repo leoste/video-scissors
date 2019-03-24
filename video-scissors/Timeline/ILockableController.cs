@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace Scissors.Timeline
 {
-    interface IControlController : ILockableController
+    interface ILockableController : IController
     {
-        Rectangle ControlRectangle { get; }
-        Rectangle ControlParentRectangle { get; }
+        bool IsLocked { get; }
+        bool IsVisible { get; }
+        Color RealBackColor { get; }
     }
 }
