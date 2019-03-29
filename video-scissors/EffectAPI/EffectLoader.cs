@@ -28,8 +28,28 @@ namespace Scissors.EffectAPI
             };
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
+                List<Effect> currentEffects = EffectManager.Effects;
                 Effect effect = EffectManager.LoadEffect(fileDialog.FileName);
                 installedPlugins.Controls.Add(new EffectControl(effect));
+            }
+        }
+
+        private void SearchUpdated(object sender, EventArgs e)
+        {
+            foreach (EffectControl effect in installedPlugins.Controls)
+            {
+                if (!effect.Effect.Info.Name.ToLower().Contains(effectSearch.Text.ToLower()))
+                {
+                    effect.Visible = false;
+                }
+                else if (effect.Effect.Info.Name.ToLower().Contains(effectSearch.Text.ToLower()))
+                {
+                    effect.Visible = true;
+                }
+                else if (effectSearch.Text == string.Empty)
+                {
+                    effect.Visible = true;
+                }
             }
         }
     }
