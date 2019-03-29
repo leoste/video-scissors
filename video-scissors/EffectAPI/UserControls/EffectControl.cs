@@ -20,9 +20,9 @@ namespace Scissors.EffectAPI.UserControls
 
         private void Loaded(object sender, System.EventArgs e)
         {
-            effectName.Text = Effect.Info.name;
-            effectDescription.Text = Effect.Info.description;
-            effectVersion.Text = $"{Effect.Info.version[0].ToString()}.{Effect.Info.version[1].ToString()}.{Effect.Info.version[2].ToString()}";
+            effectName.Text = Effect.Info.Name;
+            effectDescription.Text = Effect.Info.Description;
+            effectVersion.Text = $"{Effect.Info.Version[0].ToString()}.{Effect.Info.Version[1].ToString()}.{Effect.Info.Version[2].ToString()}";
         }
     }
 }
