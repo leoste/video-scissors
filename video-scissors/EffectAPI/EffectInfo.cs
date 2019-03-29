@@ -9,17 +9,17 @@ namespace Scissors.EffectAPI
     [AttributeUsage(AttributeTargets.Class)]
     public class EffectInfo : Attribute
     {
-        public readonly string id;
-        public readonly string name;
-        public readonly string description;
-        public readonly int[] version = new int[3];
+        public string Id { get; }
+        public string Name { get; }
+        public string Description { get; }
+        public int[] Version = new int[3];
 
         public EffectInfo(string id, string name, string description, int[] version)
         {
-            this.id = id;
-            this.name = name;
-            this.description = description;
-            this.version = version;
+            Id = id;
+            Name = name;
+            Description = description;
+            Version = version;
         }
     }
 }
