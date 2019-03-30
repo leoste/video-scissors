@@ -82,7 +82,7 @@
             this.effectVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.effectVersion.AutoSize = true;
             this.effectVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.effectVersion.Location = new System.Drawing.Point(700, 15);
+            this.effectVersion.Location = new System.Drawing.Point(694, 15);
             this.effectVersion.Name = "effectVersion";
             this.effectVersion.Size = new System.Drawing.Size(35, 16);
             this.effectVersion.TabIndex = 4;
