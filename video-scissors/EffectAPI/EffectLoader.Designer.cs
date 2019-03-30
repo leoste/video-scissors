@@ -30,7 +30,6 @@
         {
             this.effectSearch = new System.Windows.Forms.TextBox();
             this.searchLabel = new System.Windows.Forms.Label();
-            this.search = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.installedEffects = new System.Windows.Forms.TabPage();
             this.installedPlugins = new System.Windows.Forms.FlowLayoutPanel();
@@ -44,7 +43,7 @@
             // 
             this.effectSearch.Location = new System.Drawing.Point(12, 41);
             this.effectSearch.Name = "effectSearch";
-            this.effectSearch.Size = new System.Drawing.Size(695, 20);
+            this.effectSearch.Size = new System.Drawing.Size(776, 20);
             this.effectSearch.TabIndex = 0;
             this.effectSearch.TextChanged += new System.EventHandler(this.SearchUpdated);
             // 
@@ -56,15 +55,6 @@
             this.searchLabel.Size = new System.Drawing.Size(79, 13);
             this.searchLabel.TabIndex = 1;
             this.searchLabel.Text = "Search effects:";
-            // 
-            // search
-            // 
-            this.search.Location = new System.Drawing.Point(713, 39);
-            this.search.Name = "search";
-            this.search.Size = new System.Drawing.Size(75, 23);
-            this.search.TabIndex = 2;
-            this.search.Text = "Search";
-            this.search.UseVisualStyleBackColor = true;
             // 
             // tabControl1
             // 
@@ -126,12 +116,15 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.search);
             this.Controls.Add(this.searchLabel);
             this.Controls.Add(this.effectSearch);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "EffectLoader";
             this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Effects...";
             this.TopMost = true;
             this.tabControl1.ResumeLayout(false);
@@ -145,7 +138,6 @@
 
         private System.Windows.Forms.TextBox effectSearch;
         private System.Windows.Forms.Label searchLabel;
-        private System.Windows.Forms.Button search;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage installedEffects;
         private System.Windows.Forms.TabPage availableEffects;
