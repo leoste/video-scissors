@@ -30,7 +30,6 @@ namespace Scissors
             EffectLoader effectLoader = new EffectLoader();
             effectLoader.MdiParent = this;
             effectLoader.Show();
-
         }
 
         private void timeline2_Load(object sender, EventArgs e)

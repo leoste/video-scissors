@@ -124,7 +124,7 @@
             this.Name = "EffectLoader";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Effects...";
             this.TopMost = true;
             this.tabControl1.ResumeLayout(false);
