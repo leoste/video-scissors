@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scissors.Timeline
+namespace Scissors
 {
-    class Frame: IDisposable
+    class Frame : IDisposable
     {
         private Bitmap bitmap;
         private bool sameAsLastFrame;
