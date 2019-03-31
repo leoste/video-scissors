@@ -58,7 +58,7 @@
             // uninstallButton
             // 
             this.uninstallButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.uninstallButton.Location = new System.Drawing.Point(677, 64);
+            this.uninstallButton.Location = new System.Drawing.Point(660, 64);
             this.uninstallButton.Name = "uninstallButton";
             this.uninstallButton.Size = new System.Drawing.Size(75, 23);
             this.uninstallButton.TabIndex = 2;
@@ -71,7 +71,7 @@
             this.effectVersionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.effectVersionLabel.AutoSize = true;
             this.effectVersionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.effectVersionLabel.Location = new System.Drawing.Point(695, -1);
+            this.effectVersionLabel.Location = new System.Drawing.Point(678, -1);
             this.effectVersionLabel.Name = "effectVersionLabel";
             this.effectVersionLabel.Size = new System.Drawing.Size(57, 16);
             this.effectVersionLabel.TabIndex = 3;
@@ -82,7 +82,7 @@
             this.effectVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.effectVersion.AutoSize = true;
             this.effectVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.effectVersion.Location = new System.Drawing.Point(717, 15);
+            this.effectVersion.Location = new System.Drawing.Point(694, 15);
             this.effectVersion.Name = "effectVersion";
             this.effectVersion.Size = new System.Drawing.Size(35, 16);
             this.effectVersion.TabIndex = 4;
@@ -99,7 +99,7 @@
             this.Controls.Add(this.uninstallButton);
             this.Controls.Add(this.effectDescription);
             this.Name = "EffectControl";
-            this.Size = new System.Drawing.Size(755, 90);
+            this.Size = new System.Drawing.Size(738, 90);
             this.Load += new System.EventHandler(this.Loaded);
             this.ResumeLayout(false);
             this.PerformLayout();

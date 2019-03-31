@@ -18,7 +18,6 @@ namespace Scissors
         public Form1()
         {
             InitializeComponent();
-            pluginThread.RunWorkerAsync();
         }
 
         private void timeline1_Load(object sender, EventArgs e)
@@ -26,21 +25,15 @@ namespace Scissors
         
         }
 
-        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            EffectLoader effectLoader = new EffectLoader();
-            effectLoader.Show();
-
-        }
-
         private void timeline2_Load(object sender, EventArgs e)
         {
 
         }
 
-        private void Update(object sender, DoWorkEventArgs e)
+        private void effectsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //TODO: Implement performance friendly update loop (tried with while(true) but that's trash and slow)
+            EffectLoader effectLoader = new EffectLoader();
+            effectLoader.Show();
         }
     }
 }
