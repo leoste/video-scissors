@@ -92,7 +92,7 @@
     <Compile Include="Controls\FancyScrollbar.Designer.cs">
       <DependentUpon>FancyScrollbar.cs</DependentUpon>
     </Compile>
-    <Compile Include="Timeline\Frame.cs" />
+    <Compile Include="Frame.cs" />
     <Compile Include="Timeline\IChildrenController.cs" />
     <Compile Include="Timeline\IControlController.cs" />
     <Compile Include="Timeline\IController.cs" />
