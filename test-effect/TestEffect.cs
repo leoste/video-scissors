@@ -1,6 +1,5 @@
 using System;
 using Scissors.EffectAPI;
-using Scissors.Timeline;
 
 namespace test_effect
 {
