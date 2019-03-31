@@ -99,9 +99,10 @@ namespace Scissors.Timeline
 
         public FancyScrollbar()
         {
-            InitializeComponent();
-            
             brush = new SolidBrush(ForeColor);
+            backBrush = new SolidBrush(BackColor);
+
+            InitializeComponent();            
 
             UpdateCacheAndUI();
         }
