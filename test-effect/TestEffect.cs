@@ -16,5 +16,10 @@ namespace test_effect
         {
             Console.WriteLine("test_effect unloaded!");
         }
+
+        public Frame ProcessFrame(Frame originalFrame)
+        {
+            throw new Exception();
+        }
     }
 }

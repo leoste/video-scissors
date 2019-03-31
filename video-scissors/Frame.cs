@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Scissors
 {
-    class Frame : IDisposable
+    public class Frame : IDisposable
     {
         private Bitmap bitmap;
         private bool sameAsLastFrame;
