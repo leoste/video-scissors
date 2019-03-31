@@ -13,6 +13,8 @@ namespace Scissors.Controls
 {
     public partial class FancySidemenu : UserControl
     {
+        private static readonly int textMargin = 3;
+
         private string[] tabs;
         private int selected;
         Color highlightColor;
@@ -157,6 +159,13 @@ namespace Scissors.Controls
             e.Graphics.FillRectangle(backBrush, new Rectangle(0, 0, Width, Height));
 
             e.Graphics.Clip = graphicsClip;
+            
+            for (int i = 0; i < tabs.Length; i += 1)
+            {
+                int y = (int)(i * tabHeight);
+                int height = TextRenderer.MeasureText(tabs[i], Font).Height;
+                e.Graphics.DrawString(tabs[i], Font, brush, textMargin, y + (tabHeight - height) / 2);
+            }
         }
     }
 }

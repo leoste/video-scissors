@@ -37,7 +37,8 @@
             this.fancySidemenu1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.fancySidemenu1.BackColor = System.Drawing.Color.DimGray;
-            this.fancySidemenu1.ForeColor = System.Drawing.Color.Black;
+            this.fancySidemenu1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
+            this.fancySidemenu1.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.fancySidemenu1.HighlightColor = System.Drawing.Color.Gray;
             this.fancySidemenu1.Location = new System.Drawing.Point(0, 0);
             this.fancySidemenu1.Margin = new System.Windows.Forms.Padding(0);
