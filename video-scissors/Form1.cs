@@ -25,16 +25,15 @@ namespace Scissors
         
         }
 
-        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            EffectLoader effectLoader = new EffectLoader();
-            effectLoader.MdiParent = this;
-            effectLoader.Show();
-        }
-
         private void timeline2_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void effectsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EffectLoader effectLoader = new EffectLoader();
+            effectLoader.Show();
         }
     }
 }
