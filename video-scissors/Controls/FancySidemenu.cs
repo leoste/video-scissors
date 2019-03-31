@@ -23,6 +23,7 @@ namespace Scissors.Controls
         float tabHeight;
         int tabWidth;
         int triangleWidth;
+        int y;
 
         public string[] Tabs
         {
@@ -40,6 +41,7 @@ namespace Scissors.Controls
         public int SelectedId
         {
             get { return selected; }
+            set { selected = value; }
         }
 
         public string SelectedTab
@@ -58,7 +60,7 @@ namespace Scissors.Controls
             }
         }
 
-        public event EventHandler TabSelected;
+        public event EventHandler<SelectionEventArgs> TabClicked;
 
         public FancySidemenu()
         {
@@ -75,7 +77,17 @@ namespace Scissors.Controls
 
         private void FancySidemenu_MouseDown(object sender, MouseEventArgs e)
         {
+            int protoY = (int)(e.Y / (float)Height * tabs.Length);
+            bool changed = protoY != y;
 
+            if (changed)
+            {
+                selected = protoY;
+                UpdateSelectionCache();
+                UpdateUI();
+            }
+
+            if (TabClicked != null) TabClicked.Invoke(this, new SelectionEventArgs(protoY, changed));
         }
 
         private void FancySidemenu_BackColorChanged(object sender, EventArgs e)
@@ -91,10 +103,17 @@ namespace Scissors.Controls
         private void UpdateCacheAndUI()
         {
             tabHeight = Height / (float)tabs.Length;
-            triangleWidth = (int)tabHeight;
+            triangleWidth = (int)(tabHeight / 2.6);
             tabWidth = Width - triangleWidth;
 
+            UpdateSelectionCache();
+
             UpdateUI();
+        }
+
+        private void UpdateSelectionCache()
+        {
+            y = (int)(selected * tabHeight);
         }
 
         private void UpdateUI()
@@ -109,7 +128,6 @@ namespace Scissors.Controls
 
         private void FancySidemenu_Paint(object sender, PaintEventArgs e)
         {
-            int y = (int)(selected * tabHeight);
             int bottom = (int)(y + tabHeight);
             
             Region tab;

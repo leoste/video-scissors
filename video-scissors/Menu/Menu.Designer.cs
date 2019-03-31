@@ -36,19 +36,19 @@
             // 
             this.fancySidemenu1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.fancySidemenu1.BackColor = System.Drawing.Color.Gray;
+            this.fancySidemenu1.BackColor = System.Drawing.Color.DimGray;
             this.fancySidemenu1.ForeColor = System.Drawing.Color.Black;
-            this.fancySidemenu1.HighlightColor = System.Drawing.Color.DarkGray;
+            this.fancySidemenu1.HighlightColor = System.Drawing.Color.Gray;
             this.fancySidemenu1.Location = new System.Drawing.Point(0, 0);
             this.fancySidemenu1.Margin = new System.Windows.Forms.Padding(0);
             this.fancySidemenu1.Name = "fancySidemenu1";
+            this.fancySidemenu1.SelectedId = 0;
             this.fancySidemenu1.Size = new System.Drawing.Size(100, 200);
             this.fancySidemenu1.TabIndex = 14;
             this.fancySidemenu1.Tabs = new string[] {
-        "b",
-        "c",
-        "d",
-        "a"};
+        "Media",
+        "Effects",
+        "Presets"};
             // 
             // verticalScrollbar
             // 
@@ -71,6 +71,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.DimGray;
             this.Controls.Add(this.fancySidemenu1);
             this.Controls.Add(this.verticalScrollbar);
             this.Name = "Menu";
