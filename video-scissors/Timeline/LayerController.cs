@@ -128,13 +128,6 @@ namespace Scissors.Timeline
             SetId();
 
             items = new List<ItemController>();
-            Random rnd = new Random();
-            items.Add(new ItemController(this, rnd.Next(0, 20), rnd.Next(3, 13)));
-            System.Threading.Thread.Sleep(5);
-            items.Add(new ItemController(this, rnd.Next(45, 50), rnd.Next(6, 30)));
-            System.Threading.Thread.Sleep(5);
-            items.Add(new ItemController(this, rnd.Next(70, 90), rnd.Next(10, 15)));
-            System.Threading.Thread.Sleep(5);
             
             lockButton = new ButtonController(this, new Point(
                 5 + dragWidth + ButtonController.margin,

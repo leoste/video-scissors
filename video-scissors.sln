@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.28010.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "video-scissors", "video-scissors\video-scissors.csproj", "{166E112F-43B2-48C9-83A0-AA070F44EBA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test-effect", "test-effect\test-effect.csproj", "{16024374-3971-48D5-B6CE-E132EE3F19DC}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{166E112F-43B2-48C9-83A0-AA070F44EBA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{166E112F-43B2-48C9-83A0-AA070F44EBA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{166E112F-43B2-48C9-83A0-AA070F44EBA5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{16024374-3971-48D5-B6CE-E132EE3F19DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{16024374-3971-48D5-B6CE-E132EE3F19DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{16024374-3971-48D5-B6CE-E132EE3F19DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{16024374-3971-48D5-B6CE-E132EE3F19DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

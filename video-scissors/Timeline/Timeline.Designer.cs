@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.rectangleProvider1 = new Scissors.Timeline.RectangleProvider();
-            this.verticalScrollbar = new Scissors.Timeline.FancyScrollbar();
-            this.horizontalScrollBar = new Scissors.Timeline.FancyScrollbar();
+            this.verticalScrollbar = new Scissors.Controls.FancyScrollbar();
+            this.horizontalScrollBar = new Scissors.Controls.FancyScrollbar();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -65,7 +65,7 @@
             this.verticalScrollbar.Maximum = 10;
             this.verticalScrollbar.Minimum = 0;
             this.verticalScrollbar.Name = "verticalScrollbar";
-            this.verticalScrollbar.ScrollDirection = Scissors.Timeline.ScrollDirection.UpToDown;
+            this.verticalScrollbar.ScrollDirection = Scissors.Controls.ScrollDirection.UpToDown;
             this.verticalScrollbar.ScrollWidth = 3;
             this.verticalScrollbar.Size = new System.Drawing.Size(24, 481);
             this.verticalScrollbar.TabIndex = 12;
@@ -78,14 +78,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.horizontalScrollBar.BackColor = System.Drawing.Color.Gray;
             this.horizontalScrollBar.ForeColor = System.Drawing.Color.DarkGray;
-            this.horizontalScrollBar.Location = new System.Drawing.Point(174, 527);
+            this.horizontalScrollBar.Location = new System.Drawing.Point(162, 527);
             this.horizontalScrollBar.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.horizontalScrollBar.Maximum = 10;
             this.horizontalScrollBar.Minimum = 0;
             this.horizontalScrollBar.Name = "horizontalScrollBar";
-            this.horizontalScrollBar.ScrollDirection = Scissors.Timeline.ScrollDirection.LeftToRight;
+            this.horizontalScrollBar.ScrollDirection = Scissors.Controls.ScrollDirection.LeftToRight;
             this.horizontalScrollBar.ScrollWidth = 3;
-            this.horizontalScrollBar.Size = new System.Drawing.Size(730, 24);
+            this.horizontalScrollBar.Size = new System.Drawing.Size(742, 24);
             this.horizontalScrollBar.TabIndex = 11;
             this.horizontalScrollBar.Value = 3;
             this.horizontalScrollBar.Scroll += new System.EventHandler<System.Windows.Forms.ScrollEventArgs>(this.horizontalScrollBar_Scroll);
@@ -129,8 +129,8 @@
         }
 
         #endregion
-        private FancyScrollbar horizontalScrollBar;
-        private FancyScrollbar verticalScrollbar;
+        private Scissors.Controls.FancyScrollbar horizontalScrollBar;
+        private Scissors.Controls.FancyScrollbar verticalScrollbar;
         private RectangleProvider rectangleProvider1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;

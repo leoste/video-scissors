@@ -48,6 +48,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColorProvider.cs" />
+    <Compile Include="Controls\FancySidemenu.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FancySidemenu.Designer.cs">
+      <DependentUpon>FancySidemenu.cs</DependentUpon>
+    </Compile>
     <Compile Include="EffectAPI\Effect.cs" />
     <Compile Include="EffectAPI\EffectInfo.cs" />
     <Compile Include="EffectAPI\EffectLoader.cs">
@@ -80,10 +86,10 @@
     <Compile Include="Timeline\ButtonController.cs" />
     <Compile Include="Timeline\CursorController.cs" />
     <Compile Include="Timeline\CursorController_ControllerHandler.cs" />
-    <Compile Include="Timeline\FancyScrollbar.cs">
+    <Compile Include="Controls\FancyScrollbar.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Timeline\FancyScrollbar.Designer.cs">
+    <Compile Include="Controls\FancyScrollbar.Designer.cs">
       <DependentUpon>FancyScrollbar.cs</DependentUpon>
     </Compile>
     <Compile Include="Timeline\Frame.cs" />
@@ -94,10 +100,16 @@
     <Compile Include="Timeline\IDraggableController.cs" />
     <Compile Include="Timeline\ILockableController.cs" />
     <Compile Include="Timeline\IResizableController.cs" />
+    <Compile Include="Timeline\Menu.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Timeline\Menu.Designer.cs">
+      <DependentUpon>Menu.cs</DependentUpon>
+    </Compile>
     <Compile Include="Timeline\LocationChangeEventArgs.cs" />
     <Compile Include="Timeline\DisownEventArgs.cs" />
     <Compile Include="Timeline\RulerController.cs" />
-    <Compile Include="Timeline\ScrollDirection.cs" />
+    <Compile Include="Controls\ScrollDirection.cs" />
     <Compile Include="Timeline\RectangleProvider.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -117,6 +129,9 @@
     <Compile Include="Timeline\Timeline.Designer.cs">
       <DependentUpon>Timeline.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Controls\FancySidemenu.resx">
+      <DependentUpon>FancySidemenu.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EffectAPI\EffectLoader.resx">
       <DependentUpon>EffectLoader.cs</DependentUpon>
     </EmbeddedResource>
@@ -137,8 +152,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Timeline\FancyScrollbar.resx">
+    <EmbeddedResource Include="Controls\FancyScrollbar.resx">
       <DependentUpon>FancyScrollbar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Timeline\Menu.resx">
+      <DependentUpon>Menu.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Timeline\Timeline.resx">
       <DependentUpon>Timeline.cs</DependentUpon>

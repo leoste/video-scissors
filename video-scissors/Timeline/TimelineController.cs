@@ -169,7 +169,6 @@ namespace Scissors.Timeline
             this.timeline = timeline;
             slices = new List<SliceController>();
             CreateSlice();
-            CreateSlice();
 
             cursor = new CursorController(this);
             ruler = new RulerController(this);
