@@ -1,4 +1,6 @@
-﻿namespace Scissors.EffectAPI
+﻿using Scissors;
+
+namespace Scissors.EffectAPI
 {
     public interface IEffect
     {
