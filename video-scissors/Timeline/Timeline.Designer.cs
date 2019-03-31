@@ -58,8 +58,8 @@
             // 
             this.verticalScrollbar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.verticalScrollbar.BackColor = System.Drawing.Color.Gray;
-            this.verticalScrollbar.ForeColor = System.Drawing.Color.DarkGray;
+            this.verticalScrollbar.BackColor = System.Drawing.Color.Silver;
+            this.verticalScrollbar.ForeColor = System.Drawing.Color.Gainsboro;
             this.verticalScrollbar.Location = new System.Drawing.Point(0, 43);
             this.verticalScrollbar.Margin = new System.Windows.Forms.Padding(0);
             this.verticalScrollbar.Maximum = 10;
@@ -76,8 +76,8 @@
             // 
             this.horizontalScrollBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.horizontalScrollBar.BackColor = System.Drawing.Color.Gray;
-            this.horizontalScrollBar.ForeColor = System.Drawing.Color.DarkGray;
+            this.horizontalScrollBar.BackColor = System.Drawing.Color.Silver;
+            this.horizontalScrollBar.ForeColor = System.Drawing.Color.Gainsboro;
             this.horizontalScrollBar.Location = new System.Drawing.Point(162, 527);
             this.horizontalScrollBar.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.horizontalScrollBar.Maximum = 10;
