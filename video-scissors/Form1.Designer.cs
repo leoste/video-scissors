@@ -38,6 +38,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.itemSelector1 = new Scissors.Timeline.Menu();
             this.timeline1 = new Scissors.Timeline.Timeline();
             this.topBar.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -46,6 +47,7 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -110,7 +112,7 @@
             this.panel1.Location = new System.Drawing.Point(0, 24);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(824, 479);
+            this.panel1.Size = new System.Drawing.Size(824, 579);
             this.panel1.TabIndex = 1;
             // 
             // splitContainer1
@@ -127,8 +129,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.timeline1);
-            this.splitContainer1.Size = new System.Drawing.Size(824, 479);
-            this.splitContainer1.SplitterDistance = 130;
+            this.splitContainer1.Size = new System.Drawing.Size(824, 579);
+            this.splitContainer1.SplitterDistance = 200;
             this.splitContainer1.TabIndex = 1;
             // 
             // splitContainer2
@@ -136,9 +138,21 @@
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
             this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Size = new System.Drawing.Size(824, 130);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.itemSelector1);
+            this.splitContainer2.Size = new System.Drawing.Size(824, 200);
             this.splitContainer2.SplitterDistance = 272;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // itemSelector1
+            // 
+            this.itemSelector1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.itemSelector1.Location = new System.Drawing.Point(0, 0);
+            this.itemSelector1.Name = "itemSelector1";
+            this.itemSelector1.Size = new System.Drawing.Size(548, 200);
+            this.itemSelector1.TabIndex = 0;
             // 
             // timeline1
             // 
@@ -146,14 +160,14 @@
             this.timeline1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.timeline1.Location = new System.Drawing.Point(0, 0);
             this.timeline1.Name = "timeline1";
-            this.timeline1.Size = new System.Drawing.Size(824, 345);
+            this.timeline1.Size = new System.Drawing.Size(824, 375);
             this.timeline1.TabIndex = 0;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(824, 501);
+            this.ClientSize = new System.Drawing.Size(824, 601);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.topBar);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(186)));
@@ -168,6 +182,7 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -187,6 +202,7 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private Timeline.Timeline timeline1;
+        private Timeline.Menu itemSelector1;
     }
 }
 

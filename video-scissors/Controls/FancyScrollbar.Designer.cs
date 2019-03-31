@@ -1,4 +1,4 @@
-﻿namespace Scissors.Timeline
+﻿namespace Scissors.Controls
 {
     partial class FancyScrollbar
     {
@@ -34,6 +34,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.ForeColor = System.Drawing.Color.Black;
             this.Name = "FancyScrollbar";
             this.BackColorChanged += new System.EventHandler(this.FancyScrollbar_BackColorChanged);
             this.ForeColorChanged += new System.EventHandler(this.FancyScrollbar_ForeColorChanged);

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Scissors.Timeline
+namespace Scissors.Controls
 {
     public partial class FancyScrollbar : UserControl
     {
@@ -95,13 +95,14 @@ namespace Scissors.Timeline
             }
         }
 
-        public event EventHandler<ScrollEventArgs> Scroll;
+        public new event EventHandler<ScrollEventArgs> Scroll;
 
         public FancyScrollbar()
         {
-            InitializeComponent();
-            
             brush = new SolidBrush(ForeColor);
+            backBrush = new SolidBrush(BackColor);
+
+            InitializeComponent();            
 
             UpdateCacheAndUI();
         }

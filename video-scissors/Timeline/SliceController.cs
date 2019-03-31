@@ -319,13 +319,10 @@ namespace Scissors.Timeline
             AddLayer(layer, id);
 
             UpdateCache();
-            
-            if (id < timeline.SliceCount)
-            {
-                List<SliceController> slices = timeline.GetSlices(id, timeline.SliceCount - id);
-                UpdateSlicesCache(slices);
-                UpdateSlicesUI(slices);
-            }
+
+            List<SliceController> slices = timeline.GetSlices(this.id, timeline.SliceCount - this.id);
+            UpdateSlicesCache(slices);
+            UpdateSlicesUI(slices);
 
             UpdateUI();
 
