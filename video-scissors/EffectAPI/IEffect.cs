@@ -4,7 +4,6 @@
     {
 
         void OnLoad();
-        void OnUpdate();
         void OnUnload();
     }
 }

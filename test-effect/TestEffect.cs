@@ -1,5 +1,6 @@
 using System;
 using Scissors.EffectAPI;
+using Scissors.Timeline;
 
 namespace test_effect
 {
@@ -9,11 +10,6 @@ namespace test_effect
         public void OnLoad()
         {
             Console.WriteLine("test_effect loaded!");
-        }
-
-        public void OnUpdate()
-        {
-            Console.WriteLine("test_effect updated!");
         }
 
         public void OnUnload()
