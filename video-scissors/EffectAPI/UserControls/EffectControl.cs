@@ -9,7 +9,7 @@ namespace Scissors.EffectAPI.UserControls
         public EffectControl(Effect effect)
         {
             InitializeComponent();
-            this.Effect = effect;
+            Effect = effect;
         }
 
         private void Uninstall(object sender, System.EventArgs e)
