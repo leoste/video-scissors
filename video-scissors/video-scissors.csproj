@@ -100,10 +100,10 @@
     <Compile Include="Timeline\IDraggableController.cs" />
     <Compile Include="Timeline\ILockableController.cs" />
     <Compile Include="Timeline\IResizableController.cs" />
-    <Compile Include="Timeline\Menu.cs">
+    <Compile Include="Menu\Menu.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Timeline\Menu.Designer.cs">
+    <Compile Include="Menu\Menu.Designer.cs">
       <DependentUpon>Menu.cs</DependentUpon>
     </Compile>
     <Compile Include="Timeline\LocationChangeEventArgs.cs" />
@@ -155,7 +155,7 @@
     <EmbeddedResource Include="Controls\FancyScrollbar.resx">
       <DependentUpon>FancyScrollbar.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Timeline\Menu.resx">
+    <EmbeddedResource Include="Menu\Menu.resx">
       <DependentUpon>Menu.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Timeline\Timeline.resx">
