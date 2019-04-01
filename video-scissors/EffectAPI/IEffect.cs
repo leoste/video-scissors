@@ -1,4 +1,4 @@
-﻿using Scissors;
+﻿using Scissors.Objects;
 
 namespace Scissors.EffectAPI
 {

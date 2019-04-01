@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scissors
+namespace Scissors.Objects
 {
     public class Frame : IDisposable
     {
