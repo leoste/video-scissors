@@ -127,6 +127,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Effects...";
             this.TopMost = true;
+            this.Load += new System.EventHandler(this.FormLoaded);
             this.tabControl1.ResumeLayout(false);
             this.installedEffects.ResumeLayout(false);
             this.ResumeLayout(false);
