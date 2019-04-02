@@ -1,14 +1,5 @@
 ﻿using Scissors.EffectAPI.UserControls;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Scissors.EffectAPI
@@ -28,9 +19,11 @@ namespace Scissors.EffectAPI
             };
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
-                List<Effect> currentEffects = EffectManager.Effects;
-                Effect effect = EffectManager.LoadEffect(fileDialog.FileName);
-                installedPlugins.Controls.Add(new EffectControl(effect));
+                Effect effect = EffectManager.LoadEffectFile(fileDialog.FileName);
+                if (effect != null)
+                {
+                    installedPlugins.Controls.Add(new EffectControl(effect));
+                }
             }
         }
 
@@ -50,6 +43,14 @@ namespace Scissors.EffectAPI
                 {
                     effect.Visible = true;
                 }
+            }
+        }
+
+        private void FormLoaded(object sender, EventArgs e)
+        {
+            foreach (Effect effect in EffectManager.Effects)
+            {
+                installedPlugins.Controls.Add(new EffectControl(effect));
             }
         }
     }

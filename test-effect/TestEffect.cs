@@ -1,6 +1,6 @@
 using System;
 using Scissors.EffectAPI;
-using Scissors;
+using Scissors.Objects;
 
 namespace test_effect
 {
