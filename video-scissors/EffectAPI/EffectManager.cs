@@ -17,19 +17,12 @@ namespace Scissors.EffectAPI
         {
             string copyDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Video Scissors\\effects\\");
             string fileName = Path.GetFileName(path);
+
             if (!File.Exists(Path.Combine(copyDirectory, fileName)))
             {
-                try
-                {
-                    File.Copy(path, Path.Combine(copyDirectory, fileName));
-                    File.SetAttributes(Path.Combine(copyDirectory, fileName), FileAttributes.Normal);
-                    return LoadEffect(path);
-                }
-                catch (ReflectionTypeLoadException e)
-                {
-                    MessageBox.Show(e.StackTrace, "Error!", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error);
-                    return null;
-                }
+                File.Copy(path, Path.Combine(copyDirectory, fileName));
+                File.SetAttributes(Path.Combine(copyDirectory, fileName), FileAttributes.Normal);
+                return LoadEffect(path);
             }
             else
             {
@@ -81,7 +74,7 @@ namespace Scissors.EffectAPI
             }
             catch (ReflectionTypeLoadException e)
             {
-                Debug.Fail(e.StackTrace);
+                MessageBox.Show(e.StackTrace, "Error!", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error);
                 return null;
             }
         }
