@@ -35,5 +35,10 @@ namespace Scissors
             EffectLoader effectLoader = new EffectLoader();
             effectLoader.Show();
         }
+
+        private void FormLoaded(object sender, EventArgs e)
+        {
+            EffectManager.LoadEffects();
+        }
     }
 }

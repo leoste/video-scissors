@@ -175,6 +175,7 @@
             this.MainMenuStrip = this.topBar;
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.FormLoaded);
             this.topBar.ResumeLayout(false);
             this.topBar.PerformLayout();
             this.panel1.ResumeLayout(false);
