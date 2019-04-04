@@ -136,20 +136,16 @@ namespace Scissors.Timeline
 
         private void RectangleProvider_MouseDown(object sender, MouseEventArgs e)
         {
-            IController controller = handler.GetTargettedController(e.Location);
-            state = handler.GetCursorState(e.Location, controller);
+            if (!handler.Active)
+            {
+                IController controller = handler.GetTargettedController(e.Location);
+                state = handler.GetCursorState(e.Location, controller);
 
-            /*LayerController layer = timeline.GetSlices().First().GetChildren().First() as LayerController;
-            ItemController item = layer.CreateItem(0, 20);
-            state = CursorState.MoveItem;
-            handler.BeginControllerAction(e.Location, item, state);
-            UpdateMouse(e);
-            return;*/
+                if (state == CursorState.Hover) return;
+                else handler.BeginControllerAction(e.Location, controller, state);
 
-            if (state == CursorState.Hover) return;
-            else handler.BeginControllerAction(e.Location, controller, state);            
-            
-            UpdateMouse(e);
+                UpdateMouse(e);
+            }
         }
 
         private void RectangleProvider_MouseMove(object sender, MouseEventArgs e)
@@ -180,7 +176,7 @@ namespace Scissors.Timeline
 
         private void RectangleProvider_MouseUp(object sender, MouseEventArgs e)
         {
-            if (state != CursorState.Hover)
+            if (handler.Active)
             {
                 handler.EndControllerAction();
                 state = CursorState.Hover;

@@ -32,6 +32,8 @@ namespace Scissors.Timeline
 
             public IController ActionController { get { return actionController; } }
 
+            public bool Active { get { return doingAction; } }
+
             public ControllerHandler(CursorController owner)
             {
                 cursor = owner;
