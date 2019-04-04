@@ -12,12 +12,14 @@ namespace Scissors.Timeline
 {
     public partial class Menu : UserControl
     {
+        private List<Item> allItems;
         private List<MediaItem> mediaItems;
         private List<EffectItem> effectItems;
 
         public Menu()
         {
             InitializeComponent();
+            allItems = new List<Item>();
             mediaItems = new List<MediaItem>();
             effectItems = new List<EffectItem>();
         }
@@ -46,37 +48,71 @@ namespace Scissors.Timeline
                 {
                     for (int i = 0; i < openMediaDialog.FileNames.Length; i += 1)
                     {
-                        Label label = new Label();
-                        label.Size = label1.Size;
-                        label.BackColor = label1.BackColor;
-                        label.ForeColor = label1.ForeColor;
-                        label.Margin = label1.Margin;
+                        MediaItem item = new MediaItem();
+                        SetupItem(item, openMediaDialog.FileNames[i], openMediaDialog.SafeFileNames[i]);
                         
-                        label.Text = openMediaDialog.SafeFileNames[i];
-
-                        flowLayoutPanel1.Controls.Add(label);
-                        flowLayoutPanel1.Controls.SetChildIndex(label1, flowLayoutPanel1.Controls.Count);
-
-                        mediaItems.Add(new MediaItem()
-                        {
-                            label = label,
-                            filename = openMediaDialog.FileNames[i]
-                        });
+                        mediaItems.Add(item);
                     }
+                    flowLayoutPanel1.Controls.SetChildIndex(label1, flowLayoutPanel1.Controls.Count);
                 }
             }
         }
 
-        private struct MediaItem
+        private void SetupItem(Item item, string filename, string name)
+        {
+            Label label = new Label();
+
+            label.Size = label1.Size;
+            label.BackColor = label1.BackColor;
+            label.ForeColor = label1.ForeColor;
+            label.Margin = label1.Margin;
+
+            label.MouseDown += Label_MouseDown;
+            label.MouseMove += Label_MouseMove;
+            label.MouseUp += Label_MouseUp;
+
+            flowLayoutPanel1.Controls.Add(label);
+
+            label.Text = name;
+            item.label = label;
+            item.filename = filename;
+
+            allItems.Add(item);
+        }
+
+        private void Label_MouseDown(object sender, MouseEventArgs e)
+        {
+            
+        }
+
+        private void Label_MouseMove(object sender, MouseEventArgs e)
+        {
+            
+        }
+
+        private void Label_MouseUp(object sender, MouseEventArgs e)
+        {
+            
+        }
+
+        private Item FindItemByLabel(Label label)
+        {
+            return allItems.Find(x => x.label == label);
+        }
+
+        private class Item
         {
             public Label label;
             public string filename;
         }
 
-        private struct EffectItem
+        private class MediaItem : Item
         {
-            public Label label;
-            public string filename;
+            
+        }
+
+        private class EffectItem : Item
+        {
             public int duwu;
         }
     }
