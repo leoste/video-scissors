@@ -136,10 +136,6 @@ namespace Scissors.Timeline
 
         private void RectangleProvider_MouseDown(object sender, MouseEventArgs e)
         {
-            GlobalMouseInfo.Holder = MouseHolder.RectangleProvider;
-            GlobalMouseInfo.LastKnownHolder = MouseHolder.RectangleProvider;
-            GlobalMouseInfo.State = MouseState.Pressed;
-            
             IController controller = handler.GetTargettedController(e.Location);
             state = handler.GetCursorState(e.Location, controller);
 
@@ -184,9 +180,6 @@ namespace Scissors.Timeline
 
         private void RectangleProvider_MouseUp(object sender, MouseEventArgs e)
         {
-            GlobalMouseInfo.Holder = MouseHolder.None;
-            GlobalMouseInfo.State = MouseState.Unpressed;
-
             if (state != CursorState.Hover)
             {
                 handler.EndControllerAction();

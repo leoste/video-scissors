@@ -30,12 +30,14 @@
         {
             this.SuspendLayout();
             // 
-            // TimelineContent
+            // RectangleProvider
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Name = "TimelineContent";
+            this.Name = "RectangleProvider";
             this.Size = new System.Drawing.Size(548, 358);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.RectangleProvider_MouseDown);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.RectangleProvider_MouseUp);
             this.ResumeLayout(false);
 
         }
