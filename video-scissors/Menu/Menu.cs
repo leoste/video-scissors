@@ -82,7 +82,9 @@ namespace Scissors.Timeline
 
         private void Label_MouseDown(object sender, MouseEventArgs e)
         {
-            
+            GlobalMouseInfo.Holder = MouseHolder.Menu;
+            GlobalMouseInfo.LastKnownHolder = MouseHolder.Menu;
+            GlobalMouseInfo.State = MouseState.Pressed;            
         }
 
         private void Label_MouseMove(object sender, MouseEventArgs e)
@@ -92,7 +94,8 @@ namespace Scissors.Timeline
 
         private void Label_MouseUp(object sender, MouseEventArgs e)
         {
-            
+            GlobalMouseInfo.State = MouseState.Unpressed;
+            GlobalMouseInfo.Holder = MouseHolder.None;
         }
 
         private Item FindItemByLabel(Label label)
