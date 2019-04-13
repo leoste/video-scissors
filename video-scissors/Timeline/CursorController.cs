@@ -116,7 +116,8 @@ namespace Scissors.Timeline
                 GlobalMouseInfo.LastKnownHolder = MouseHolder.None;
                 //need to create an item from menu
 
-                Point mouse = rectangleProvider.PointToClient(Control.MousePosition);
+                Point screen = Control.MousePosition;
+                Point mouse = rectangleProvider.PointToClient(screen);
 
                 IController controller = handler.GetTargettedController(mouse);
                 LayerController layer;
@@ -130,7 +131,8 @@ namespace Scissors.Timeline
                 }
                 else return;
 
-                layer.CreateItem(0, 10);
+                int x = (int)Math.Round((mouse.X - timeline.Rectangle.Left) / timeline.TimelineZoom);
+                layer.CreateItem(x, 10);
             }
         }
 
