@@ -105,17 +105,49 @@ namespace Scissors.Timeline
             rectangleProvider.MouseUp += RectangleProvider_MouseUp;
 
             rectangleProvider.Paint += RectangleProvider_Paint;
+
+            rectangleProvider.MouseEnter += RectangleProvider_MouseEnter;
+        }
+
+        private void RectangleProvider_MouseEnter(object sender, EventArgs e)
+        {
+            if (GlobalMouseInfo.LastKnownHolder == MouseHolder.Menu)
+            {
+                GlobalMouseInfo.LastKnownHolder = MouseHolder.None;
+                //need to create an item from menu
+
+                Point screen = Control.MousePosition;
+                Point mouse = rectangleProvider.PointToClient(screen);
+
+                IController controller = handler.GetTargettedController(mouse);
+                LayerController layer;
+                if (controller is LayerController targetLayer)
+                {
+                    layer = targetLayer;
+                }
+                else if (controller is SliceController slice)
+                {
+                    layer = slice.GetChildren().First() as LayerController;
+                }
+                else return;
+
+                int x = (int)Math.Round((mouse.X - timeline.Rectangle.Left) / timeline.TimelineZoom);
+                layer.CreateItem(x, 10);
+            }
         }
 
         private void RectangleProvider_MouseDown(object sender, MouseEventArgs e)
         {
-            IController controller = handler.GetTargettedController(e.Location);
-            state = handler.GetCursorState(e.Location, controller);
+            if (!handler.Active)
+            {
+                IController controller = handler.GetTargettedController(e.Location);
+                state = handler.GetCursorState(e.Location, controller);
 
-            if (state == CursorState.Hover) return;
-            else handler.BeginControllerAction(e.Location, controller, state);            
-            
-            UpdateMouse(e);
+                if (state == CursorState.Hover) return;
+                else handler.BeginControllerAction(e.Location, controller, state);
+
+                UpdateMouse(e);
+            }
         }
 
         private void RectangleProvider_MouseMove(object sender, MouseEventArgs e)
@@ -146,7 +178,7 @@ namespace Scissors.Timeline
 
         private void RectangleProvider_MouseUp(object sender, MouseEventArgs e)
         {
-            if (state != CursorState.Hover)
+            if (handler.Active)
             {
                 handler.EndControllerAction();
                 state = CursorState.Hover;

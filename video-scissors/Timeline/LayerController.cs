@@ -290,16 +290,19 @@ namespace Scissors.Timeline
             RectangleProvider.InvalidateContentContainerRectangle(item.Rectangle);
         }
 
-        internal void AddItem(ItemController item)
+        public ItemController CreateItem(int startPosition = 0, int length = 1)
         {
+            ItemController item = new ItemController(this, startPosition, length);
             items.Add(item);
             RectangleProvider.InvalidateContentContainerRectangle(item.Rectangle);
+            return item;
         }
 
-        internal void RemoveItem(ItemController item)
+        public void DeleteItem(ItemController item)
         {
             items.Remove(item);
             RectangleProvider.InvalidateContentContainerRectangle(item.Rectangle);
+            item.Delete();
         }
 
         private void Slice_Disowning(object sender, DisownEventArgs e)

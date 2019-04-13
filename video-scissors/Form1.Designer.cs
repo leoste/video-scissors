@@ -148,6 +148,7 @@
             // 
             // itemSelector1
             // 
+            this.itemSelector1.BackColor = System.Drawing.Color.WhiteSmoke;
             this.itemSelector1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.itemSelector1.Location = new System.Drawing.Point(0, 0);
             this.itemSelector1.Name = "itemSelector1";

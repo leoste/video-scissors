@@ -275,5 +275,18 @@ namespace Scissors.Timeline
                 InvalidateVerticalContainerRectangle(rect);
             }
         }
+
+        private void RectangleProvider_MouseDown(object sender, MouseEventArgs e)
+        {
+            GlobalMouseInfo.Holder = MouseHolder.RectangleProvider;
+            GlobalMouseInfo.LastKnownHolder = MouseHolder.RectangleProvider;
+            GlobalMouseInfo.State = MouseState.Pressed;
+        }
+
+        private void RectangleProvider_MouseUp(object sender, MouseEventArgs e)
+        {
+            GlobalMouseInfo.Holder = MouseHolder.None;
+            GlobalMouseInfo.State = MouseState.Unpressed;
+        }
     }
 }

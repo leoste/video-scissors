@@ -13,6 +13,8 @@ namespace Scissors.Controls
 {
     public partial class FancySidemenu : UserControl
     {
+        private static readonly int textMargin = 3;
+
         private string[] tabs;
         private int selected;
         Color highlightColor;
@@ -23,6 +25,7 @@ namespace Scissors.Controls
         float tabHeight;
         int tabWidth;
         int triangleWidth;
+        int y;
 
         public string[] Tabs
         {
@@ -40,6 +43,7 @@ namespace Scissors.Controls
         public int SelectedId
         {
             get { return selected; }
+            set { selected = value; }
         }
 
         public string SelectedTab
@@ -58,7 +62,7 @@ namespace Scissors.Controls
             }
         }
 
-        public event EventHandler TabSelected;
+        public event EventHandler<SelectionEventArgs> TabClicked;
 
         public FancySidemenu()
         {
@@ -75,7 +79,17 @@ namespace Scissors.Controls
 
         private void FancySidemenu_MouseDown(object sender, MouseEventArgs e)
         {
+            int protoY = (int)(e.Y / (float)Height * tabs.Length);
+            bool changed = protoY != y;
 
+            if (changed)
+            {
+                selected = protoY;
+                UpdateSelectionCache();
+                UpdateUI();
+            }
+
+            if (TabClicked != null) TabClicked.Invoke(this, new SelectionEventArgs(protoY, changed));
         }
 
         private void FancySidemenu_BackColorChanged(object sender, EventArgs e)
@@ -91,10 +105,17 @@ namespace Scissors.Controls
         private void UpdateCacheAndUI()
         {
             tabHeight = Height / (float)tabs.Length;
-            triangleWidth = (int)tabHeight;
+            triangleWidth = (int)(tabHeight / 2.6);
             tabWidth = Width - triangleWidth;
 
+            UpdateSelectionCache();
+
             UpdateUI();
+        }
+
+        private void UpdateSelectionCache()
+        {
+            y = (int)(selected * tabHeight);
         }
 
         private void UpdateUI()
@@ -109,7 +130,6 @@ namespace Scissors.Controls
 
         private void FancySidemenu_Paint(object sender, PaintEventArgs e)
         {
-            int y = (int)(selected * tabHeight);
             int bottom = (int)(y + tabHeight);
             
             Region tab;
@@ -139,6 +159,13 @@ namespace Scissors.Controls
             e.Graphics.FillRectangle(backBrush, new Rectangle(0, 0, Width, Height));
 
             e.Graphics.Clip = graphicsClip;
+            
+            for (int i = 0; i < tabs.Length; i += 1)
+            {
+                int y = (int)(i * tabHeight);
+                int height = TextRenderer.MeasureText(tabs[i], Font).Height;
+                e.Graphics.DrawString(tabs[i], Font, brush, textMargin, y + (tabHeight - height) / 2);
+            }
         }
     }
 }
