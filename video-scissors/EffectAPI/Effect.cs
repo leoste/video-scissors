@@ -10,11 +10,11 @@ namespace Scissors.EffectAPI
         public EffectInfo Info { get; }
         public Type Type { get; }
 
-        public Effect(EffectInfo info, Type effect, string path)
+        public Effect(Type effect, string path)
         {
             if (!effect.GetInterfaces().Contains(typeof(IEffect))) throw new ArgumentException("effect must implement IEffect!");
 
-            Info = Info;
+            Info = (EffectInfo)effect.GetCustomAttribute(typeof(EffectInfo), false);
             Type = effect;
             Path = path;
         }

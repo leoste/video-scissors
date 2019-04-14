@@ -62,9 +62,8 @@ namespace Scissors.EffectAPI
             try
             {
                 Assembly effectDll = Assembly.LoadFile(path);
-                Type type = effectDll.GetTypes()[0];
-                EffectInfo effectInfo = (EffectInfo)type.GetCustomAttribute(typeof(EffectInfo), false);
-                Effect effect = new Effect(effectInfo, type, Path.Combine(copyDirectory, Path.GetFileName(path)));                
+                Type type = effectDll.GetTypes()[0];                
+                Effect effect = new Effect(type, Path.Combine(copyDirectory, Path.GetFileName(path)));                
                 Effects.Add(effect);
                 return effect;
             }
