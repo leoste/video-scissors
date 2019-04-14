@@ -90,7 +90,7 @@ namespace Scissors.Timeline
             
             if (item is MediaItem media)
             {
-                GlobalMouseInfo.MenuItemEffect = new EffectAPI.Effect(null, typeof(Effects.ImageRenderer), null);
+                GlobalMouseInfo.MenuItemEffect = new EffectAPI.Effect(typeof(Effects.ImageRenderer), null);
             }
         }
 
