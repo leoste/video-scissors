@@ -9,6 +9,7 @@ using Scissors.Objects;
 
 namespace Scissors.Effects
 {
+    [EffectInfo("image_renderer", "Image Renderer", "Renders an image.", new int[] { 1, 0, 0 })]
     class ImageRenderer : IEffect
     {
         private Image image;
