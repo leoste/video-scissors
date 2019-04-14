@@ -38,8 +38,8 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.itemSelector1 = new Scissors.Timeline.Menu();
             this.timeline1 = new Scissors.Timeline.Timeline();
+            this.itemSelector1 = new Scissors.Timeline.Menu();
             this.topBar.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -143,17 +143,8 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.itemSelector1);
             this.splitContainer2.Size = new System.Drawing.Size(824, 200);
-            this.splitContainer2.SplitterDistance = 272;
+            this.splitContainer2.SplitterDistance = 271;
             this.splitContainer2.TabIndex = 0;
-            // 
-            // itemSelector1
-            // 
-            this.itemSelector1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.itemSelector1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.itemSelector1.Location = new System.Drawing.Point(0, 0);
-            this.itemSelector1.Name = "itemSelector1";
-            this.itemSelector1.Size = new System.Drawing.Size(548, 200);
-            this.itemSelector1.TabIndex = 0;
             // 
             // timeline1
             // 
@@ -163,6 +154,15 @@
             this.timeline1.Name = "timeline1";
             this.timeline1.Size = new System.Drawing.Size(824, 375);
             this.timeline1.TabIndex = 0;
+            // 
+            // itemSelector1
+            // 
+            this.itemSelector1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.itemSelector1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.itemSelector1.Location = new System.Drawing.Point(0, 0);
+            this.itemSelector1.Name = "itemSelector1";
+            this.itemSelector1.Size = new System.Drawing.Size(549, 200);
+            this.itemSelector1.TabIndex = 0;
             // 
             // Form1
             // 

@@ -23,7 +23,7 @@ namespace Scissors.Timeline
         private int startPosition;
         private int endPosition;
         private int itemLength;
-        private Effect effect;
+        private IEffect effectInstance;
         
         internal int StartPosition
         {
@@ -82,7 +82,7 @@ namespace Scissors.Timeline
             }
         }
 
-        internal Effect Effect { get { return effect; } }
+        internal IEffect EffectInstance { get { return effectInstance; } }
 
         public int TimelineLength { get { return layer.TimelineLength; } }
         public int ProjectFramerate { get { return layer.ProjectFramerate; } }
@@ -187,7 +187,7 @@ namespace Scissors.Timeline
         internal ItemController(LayerController layer, int startPosition, int length, Effect effect)
         {
             this.layer = layer;
-            this.effect = effect;
+            effectInstance = effect.CreateEffectInstance();
             rectangleProvider = layer.RectangleProvider;
             UpdateCache();
             oldRectangle = itemRectangle;

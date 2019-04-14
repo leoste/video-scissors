@@ -138,15 +138,26 @@ namespace Scissors.Timeline
 
         private void RectangleProvider_MouseDown(object sender, MouseEventArgs e)
         {
-            if (!handler.Active)
+            if (e.Button == MouseButtons.Left)
             {
-                IController controller = handler.GetTargettedController(e.Location);
-                state = handler.GetCursorState(e.Location, controller);
+                if (!handler.Active)
+                {
+                    IController controller = handler.GetTargettedController(e.Location);
+                    state = handler.GetCursorState(e.Location, controller);
 
-                if (state == CursorState.Hover) return;
-                else handler.BeginControllerAction(e.Location, controller, state);
+                    if (state == CursorState.Hover) return;
+                    else handler.BeginControllerAction(e.Location, controller, state);
 
-                UpdateMouse(e);
+                    UpdateMouse(e);
+                }
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                if (!handler.Active)
+                {
+                    IController controller = handler.GetTargettedController(e.Location);
+                    handler.RightClick(controller);
+                }
             }
         }
 

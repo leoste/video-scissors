@@ -300,6 +300,16 @@ namespace Scissors.Timeline
                 state = CursorState.Hover;
                 actionController = null;
             }
+
+            public void RightClick(IController controller)
+            {
+                if (controller is ItemController item)
+                {
+                    ItemEditor editor = new ItemEditor(item.EffectInstance);
+
+                    editor.ShowDialog();
+                }
+            }
         }
     }
 }
