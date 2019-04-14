@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Scissors.EffectAPI;
 using Scissors.Objects;
 
 namespace Scissors.Timeline
@@ -22,6 +23,7 @@ namespace Scissors.Timeline
         private int startPosition;
         private int endPosition;
         private int itemLength;
+        private Effect effect;
         
         internal int StartPosition
         {
@@ -79,6 +81,8 @@ namespace Scissors.Timeline
                 }
             }
         }
+
+        internal Effect Effect { get { return effect; } }
 
         public int TimelineLength { get { return layer.TimelineLength; } }
         public int ProjectFramerate { get { return layer.ProjectFramerate; } }
@@ -180,9 +184,10 @@ namespace Scissors.Timeline
         public event EventHandler TimelineLengthChanged;
         public event EventHandler TimelineZoomChanged;
 
-        internal ItemController(LayerController layer, int startPosition, int length)
+        internal ItemController(LayerController layer, int startPosition, int length, Effect effect)
         {
             this.layer = layer;
+            this.effect = effect;
             rectangleProvider = layer.RectangleProvider;
             UpdateCache();
             oldRectangle = itemRectangle;

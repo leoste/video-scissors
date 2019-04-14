@@ -132,7 +132,7 @@ namespace Scissors.Timeline
                 else return;
 
                 int x = (int)Math.Round((mouse.X - timeline.Rectangle.Left) / timeline.TimelineZoom);
-                layer.CreateItem(x, 10);
+                layer.CreateItem(GlobalMouseInfo.MenuItemEffect, x, 10);
             }
         }
 

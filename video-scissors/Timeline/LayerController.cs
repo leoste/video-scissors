@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Scissors.EffectAPI;
 using Scissors.Objects;
 
 namespace Scissors.Timeline
@@ -290,9 +291,9 @@ namespace Scissors.Timeline
             RectangleProvider.InvalidateContentContainerRectangle(item.Rectangle);
         }
 
-        public ItemController CreateItem(int startPosition = 0, int length = 1)
+        public ItemController CreateItem(Effect effect, int startPosition = 0, int length = 1)
         {
-            ItemController item = new ItemController(this, startPosition, length);
+            ItemController item = new ItemController(this, startPosition, length, effect);
             items.Add(item);
             RectangleProvider.InvalidateContentContainerRectangle(item.Rectangle);
             return item;

@@ -54,6 +54,7 @@
     <Compile Include="Controls\FancySidemenu.Designer.cs">
       <DependentUpon>FancySidemenu.cs</DependentUpon>
     </Compile>
+    <Compile Include="Effects\Image.cs" />
     <Compile Include="GlobalMouseInfo.cs" />
     <Compile Include="SelectionEventArgs.cs" />
     <Compile Include="EffectAPI\Effect.cs" />
@@ -200,5 +201,6 @@
   <ItemGroup>
     <None Include="Resources\plus.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

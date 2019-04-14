@@ -84,7 +84,14 @@ namespace Scissors.Timeline
         {
             GlobalMouseInfo.Holder = MouseHolder.Menu;
             GlobalMouseInfo.LastKnownHolder = MouseHolder.Menu;
-            GlobalMouseInfo.State = MouseState.Pressed;            
+            GlobalMouseInfo.State = MouseState.Pressed;
+
+            Item item = FindItemByLabel(sender as Label);
+            
+            if (item is MediaItem media)
+            {
+                GlobalMouseInfo.MenuItemEffect = new EffectAPI.Effect(null, typeof(Effects.ImageRenderer), null);
+            }
         }
 
         private void Label_MouseMove(object sender, MouseEventArgs e)

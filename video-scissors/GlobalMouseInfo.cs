@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Scissors.EffectAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace Scissors
         public static MouseHolder Holder { get; set; }
         public static MouseHolder LastKnownHolder { get; set; }
         public static MouseState State { get; set; }
+        public static Effect MenuItemEffect { get; set; }
     }
 
     enum MouseState

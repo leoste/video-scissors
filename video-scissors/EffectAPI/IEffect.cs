@@ -6,7 +6,7 @@ namespace Scissors.EffectAPI
     {
 
         void OnLoad();
-        Frame ProcessFrame(Frame originalFrame);
+        void ProcessFrame(Frame originalFrame);
         void OnUnload();
     }
 }

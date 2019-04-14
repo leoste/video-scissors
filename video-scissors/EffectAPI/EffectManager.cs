@@ -52,7 +52,6 @@ namespace Scissors.EffectAPI
 
         public static void UnloadEffect(Effect effect)
         {
-            effect.EffectInstance.OnUnload();
             Effects.Remove(effect);
             File.Delete(effect.Path);
         }
@@ -64,11 +63,8 @@ namespace Scissors.EffectAPI
             {
                 Assembly effectDll = Assembly.LoadFile(path);
                 Type type = effectDll.GetTypes()[0];
-                IEffect effectInstance = (IEffect)Activator.CreateInstance(type);
                 EffectInfo effectInfo = (EffectInfo)type.GetCustomAttribute(typeof(EffectInfo), false);
-                Effect effect = new Effect(effectInfo, effectInstance, Path.Combine(copyDirectory, Path.GetFileName(path)));
-
-                effect.EffectInstance.OnLoad();
+                Effect effect = new Effect(effectInfo, type, Path.Combine(copyDirectory, Path.GetFileName(path)));                
                 Effects.Add(effect);
                 return effect;
             }
