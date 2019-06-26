@@ -54,6 +54,7 @@
     <Compile Include="Controls\FancySidemenu.Designer.cs">
       <DependentUpon>FancySidemenu.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\IPropertyEditor.cs" />
     <Compile Include="Controls\StringEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Scissors.Controls
 {
-    public partial class StringEditor : UserControl
+    public partial class StringEditor : UserControl, IPropertyEditor
     {
         public string Value { get { return textBox1.Text; } set { textBox1.Text = value; } }
         public string Label { get { return label1.Text; } set { label1.Text = value; } }

@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Scissors.Controls
 {
-    public partial class TwoNumberEditor : UserControl
+    public partial class TwoNumberEditor : UserControl, IPropertyEditor
     {
         public int Value1
         {
@@ -38,8 +38,7 @@ namespace Scissors.Controls
             }
         }
 
-        public string Label1 { get { return label1.Text; } set { label1.Text = value; } }
-        public string Label2 { get { return label2.Text; } set { label2.Text = value; } }
+        public string Label { get { return label1.Text; } set { label1.Text = value; } }
 
         public TwoNumberEditor()
         {

@@ -33,37 +33,45 @@ namespace Scissors.Timeline
             for (int i = 0; i < properties.Length; i++)
             {
                 Control control;
+                IPropertyEditor editor;
                 object value = properties[i].GetValue(effect);
 
                 if (properties[i].PropertyType == typeof(Point))
                 {
                     Point point = (Point)value;
-                    TwoNumberEditor editor = new TwoNumberEditor();
-                    editor.Value1 = point.X;
-                    editor.Value2 = point.Y;
-                    editor.Label1 = "X";
-                    editor.Label2 = "Y";
-                    control = editor;
+                    TwoNumberEditor twoEditor = new TwoNumberEditor();
+                    twoEditor.Value1 = point.X;
+                    twoEditor.Value2 = point.Y;
+                    editor = twoEditor;
+                    control = twoEditor;
                 }
                 else if (properties[i].PropertyType == typeof(Size))
                 {
                     Size size = (Size)value;
-                    TwoNumberEditor editor = new TwoNumberEditor();
-                    editor.Value1 = size.Width;
-                    editor.Value2 = size.Height;
-                    editor.Label1 = "Width";
-                    editor.Label2 = "Height";
-                    control = editor;
+                    TwoNumberEditor twoEditor = new TwoNumberEditor();
+                    twoEditor.Value1 = size.Width;
+                    twoEditor.Value2 = size.Height;
+                    editor = twoEditor;
+                    control = twoEditor;
                 }
                 else if (properties[i].PropertyType == typeof(string))
                 {
                     string text = (string)value;
-                    StringEditor editor = new StringEditor();
-                    editor.Value = text;
-                    editor.Label = "String";
-                    control = editor;
+                    StringEditor stringEditor = new StringEditor();
+                    stringEditor.Value = text;
+                    editor = stringEditor;
+                    control = stringEditor;
                 }
-                else control = new Label() { Width = 150, Height = 50, BackColor = Color.BlanchedAlmond };
+                else
+                {
+                    editor = null;
+                    control = new Label() { Width = 150, Height = 50, BackColor = Color.BlanchedAlmond };
+                }
+
+                if (editor != null)
+                {
+                    editor.Label = properties[i].Name;
+                }
 
                 flowLayoutPanel1.Controls.Add(control);
             }
